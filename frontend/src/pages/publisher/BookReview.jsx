@@ -137,13 +137,29 @@ export default function BookReview() {
                 <div className="flex items-center gap-3 text-xs font-mono text-[#2B2B2B]">
                   <FileText className="w-5 h-5 text-[#D3968C]" />
                   <div>
-                    <span className="font-semibold block">{book.title.replace(/\s+/g, '_')}_Manuscript.pdf</span>
-                    <span className="text-[10px] text-[#6E6A67]">PDF Document · 4.8 MB</span>
+                    <span className="font-semibold block">
+                      {book.manuscriptFileName || `${book.title.replace(/\s+/g, '_')}_Manuscript.pdf`}
+                    </span>
+                    <span className="text-[10px] text-[#6E6A67]">
+                      {book.manuscriptFileType || 'PDF Document'} · {book.manuscriptFileSize || 'Unknown size'}
+                    </span>
                   </div>
                 </div>
-                <span className="text-[10px] font-mono text-[#D3968C] uppercase tracking-wider font-semibold">
-                  Verified
-                </span>
+
+                {book.manuscriptUrl ? (
+                  <a
+                    href={book.manuscriptUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-[10px] font-mono text-[#D3968C] uppercase tracking-wider font-semibold hover:underline"
+                  >
+                    Open & Review
+                  </a>
+                ) : (
+                  <span className="text-[10px] font-mono text-[#6E6A67] uppercase tracking-wider">
+                    No File Attached
+                  </span>
+                )}
               </div>
 
               <div className="p-3.5 rounded-xl bg-[#F4EEEA]/50 border border-[#E7D9D3] flex items-center justify-between">

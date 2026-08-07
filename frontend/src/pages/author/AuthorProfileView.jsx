@@ -72,8 +72,14 @@ export default function AuthorProfileView() {
       <form onSubmit={handleSave} className="p-8 sm:p-10 rounded-3xl bg-[#FAF8F6] border border-[#E7D9D3] shadow-lg space-y-8">
         {/* Avatar Upload Header */}
         <div className="flex flex-col sm:flex-row items-center gap-6">
-          <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-[#E7D9D3] shadow-md group">
-            <img src={formData.avatarUrl} alt={formData.name} className="w-full h-full object-cover" />
+          <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-[#E7D9D3] shadow-md group bg-[#F4EEEA]">
+            {formData.avatarUrl ? (
+              <img src={formData.avatarUrl} alt={formData.name} className="w-full h-full object-cover" />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center">
+                <User className="w-8 h-8 text-[#D3968C]" />
+              </div>
+            )}
             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer">
               <Camera className="w-6 h-6 text-white" />
             </div>

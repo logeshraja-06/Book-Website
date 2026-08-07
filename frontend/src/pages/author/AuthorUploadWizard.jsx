@@ -52,6 +52,10 @@ export default function AuthorUploadWizard() {
       language: formData.language,
       pages: 320,
       isbn: '978-81-234-' + Math.floor(1000 + Math.random() * 9000),
+      manuscriptFileName: formData.pdfFileName,
+      manuscriptFileType: 'PDF Document',
+      manuscriptFileSize: formData.pdfFileSize,
+      manuscriptUrl: formData.manuscriptUrl || null,
     };
 
     addBook(newBook);
@@ -72,11 +76,13 @@ export default function AuthorUploadWizard() {
     e.preventDefault();
     const file = e.dataTransfer?.files[0] || e.target.files?.[0];
     if (file) {
+      const fileUrl = URL.createObjectURL(file);
       setFormData((prev) => ({
         ...prev,
         pdfFile: file,
         pdfFileName: file.name,
         pdfFileSize: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
+        manuscriptUrl: fileUrl,
       }));
     }
   };

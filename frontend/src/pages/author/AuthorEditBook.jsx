@@ -19,6 +19,8 @@ export default function AuthorEditBook() {
     price: 499,
     coverUrl: '',
     pdfFileName: 'manuscript-sample.pdf',
+    pdfFileSize: '4.8 MB',
+    manuscriptUrl: null,
   });
 
   const [toastMessage, setToastMessage] = useState(null);
@@ -32,7 +34,9 @@ export default function AuthorEditBook() {
         language: book.language || 'Tamil',
         price: book.price || 499,
         coverUrl: book.coverUrl || '',
-        pdfFileName: 'manuscript-sample.pdf',
+        pdfFileName: book.manuscriptFileName || 'manuscript-sample.pdf',
+        pdfFileSize: book.manuscriptFileSize || '4.8 MB',
+        manuscriptUrl: book.manuscriptUrl || null,
       });
     }
   }, [book]);
@@ -40,6 +44,20 @@ export default function AuthorEditBook() {
   const showToast = (msg) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3000);
+  };
+
+  const handlePdfChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const fileUrl = URL.createObjectURL(file);
+      setFormData((prev) => ({
+        ...prev,
+        pdfFileName: file.name,
+        pdfFileSize: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
+        manuscriptUrl: fileUrl,
+      }));
+      showToast('✓ Manuscript PDF updated');
+    }
   };
 
   const handleSave = (e) => {
@@ -52,6 +70,9 @@ export default function AuthorEditBook() {
         language: formData.language,
         price: Number(formData.price),
         coverUrl: formData.coverUrl,
+        manuscriptFileName: formData.pdfFileName,
+        manuscriptFileSize: formData.pdfFileSize,
+        manuscriptUrl: formData.manuscriptUrl,
       });
       showToast('✓ Book metadata updated successfully');
       setTimeout(() => navigate('/author/books'), 1200);
@@ -179,8 +200,14 @@ export default function AuthorEditBook() {
               Cover Image URL
             </label>
             <div className="flex items-center gap-4">
-              <div className="w-16 aspect-[2/3] rounded-lg overflow-hidden border border-[#E7D9D3] shrink-0">
-                <img src={formData.coverUrl} alt="Cover" className="w-full h-full object-cover" />
+              <div className="w-16 aspect-[2/3] rounded-lg overflow-hidden border border-[#E7D9D3] shrink-0 bg-[#F4EEEA]">
+                {formData.coverUrl ? (
+                  <img src={formData.coverUrl} alt="Cover" className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <ImageIcon className="w-5 h-5 text-[#D3968C]" />
+                  </div>
+                )}
               </div>
               <input
                 type="text"
@@ -195,18 +222,20 @@ export default function AuthorEditBook() {
             <label className="text-xs font-mono uppercase tracking-wider text-[#6E6A67] block font-semibold">
               Manuscript File (PDF)
             </label>
-            <div className="p-3 rounded-xl border border-[#E7D9D3] bg-[#F4EEEA]/50 flex items-center justify-between text-xs font-mono">
+            <div className="p-3 rounded-xl border border-[#E7D9D3] bg-[#F4EEEA]/50 flex items-center justify-between text-xs font-mono relative">
               <div className="flex items-center gap-2">
                 <FileText className="w-4 h-4 text-[#D3968C]" />
                 <span className="truncate max-w-[150px]">{formData.pdfFileName}</span>
               </div>
-              <button
-                type="button"
-                onClick={() => showToast('✓ Replace manuscript file selected')}
-                className="text-[11px] text-[#D3968C] font-semibold hover:underline"
-              >
+              <label className="text-[11px] text-[#D3968C] font-semibold hover:underline cursor-pointer">
                 Replace PDF
-              </button>
+                <input
+                  type="file"
+                  accept="application/pdf"
+                  onChange={handlePdfChange}
+                  className="hidden"
+                />
+              </label>
             </div>
           </div>
         </div>

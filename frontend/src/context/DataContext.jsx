@@ -61,11 +61,31 @@ export function DataProvider({ children }) {
       status: 'In Review',
       lastEdited: 'Just now',
       submittedDate: new Date().toLocaleDateString('en-IN', { month: 'short', day: '2-digit', year: 'numeric' }),
-      editorialNotes: 'Submitted for editorial review.'
+      editorialNotes: 'Submitted for editorial review.',
+      manuscriptFileName: newBook.manuscriptFileName || '',
+      manuscriptFileType: newBook.manuscriptFileType || 'PDF Document',
+      manuscriptFileSize: newBook.manuscriptFileSize || '',
+      manuscriptUrl: newBook.manuscriptUrl || null,
     };
 
     setBooks(prev => [createdBook, ...prev]);
     return createdBook;
+  }, []);
+
+  /**
+   * Update a book's fields.
+   */
+  const updateBook = useCallback((bookId, updates) => {
+    setBooks(prev =>
+      prev.map(b => b.id === bookId ? { ...b, ...updates, lastEdited: 'Just now' } : b)
+    );
+  }, []);
+
+  /**
+   * Delete a book.
+   */
+  const deleteBook = useCallback((bookId) => {
+    setBooks(prev => prev.filter(b => b.id !== bookId));
   }, []);
 
   /**
@@ -157,6 +177,8 @@ export function DataProvider({ children }) {
 
         // Mutable actions
         addBook,
+        updateBook,
+        deleteBook,
         updateBookStatus,
         toggleWishlist,
         toggleLibrary,
