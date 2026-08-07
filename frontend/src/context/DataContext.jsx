@@ -12,6 +12,7 @@ export function DataProvider({ children }) {
   const { currentUser, token } = useAuth();
 
   const [books, setBooks] = useState(BOOKS);
+  const [editorialBooks, setEditorialBooks] = useState([]);
   const [authors, setAuthors] = useState(AUTHORS);
   const [reviews, setReviews] = useState(REVIEWS);
   const [categories, setCategories] = useState(CATEGORIES);
@@ -22,7 +23,7 @@ export function DataProvider({ children }) {
   const [libraryBookState, setLibraryBookState] = useState(INITIAL_LIBRARY_BOOKS);
   const [wishlistIds, setWishlistIds] = useState(['sapiens', 'atomic-habits', 'immortals-meluha']);
 
-  // 1. Fetch Public Books, Authors & Categories on Mount
+  // 1. Fetch Public Books (merge by ID), Authors & Categories on Mount
   const fetchPublicData = useCallback(async () => {
     try {
       const [booksRes, authorsRes, categoriesRes] = await Promise.allSettled([
@@ -31,13 +32,17 @@ export function DataProvider({ children }) {
         apiFetch('/categories')
       ]);
 
-      if (booksRes.status === 'fulfilled' && booksRes.value.success && booksRes.value.data) {
-        setBooks(booksRes.value.data);
+      if (booksRes.status === 'fulfilled' && booksRes.value?.success && booksRes.value.data) {
+        setBooks(prev => {
+          const map = new Map(prev.map(b => [b.id || b._id, b]));
+          (booksRes.value.data || []).forEach(b => map.set(b.id || b._id, b));
+          return Array.from(map.values());
+        });
       }
-      if (authorsRes.status === 'fulfilled' && authorsRes.value.success && authorsRes.value.data) {
+      if (authorsRes.status === 'fulfilled' && authorsRes.value?.success && authorsRes.value.data) {
         setAuthors(authorsRes.value.data);
       }
-      if (categoriesRes.status === 'fulfilled' && categoriesRes.value.success && categoriesRes.value.data) {
+      if (categoriesRes.status === 'fulfilled' && categoriesRes.value?.success && categoriesRes.value.data) {
         setCategories(categoriesRes.value.data);
       }
     } catch (err) {
@@ -49,7 +54,29 @@ export function DataProvider({ children }) {
     fetchPublicData();
   }, [fetchPublicData]);
 
-  // 2. Role-Based Module State Rehydration (Studio / Editorial / Reader)
+  // 2. Fetch Editorial Data (Full Catalog + Review Queue for Publisher/Admin)
+  const fetchEditorialData = useCallback(async () => {
+    if (!token || !currentUser) return;
+    if (currentUser.role !== 'publisher' && currentUser.role !== 'admin') return;
+
+    try {
+      const [booksRes, queueRes] = await Promise.allSettled([
+        apiFetch('/editorial/books'),
+        apiFetch('/editorial/queue')
+      ]);
+
+      if (booksRes.status === 'fulfilled' && booksRes.value?.success && booksRes.value.data) {
+        setEditorialBooks(booksRes.value.data);
+      }
+      if (queueRes.status === 'fulfilled' && queueRes.value?.success && queueRes.value.data) {
+        setEditorialQueue(queueRes.value.data);
+      }
+    } catch (err) {
+      console.warn('[DataContext] Editorial fetch notice:', err.message);
+    }
+  }, [token, currentUser]);
+
+  // 3. Role-Based Module State Rehydration (Studio / Editorial / Reader)
   const fetchModuleData = useCallback(async () => {
     if (!token || !currentUser) return;
 
@@ -62,12 +89,9 @@ export function DataProvider({ children }) {
         }
       }
 
-      // Publisher Editorial Queue
+      // Publisher Editorial Data
       if (currentUser.role === 'publisher' || currentUser.role === 'admin') {
-        const queueRes = await apiFetch('/editorial/queue').catch(() => null);
-        if (queueRes?.success && queueRes.data) {
-          setEditorialQueue(queueRes.data);
-        }
+        fetchEditorialData();
       }
 
       // Reader Library & Wishlist
@@ -88,7 +112,7 @@ export function DataProvider({ children }) {
     } catch (err) {
       console.warn('[DataContext] Module fetch notice:', err.message);
     }
-  }, [token, currentUser]);
+  }, [token, currentUser, fetchEditorialData]);
 
   useEffect(() => {
     fetchModuleData();
@@ -135,7 +159,11 @@ export function DataProvider({ children }) {
         };
         setBooks(prev => [createdBook, ...prev]);
         setStudioBooks(prev => [createdBook, ...prev]);
+        setEditorialQueue(prev => [createdBook, ...prev]);
+        setEditorialBooks(prev => [createdBook, ...prev]);
+
         fetchPublicData();
+        fetchEditorialData();
         return createdBook;
       }
     } catch (err) {
@@ -175,8 +203,10 @@ export function DataProvider({ children }) {
 
     setBooks(prev => [createdBook, ...prev]);
     setStudioBooks(prev => [createdBook, ...prev]);
+    setEditorialQueue(prev => [createdBook, ...prev]);
+    setEditorialBooks(prev => [createdBook, ...prev]);
     return createdBook;
-  }, [currentUser, fetchPublicData]);
+  }, [currentUser, fetchPublicData, fetchEditorialData]);
 
   /**
    * Update a book's fields.
@@ -210,7 +240,9 @@ export function DataProvider({ children }) {
         const updated = { ...res.data, id: res.data.id || res.data._id };
         setBooks(prev => prev.map(b => (b.id === bookId || b._id === bookId) ? updated : b));
         setStudioBooks(prev => prev.map(b => (b.id === bookId || b._id === bookId) ? updated : b));
+        setEditorialBooks(prev => prev.map(b => (b.id === bookId || b._id === bookId) ? updated : b));
         fetchPublicData();
+        fetchEditorialData();
         return;
       }
     } catch (err) {
@@ -219,7 +251,8 @@ export function DataProvider({ children }) {
 
     setBooks(prev => prev.map(b => (b.id === bookId || b._id === bookId) ? { ...b, ...updates, lastEdited: 'Just now' } : b));
     setStudioBooks(prev => prev.map(b => (b.id === bookId || b._id === bookId) ? { ...b, ...updates, lastEdited: 'Just now' } : b));
-  }, [fetchPublicData]);
+    setEditorialBooks(prev => prev.map(b => (b.id === bookId || b._id === bookId) ? { ...b, ...updates, lastEdited: 'Just now' } : b));
+  }, [fetchPublicData, fetchEditorialData]);
 
   /**
    * Delete a book.
@@ -233,6 +266,8 @@ export function DataProvider({ children }) {
 
     setBooks(prev => prev.filter(b => b.id !== bookId && b._id !== bookId));
     setStudioBooks(prev => prev.filter(b => b.id !== bookId && b._id !== bookId));
+    setEditorialQueue(prev => prev.filter(b => b.id !== bookId && b._id !== bookId));
+    setEditorialBooks(prev => prev.filter(b => b.id !== bookId && b._id !== bookId));
   }, []);
 
   /**
@@ -257,8 +292,10 @@ export function DataProvider({ children }) {
         if (res.success && res.data) {
           const updated = { ...res.data, id: res.data.id || res.data._id };
           setBooks(prev => prev.map(b => (b.id === bookId || b._id === bookId) ? updated : b));
+          setEditorialBooks(prev => prev.map(b => (b.id === bookId || b._id === bookId) ? updated : b));
           setEditorialQueue(prev => prev.map(b => (b.id === bookId || b._id === bookId) ? updated : b));
           fetchPublicData();
+          fetchEditorialData();
           return;
         }
       }
@@ -267,7 +304,8 @@ export function DataProvider({ children }) {
     }
 
     setBooks(prev => prev.map(b => (b.id === bookId || b._id === bookId) ? { ...b, status: newStatus } : b));
-  }, [fetchPublicData]);
+    setEditorialBooks(prev => prev.map(b => (b.id === bookId || b._id === bookId) ? { ...b, status: newStatus } : b));
+  }, [fetchPublicData, fetchEditorialData]);
 
   /**
    * Reader: Toggle Wishlist
@@ -353,13 +391,16 @@ export function DataProvider({ children }) {
     setReviews(prev => [newReview, ...prev]);
   }, [fetchPublicData]);
 
-  // Derived helpers — computed from current state with ID matching flexibility
+  // Derived helpers — computed from current state with slug and ID matching flexibility
   const getBookById = useCallback(id => {
-    return books.find(b => b.id === id || b._id === id || b.legacyId === id) || null;
-  }, [books]);
+    if (!id) return null;
+    return editorialBooks.find(b => b.slug === id || b.id === id || b._id === id || b.legacyId === id) ||
+           books.find(b => b.slug === id || b.id === id || b._id === id || b.legacyId === id) || null;
+  }, [editorialBooks, books]);
 
   const getAuthorById = useCallback(id => {
-    return authors.find(a => a.id === id || a._id === id || a.legacyId === id) || null;
+    if (!id) return null;
+    return authors.find(a => a.slug === id || a.id === id || a._id === id || a.legacyId === id || a.name?.toLowerCase().replace(/\s+/g, '-') === id) || null;
   }, [authors]);
 
   const getReviewsByBookId = useCallback(bookId => {
@@ -367,14 +408,15 @@ export function DataProvider({ children }) {
   }, [reviews]);
 
   const getBooksByAuthorId = useCallback(authorId => {
-    return books.filter(b => b.authorId === authorId || b.authorId?._id === authorId);
-  }, [books]);
+    return (editorialBooks.length > 0 ? editorialBooks : books).filter(b => b.authorId === authorId || b.authorId?._id === authorId);
+  }, [editorialBooks, books]);
 
   return (
     <DataContext.Provider
       value={{
         // Raw state
         books,
+        editorialBooks,
         authors,
         reviews,
         categories,
@@ -384,6 +426,7 @@ export function DataProvider({ children }) {
 
         // Mutable actions
         fetchPublicData,
+        fetchEditorialData,
         addBook,
         updateBook,
         deleteBook,
@@ -400,7 +443,7 @@ export function DataProvider({ children }) {
 
         // Module-specific slices
         studioBooks: studioBooks.length > 0 ? studioBooks : books.filter(b => b.authorId === 'kalki-krishnamurthy' || b.author === currentUser?.name),
-        editorialQueue: editorialQueue.length > 0 ? editorialQueue : books.filter(b => b.status === 'In Review' || b.status === 'Rejected'),
+        editorialQueue: editorialQueue.length > 0 ? editorialQueue : (editorialBooks.length > 0 ? editorialBooks.filter(b => b.status === 'In Review' || b.status === 'Rejected') : books.filter(b => b.status === 'In Review' || b.status === 'Rejected')),
       }}
     >
       {children}

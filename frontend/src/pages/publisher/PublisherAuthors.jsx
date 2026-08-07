@@ -3,7 +3,9 @@ import { motion } from 'framer-motion';
 import { useData } from '../../context/DataContext';
 
 export default function PublisherAuthors() {
-  const { authors, books } = useData();
+  const { authors, books, editorialBooks } = useData();
+
+  const catalogSource = editorialBooks.length > 0 ? editorialBooks : books;
 
   return (
     <div className="space-y-6">
@@ -19,7 +21,8 @@ export default function PublisherAuthors() {
       {/* Editorial List */}
       <div className="bg-[#FFFFFF] rounded-2xl border border-[#E7D9D3] divide-y divide-[#E7D9D3] shadow-sm">
         {authors.map((author, idx) => {
-          const authorBookCount = (author.books || []).length || books.filter((b) => b.authorId === author.id).length;
+          const authorId = author._id || author.id;
+          const authorBookCount = (author.books || []).length || catalogSource.filter((b) => b.authorId === authorId || b.authorId === author.id || b.author === author.name).length;
 
           return (
             <motion.div

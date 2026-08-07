@@ -4,11 +4,13 @@ import { Layers, ArrowRight, BookOpen, Clock, ShieldCheck, Tag } from 'lucide-re
 import { useData } from '../../context/DataContext';
 
 export default function PublisherHome() {
-  const { books, editorialQueue } = useData();
+  const { books, editorialBooks, editorialQueue } = useData();
 
-  const pendingCount = books.filter((b) => b.status === 'In Review').length;
-  const approvedCount = books.filter((b) => b.status === 'Published').length;
-  const recentSubmissions = books.slice(0, 4);
+  const catalogSource = editorialBooks.length > 0 ? editorialBooks : books;
+
+  const pendingCount = editorialQueue.length > 0 ? editorialQueue.length : catalogSource.filter((b) => b.status === 'In Review').length;
+  const approvedCount = catalogSource.filter((b) => b.status === 'Published').length;
+  const recentSubmissions = editorialQueue.length > 0 ? editorialQueue.slice(0, 4) : catalogSource.slice(0, 4);
 
   return (
     <div className="space-y-12">
@@ -122,7 +124,7 @@ export default function PublisherHome() {
                     {book.status}
                   </span>
                   <Link
-                    to={`/publisher/review/${book.id}`}
+                    to={`/publisher/review/${book.id || book._id}`}
                     className="text-xs font-semibold uppercase font-mono text-[#2B2B2B] hover:text-[#D3968C]"
                   >
                     Review

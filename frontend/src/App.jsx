@@ -12,6 +12,7 @@ import BookDetails from './pages/public/BookDetails';
 import AuthorsListing from './pages/public/AuthorsListing';
 import AuthorProfile from './pages/public/AuthorProfile';
 import CategoriesPage from './pages/public/CategoriesPage';
+import CategoryDetail from './pages/public/CategoryDetail';
 import AboutPage from './pages/public/AboutPage';
 import ContactPage from './pages/public/ContactPage';
 import BlogPage from './pages/public/BlogPage';
@@ -73,6 +74,7 @@ export default function App() {
             <Route path="/authors" element={<AuthorsListing />} />
             <Route path="/authors/:id" element={<AuthorProfile />} />
             <Route path="/categories" element={<CategoriesPage />} />
+            <Route path="/categories/:slug" element={<CategoryDetail />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/blog" element={<BlogPage />} />

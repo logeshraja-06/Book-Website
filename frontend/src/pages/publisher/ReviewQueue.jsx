@@ -5,10 +5,12 @@ import { ArrowRight, Clock } from 'lucide-react';
 import { useData } from '../../context/DataContext';
 
 export default function ReviewQueue() {
-  const { books } = useData();
+  const { books, editorialBooks } = useData();
   const [filter, setFilter] = useState('All'); // 'All' | 'Pending' | 'Approved' | 'Rejected'
 
-  const filtered = books.filter((b) => {
+  const catalogSource = editorialBooks.length > 0 ? editorialBooks : books;
+
+  const filtered = catalogSource.filter((b) => {
     if (filter === 'Pending') return b.status === 'In Review';
     if (filter === 'Approved') return b.status === 'Published';
     if (filter === 'Rejected') return b.status === 'Rejected';
@@ -63,15 +65,17 @@ export default function ReviewQueue() {
 
       {/* Editorial List */}
       <div className="space-y-4">
-        {filtered.map((book, idx) => (
-          <motion.div
-            key={book.id}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35, delay: idx * 0.05 }}
-          >
-            <Link
-              to={`/publisher/review/${book.id}`}
+        {filtered.map((book, idx) => {
+          const bookId = book.id || book._id;
+          return (
+            <motion.div
+              key={bookId}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, delay: idx * 0.05 }}
+            >
+              <Link
+                to={`/publisher/review/${bookId}`}
               className="bg-[#FFFFFF] rounded-2xl p-5 border border-[#E7D9D3] flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-[#D3968C] transition-all duration-300 shadow-sm group block"
             >
               <div className="flex items-center gap-4">
@@ -122,7 +126,8 @@ export default function ReviewQueue() {
               </div>
             </Link>
           </motion.div>
-        ))}
+        );
+      })}
       </div>
 
     </div>

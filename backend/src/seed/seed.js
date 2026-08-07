@@ -569,11 +569,16 @@ const seedDB = async () => {
     console.log('[Seed] Inserted Categories.');
 
     // 4. Seed Authors
+    const slugify = require('../utils/slugify');
     const authorMap = {}; // legacyId -> Author _id
     for (const aData of AUTHORS_DATA) {
+      const aSlug = aData.id || slugify(aData.name);
       const authorDoc = await Author.create({
         ...aData,
+        slug: aSlug,
         legacyId: aData.id,
+        genres: [aData.role ? aData.role.replace(/Icon|Writer|Novelist|Scientist|Professor|Essayist|Intellectual/gi, '').trim() : 'Literature'],
+        socialLinks: { twitter: aData.handle || '@author', website: 'https://bookverse.studio' },
         userId: aData.id === 'kalki-krishnamurthy' ? authorUser._id : null
       });
       authorMap[aData.id] = authorDoc._id;
@@ -582,14 +587,21 @@ const seedDB = async () => {
 
     // 5. Seed Books
     const bookMap = {}; // legacyId -> Book _id
+    let bIdx = 1;
     for (const bData of BOOKS_DATA) {
       const authorObjId = authorMap[bData.authorId] || authorMap['kalki-krishnamurthy'];
+      const bSlug = bData.id || slugify(bData.title);
+      const seqStr = String(bIdx).padStart(6, '0');
       const bookDoc = await Book.create({
         ...bData,
+        slug: bSlug,
+        bookCode: `BVS-${bData.publishYear || 2026}-${seqStr}`,
         legacyId: bData.id,
-        authorId: authorObjId
+        authorId: authorObjId,
+        publisherId: publisherUser._id
       });
       bookMap[bData.id] = bookDoc._id;
+      bIdx++;
     }
     console.log('[Seed] Inserted Books.');
 

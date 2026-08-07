@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const Book = require('../models/Book');
 const Review = require('../models/Review');
+const Bookmark = require('../models/Bookmark');
 const ApiResponse = require('../utils/apiResponse');
 const asyncHandler = require('../middleware/asyncHandler');
 const mongoose = require('mongoose');
@@ -115,8 +116,8 @@ const toggleWishlist = asyncHandler(async (req, res) => {
 // @route   GET /api/reader/bookmarks
 // @access  Private
 const getBookmarks = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id).populate('bookmarks.bookId');
-  return ApiResponse.success(res, 'Bookmarks fetched successfully', user.bookmarks || []);
+  const bookmarks = await Bookmark.find({ userId: req.user._id }).populate('bookId');
+  return ApiResponse.success(res, 'Bookmarks fetched successfully', bookmarks);
 });
 
 // @desc    Add a bookmark
@@ -130,21 +131,17 @@ const addBookmark = asyncHandler(async (req, res) => {
     return ApiResponse.error(res, 'Book not found', 404);
   }
 
-  const user = await User.findById(req.user._id);
-
-  const newBookmark = {
+  const newBookmark = await Bookmark.create({
+    userId: req.user._id,
     bookId: resolvedId,
     pageRef: pageRef || 'Page 1',
     quote: quote || '',
     note: note || '',
     dateSaved: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-  };
+  });
 
-  user.bookmarks.push(newBookmark);
-  await user.save();
-
-  const updatedUser = await User.findById(user._id).populate('bookmarks.bookId');
-  return ApiResponse.success(res, 'Bookmark saved successfully', updatedUser.bookmarks, 201);
+  const populated = await Bookmark.findById(newBookmark._id).populate('bookId');
+  return ApiResponse.success(res, 'Bookmark saved successfully', populated, 201);
 });
 
 // @desc    Delete a bookmark
@@ -153,11 +150,10 @@ const addBookmark = asyncHandler(async (req, res) => {
 const deleteBookmark = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
-  const user = await User.findById(req.user._id);
-  user.bookmarks = user.bookmarks.filter((bm) => bm._id.toString() !== id);
+  await Bookmark.findOneAndDelete({ _id: id, userId: req.user._id });
+  const remaining = await Bookmark.find({ userId: req.user._id }).populate('bookId');
 
-  await user.save();
-  return ApiResponse.success(res, 'Bookmark removed successfully', user.bookmarks);
+  return ApiResponse.success(res, 'Bookmark removed successfully', remaining);
 });
 
 // @desc    Create review for a book (Enforce 1 review per (user, book) pair)

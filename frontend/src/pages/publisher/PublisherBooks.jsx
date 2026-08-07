@@ -3,16 +3,19 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Search, Eye, Trash2 } from 'lucide-react';
 import { useData } from '../../context/DataContext';
+import { formatPrice } from '../../utils/format';
 
 export default function PublisherBooks() {
-  const { books } = useData();
+  const { books, editorialBooks } = useData();
   const [searchParams] = useSearchParams();
   const authorFilterParam = searchParams.get('author');
 
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('All'); // 'All' | 'Published' | 'Pending' | 'Rejected' | 'Archived'
 
-  const filtered = books.filter((b) => {
+  const catalogSource = editorialBooks.length > 0 ? editorialBooks : books;
+
+  const filtered = catalogSource.filter((b) => {
     if (authorFilterParam && b.authorId !== authorFilterParam) return false;
     
     if (statusFilter === 'Published' && b.status !== 'Published') return false;
@@ -87,55 +90,60 @@ export default function PublisherBooks() {
 
       {/* Editorial List Layout */}
       <div className="bg-[#FFFFFF] rounded-2xl border border-[#E7D9D3] divide-y divide-[#E7D9D3] shadow-sm">
-        {filtered.map((book) => (
-          <div
-            key={book.id}
-            className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-[#F4EEEA]/50 transition-colors group"
-          >
-            <div className="flex items-center gap-4">
-              <div className="w-10 h-14 rounded overflow-hidden bg-[#F4EEEA] shrink-0 border border-[#E7D9D3]">
-                <img src={book.coverUrl} alt={book.title} className="w-full h-full object-cover" />
+        {filtered.map((book) => {
+          const bookId = book.id || book._id;
+          return (
+            <div
+              key={bookId}
+              className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-[#F4EEEA]/50 transition-colors group"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-14 rounded overflow-hidden bg-[#F4EEEA] shrink-0 border border-[#E7D9D3]">
+                  <img src={book.coverUrl} alt={book.title} className="w-full h-full object-cover" />
+                </div>
+
+                <div>
+                  <h4 className="font-editorial-serif text-base font-bold text-[#2B2B2B]">{book.title}</h4>
+                  <p className="text-xs text-[#6E6A67]">
+                    {book.author} · {book.genre} {book.bookCode ? `· ${book.bookCode}` : ''} · ISBN: {book.isbn || '978-81-000000'}
+                  </p>
+                </div>
               </div>
 
-              <div>
-                <h4 className="font-editorial-serif text-base font-bold text-[#2B2B2B]">{book.title}</h4>
-                <p className="text-xs text-[#6E6A67]">{book.author} · {book.genre} · ISBN: {book.isbn}</p>
+              <div className="flex items-center justify-between sm:justify-end gap-6 pt-2 sm:pt-0 border-t sm:border-t-0 border-[#E7D9D3]">
+                {/* Quiet Status Label */}
+                <span
+                  className={`text-[10px] font-mono uppercase tracking-wider font-semibold ${
+                    book.status === 'Published'
+                      ? 'text-[#D3968C]'
+                      : book.status === 'In Review'
+                      ? 'text-[#6E6A67]'
+                      : 'text-[#2B2B2B]'
+                  }`}
+                >
+                  {book.status}
+                </span>
+                <span className="font-mono text-xs font-semibold text-[#2B2B2B]">{formatPrice(book.price)}</span>
+
+                <div className="flex items-center gap-2">
+                  <Link
+                    to={`/books/${bookId}`}
+                    className="p-2 rounded-full hover:bg-[#E7D9D3] text-[#2B2B2B] min-h-[44px] min-w-[44px] flex items-center justify-center"
+                    title="View Public Details"
+                  >
+                    <Eye className="w-4 h-4" />
+                  </Link>
+                  <Link
+                    to={`/publisher/review/${bookId}`}
+                    className="px-3 py-1.5 rounded-full border border-[#E7D9D3] text-xs font-mono text-[#2B2B2B] hover:border-[#D3968C]"
+                  >
+                    Review
+                  </Link>
+                </div>
               </div>
             </div>
-
-            <div className="flex items-center justify-between sm:justify-end gap-6 pt-2 sm:pt-0 border-t sm:border-t-0 border-[#E7D9D3]">
-              {/* Quiet Status Label */}
-              <span
-                className={`text-[10px] font-mono uppercase tracking-wider font-semibold ${
-                  book.status === 'Published'
-                    ? 'text-[#D3968C]'
-                    : book.status === 'In Review'
-                    ? 'text-[#6E6A67]'
-                    : 'text-[#2B2B2B]'
-                }`}
-              >
-                {book.status}
-              </span>
-              <span className="font-mono text-xs font-semibold text-[#2B2B2B]">₹{book.price}</span>
-
-              <div className="flex items-center gap-2">
-                <Link
-                  to={`/books/${book.id}`}
-                  className="p-2 rounded-full hover:bg-[#E7D9D3] text-[#2B2B2B] min-h-[44px] min-w-[44px] flex items-center justify-center"
-                  title="View Public Details"
-                >
-                  <Eye className="w-4 h-4" />
-                </Link>
-                <Link
-                  to={`/publisher/review/${book.id}`}
-                  className="px-3 py-1.5 rounded-full border border-[#E7D9D3] text-xs font-mono text-[#2B2B2B] hover:border-[#D3968C]"
-                >
-                  Review
-                </Link>
-              </div>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
     </div>

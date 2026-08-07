@@ -126,7 +126,7 @@ export default function AuthorsListing() {
 
                           <div className="space-y-1">
                             <Link
-                              to={`/authors/${authorId}`}
+                              to={`/authors/${author.slug || authorId}`}
                               className="font-editorial-serif text-2xl font-bold text-[#2B2B2B] hover:text-[#C98579] transition-colors inline-flex items-center gap-2"
                             >
                               {author.name}
@@ -157,7 +157,7 @@ export default function AuthorsListing() {
                           </div>
 
                           <Link
-                            to={`/authors/${authorId}`}
+                            to={`/authors/${author.slug || authorId}`}
                             className="px-4 py-2 rounded-full border border-[#E7D9D3] text-xs font-medium text-[#2B2B2B] group-hover:bg-[#2B2B2B] group-hover:text-[#FAF8F6] group-hover:border-[#2B2B2B] transition-all duration-300"
                           >
                             View Profile

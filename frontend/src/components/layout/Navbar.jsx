@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Menu, X, User, Lock, LogOut } from 'lucide-react';
+import { BookOpen, Menu, X, User, Lock, LogOut, Search } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 export default function Navbar() {
@@ -101,6 +101,15 @@ export default function Navbar() {
         {/* Desktop Right Action Group */}
         <div className="hidden md:flex items-center gap-4">
           
+          {/* SEARCH CATALOG SHORTCUT */}
+          <Link
+            to="/books"
+            className="p-2 rounded-full hover:bg-[#F4EEEA] text-[#6E6A67] hover:text-[#2B2B2B] transition-colors border border-[#E7D9D3]"
+            title="Search Catalog"
+          >
+            <Search className="w-4 h-4" />
+          </Link>
+
           {/* PUBLISHER ACCESS BUTTON */}
           {!isPublisher && (
             <Link

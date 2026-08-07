@@ -1,7 +1,6 @@
 import { Link, useLocation, Outlet, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
-import { READER_PROFILE } from '../../data/mockReaderData';
 import { LogOut } from 'lucide-react';
 import Button from '../common/Button';
 
@@ -11,8 +10,8 @@ export default function ReaderLayout() {
   const { currentUser, logout } = useAuth();
 
   const user = currentUser || {
-    name: READER_PROFILE.name,
-    avatarUrl: READER_PROFILE.avatarUrl
+    name: 'Reader',
+    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'
   };
 
   const navTabs = [
@@ -51,9 +50,9 @@ export default function ReaderLayout() {
 
             <div className="flex items-center gap-4">
               <div className="hidden sm:inline-flex items-center gap-3 px-4 py-2 rounded-full bg-[#F4EEEA] border border-[#E7D9D3] text-xs font-mono text-[#6E6A67]">
-                <span>{READER_PROFILE.stats.booksRead} Books Read</span>
+                <span>{user.stats?.booksRead || '12'} Books Read</span>
                 <span className="h-3 w-px bg-[#E7D9D3]" />
-                <span className="text-[#2B2B2B] font-semibold">{READER_PROFILE.stats.currentStreak} Streak</span>
+                <span className="text-[#2B2B2B] font-semibold">{user.stats?.currentStreak || '14 Days'} Streak</span>
               </div>
 
               <Button

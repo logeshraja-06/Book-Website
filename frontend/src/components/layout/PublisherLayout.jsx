@@ -1,6 +1,8 @@
+import { useEffect } from 'react';
 import { Link, useLocation, Outlet, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
+import { useData } from '../../context/DataContext';
 import { Layers, ShieldCheck, LogOut } from 'lucide-react';
 import Button from '../../components/common/Button';
 
@@ -8,6 +10,13 @@ export default function PublisherLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const { currentUser, logout } = useAuth();
+  const { fetchEditorialData } = useData();
+
+  useEffect(() => {
+    if (fetchEditorialData) {
+      fetchEditorialData();
+    }
+  }, [fetchEditorialData]);
 
   const user = currentUser || {
     name: 'Editorial Control Desk',

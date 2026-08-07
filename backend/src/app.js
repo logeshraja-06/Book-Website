@@ -75,6 +75,7 @@ app.use('/api/reviews', reviewRoutes);
 app.use('/api/reader', readerRoutes);
 app.use('/api/studio', studioRoutes);
 app.use('/api/editorial', publisherRoutes);
+app.use('/api/publisher', publisherRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/files', fileRoutes);
 
