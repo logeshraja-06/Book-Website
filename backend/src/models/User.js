@@ -11,6 +11,9 @@ const userSchema = new mongoose.Schema(
       enum: ['reader', 'author', 'publisher', 'admin'],
       default: 'reader'
     },
+    country: { type: String, default: 'India' },
+    penName: { type: String, default: '' },
+    profileImage: { type: String, default: '' },
     avatarUrl: { type: String, default: '' },
     bio: { type: String, default: '' },
     handle: { type: String, default: '' },

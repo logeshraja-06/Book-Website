@@ -102,9 +102,9 @@ export default function PublisherHome() {
           </div>
 
           <div className="space-y-4">
-            {recentSubmissions.map((book) => (
+            {recentSubmissions.map((book, idx) => (
               <div
-                key={book.id}
+                key={book.id || book._id || `recent-${idx}`}
                 className="bg-[#FFFFFF] rounded-2xl p-4 border border-[#E7D9D3] flex items-center justify-between gap-4 hover:border-[#D3968C] transition-colors shadow-sm"
               >
                 <div className="flex items-center gap-4">

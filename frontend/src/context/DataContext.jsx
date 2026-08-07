@@ -383,6 +383,7 @@ export function DataProvider({ children }) {
         wishlistBooks,
 
         // Mutable actions
+        fetchPublicData,
         addBook,
         updateBook,
         deleteBook,

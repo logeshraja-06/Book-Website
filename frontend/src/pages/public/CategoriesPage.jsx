@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowUpRight, BookOpen } from 'lucide-react';
-import { CATEGORIES, ALL_BOOKS } from '../../data/mockData';
+import { ArrowUpRight } from 'lucide-react';
+import { useData } from '../../context/DataContext';
 
 export default function CategoriesPage() {
+  const { categories: CATEGORIES, books: ALL_BOOKS } = useData();
   const navigate = useNavigate();
   const [hoveredCategory, setHoveredCategory] = useState(null);
 
@@ -26,21 +27,22 @@ export default function CategoriesPage() {
 
       <section className="divide-y divide-[#E7D9D3]">
         {CATEGORIES.map((cat, idx) => {
+          const catId = cat._id || cat.id;
           const matchingBooks = ALL_BOOKS.filter(
-            (b) => b.genre.toLowerCase().includes(cat.name.toLowerCase().split(' ')[0]) || b.genre === cat.name
+            (b) => b.genre && (b.genre.toLowerCase().includes(cat.name.toLowerCase().split(' ')[0]) || b.genre === cat.name)
           );
 
-          const isHovered = hoveredCategory === cat.id;
+          const isHovered = hoveredCategory === catId;
           const isEven = idx % 2 === 1;
 
           return (
             <motion.div
-              key={cat.id}
+              key={catId}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px' }}
               transition={{ duration: 0.5, delay: idx * 0.05 }}
-              onMouseEnter={() => setHoveredCategory(cat.id)}
+              onMouseEnter={() => setHoveredCategory(catId)}
               onMouseLeave={() => setHoveredCategory(null)}
               onClick={() => navigate(`/books`)}
               className="relative transition-all duration-500 py-16 lg:py-24 cursor-pointer bg-[#FAF8F6] hover:bg-[#F4EEEA]/50 group"
@@ -56,7 +58,7 @@ export default function CategoriesPage() {
                       </span>
                       <span className="h-px w-12 bg-[#E7D9D3]" />
                       <span className="font-mono text-xs text-[#6E6A67] uppercase tracking-widest">
-                        {cat.count || 6} Titles Archived
+                        {matchingBooks.length || cat.count || 0} Titles Archived
                       </span>
                     </div>
 
@@ -80,7 +82,7 @@ export default function CategoriesPage() {
                     <div className="flex items-center justify-center sm:justify-start lg:justify-end gap-4 overflow-hidden py-2">
                       {matchingBooks.slice(0, 3).map((book, bIdx) => (
                         <motion.div
-                          key={book.id}
+                          key={book.id || book._id}
                           animate={{
                             y: isHovered ? (bIdx === 1 ? -12 : 0) : 0,
                             scale: isHovered ? 1.05 : 1,

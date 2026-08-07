@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const path = require('path');
+const cookieParser = require('cookie-parser');
 const env = require('./config/env');
 const errorHandler = require('./middleware/errorHandler');
 const ApiResponse = require('./utils/apiResponse');
@@ -34,7 +35,7 @@ app.use(
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        callback(null, true);
+        callback(new Error('Not allowed by CORS'));
       }
     },
     credentials: true,
@@ -48,9 +49,10 @@ if (env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-// Body Parsing
+// Body & Cookie Parsing
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // Serve Uploads Directory Statically
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));

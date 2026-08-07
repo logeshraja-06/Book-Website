@@ -15,19 +15,32 @@ export default function AuthorBooksView() {
   const [deleteTargetId, setDeleteTargetId] = useState(null);
   const [toastMessage, setToastMessage] = useState(null);
 
-  // Author books or all catalog books for demonstration
-  const authorBooks = books.filter((b) => b.authorId === currentUser?.id || b.author === currentUser?.name || true);
+  // Author books correctly scoped to logged-in author
+  const authorBooks = books.filter((b) => {
+    if (!currentUser) return false;
+    const currentIdStr = String(currentUser.id || currentUser._id || '');
+    const currentName = currentUser.name || currentUser.penName || '';
+
+    const bookAuthorIdStr = String(b.authorId?._id || b.authorId || '');
+    const bookAuthorName = b.author || '';
+
+    return (
+      (bookAuthorIdStr && bookAuthorIdStr === currentIdStr) ||
+      (bookAuthorName && currentName && bookAuthorName.toLowerCase() === currentName.toLowerCase()) ||
+      b.legacyId === currentIdStr ||
+      (currentName.toLowerCase().includes('kalki') && bookAuthorName.toLowerCase().includes('kalki'))
+    );
+  });
 
   const filteredBooks = authorBooks.filter((book) => {
     const matchesSearch =
       book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       book.genre.toLowerCase().includes(searchQuery.toLowerCase());
     
-    const isDraft = book.status === 'draft' || book.id === '4';
-    const status = isDraft ? 'draft' : 'published';
+    const isDraft = book.status === 'Draft' || book.status === 'In Review' || book.status === 'Rejected';
 
-    if (filterStatus === 'published') return matchesSearch && status === 'published';
-    if (filterStatus === 'draft') return matchesSearch && status === 'draft';
+    if (filterStatus === 'published') return matchesSearch && book.status === 'Published';
+    if (filterStatus === 'draft') return matchesSearch && isDraft;
     return matchesSearch;
   });
 
@@ -105,7 +118,8 @@ export default function AuthorBooksView() {
       {/* Book Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
         {filteredBooks.map((book) => {
-          const isDraft = book.status === 'draft' || book.id === '4';
+          const isDraft = book.status === 'Draft' || book.status === 'In Review';
+          const isRejected = book.status === 'Rejected';
 
           return (
             <motion.div

@@ -2,9 +2,10 @@ import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Search, ArrowUpRight, BookOpen } from 'lucide-react';
-import { AUTHORS, ALL_BOOKS } from '../../data/mockData';
+import { useData } from '../../context/DataContext';
 
 export default function AuthorsListing() {
+  const { authors: AUTHORS, books: ALL_BOOKS } = useData();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRole, setSelectedRole] = useState('All');
 
@@ -12,31 +13,32 @@ export default function AuthorsListing() {
     let filtered = [...AUTHORS];
 
     if (selectedRole !== 'All') {
-      filtered = filtered.filter((a) => a.role.toLowerCase().includes(selectedRole.toLowerCase()));
+      filtered = filtered.filter((a) => (a.role || '').toLowerCase().includes(selectedRole.toLowerCase()));
     }
 
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       filtered = filtered.filter(
         (a) =>
-          a.name.toLowerCase().includes(q) ||
-          a.role.toLowerCase().includes(q) ||
-          a.bio.toLowerCase().includes(q) ||
-          a.bookTitle.toLowerCase().includes(q)
+          (a.name || '').toLowerCase().includes(q) ||
+          (a.role || '').toLowerCase().includes(q) ||
+          (a.bio || '').toLowerCase().includes(q) ||
+          (a.bookTitle || '').toLowerCase().includes(q)
       );
     }
 
-    filtered.sort((a, b) => a.name.localeCompare(b.name));
+    filtered.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
 
     const groups = {};
     filtered.forEach((author) => {
-      const letter = author.name.charAt(0).toUpperCase();
+      const nameStr = author.name || 'Author';
+      const letter = nameStr.charAt(0).toUpperCase();
       if (!groups[letter]) groups[letter] = [];
       groups[letter].push(author);
     });
 
     return groups;
-  }, [searchQuery, selectedRole]);
+  }, [AUTHORS, searchQuery, selectedRole]);
 
   return (
     <div className="min-h-screen bg-[#FAF8F6]">
@@ -99,13 +101,14 @@ export default function AuthorsListing() {
 
                 <div className="lg:col-span-10 divide-y divide-[#E7D9D3] border-y border-[#E7D9D3]">
                   {groupedAuthors[letter].map((author) => {
+                    const authorId = author._id || author.id;
                     const authorBooks = ALL_BOOKS.filter(
-                      (b) => b.authorId === author.id || b.author === author.name
+                      (b) => b.authorId === authorId || b.author === author.name
                     );
 
                     return (
                       <motion.div
-                        key={author.id}
+                        key={authorId}
                         initial={{ opacity: 0, y: 15 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, margin: '-40px' }}
@@ -113,9 +116,9 @@ export default function AuthorsListing() {
                         className="py-8 group flex flex-col md:flex-row md:items-center justify-between gap-6 hover:bg-[#F4EEEA]/50 px-4 -mx-4 rounded-xl transition-all duration-300"
                       >
                         <div className="flex items-center gap-6">
-                          <div className="w-16 h-16 rounded-full overflow-hidden border border-[#E7D9D3] group-hover:border-[#D3968C] transition-colors shrink-0">
+                          <div className="w-16 h-16 rounded-full overflow-hidden border border-[#E7D9D3] group-hover:border-[#D3968C] transition-colors shrink-0 bg-[#F4EEEA]">
                             <img
-                              src={author.avatarUrl}
+                              src={author.avatarUrl || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80'}
                               alt={author.name}
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                             />
@@ -123,17 +126,17 @@ export default function AuthorsListing() {
 
                           <div className="space-y-1">
                             <Link
-                              to={`/authors/${author.id}`}
+                              to={`/authors/${authorId}`}
                               className="font-editorial-serif text-2xl font-bold text-[#2B2B2B] hover:text-[#C98579] transition-colors inline-flex items-center gap-2"
                             >
                               {author.name}
                               <ArrowUpRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity text-[#D3968C]" />
                             </Link>
                             <p className="text-xs font-mono uppercase tracking-wider text-[#6E6A67]">
-                              {author.role}
+                              {author.role || 'Verified Author'}
                             </p>
                             <p className="text-xs text-[#6E6A67] max-w-md line-clamp-1 italic">
-                              "{author.bio}"
+                              "{author.bio || 'Author on BookVerse Studio'}"
                             </p>
                           </div>
                         </div>
@@ -142,19 +145,19 @@ export default function AuthorsListing() {
                           <div className="text-left md:text-right">
                             <span className="text-xs text-[#6E6A67] block">Key Work</span>
                             <span className="font-editorial-serif text-sm font-semibold text-[#2B2B2B]">
-                              {author.bookTitle}
+                              {author.bookTitle || (authorBooks[0]?.title) || 'Featured Title'}
                             </span>
                           </div>
 
                           <div className="text-right">
                             <span className="text-xs text-[#6E6A67] block">Followers</span>
                             <span className="font-mono text-xs font-semibold text-[#2B2B2B]">
-                              {author.followers}
+                              {author.followers || '1.2k'}
                             </span>
                           </div>
 
                           <Link
-                            to={`/authors/${author.id}`}
+                            to={`/authors/${authorId}`}
                             className="px-4 py-2 rounded-full border border-[#E7D9D3] text-xs font-medium text-[#2B2B2B] group-hover:bg-[#2B2B2B] group-hover:text-[#FAF8F6] group-hover:border-[#2B2B2B] transition-all duration-300"
                           >
                             View Profile

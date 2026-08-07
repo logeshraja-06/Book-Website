@@ -21,12 +21,12 @@ export default function PublisherLoginPage() {
     setErrorMessage('');
 
     try {
-      await login(email, password, 'publisher');
+      await login(email.trim(), password);
       setIsLoading(false);
       navigate('/publisher', { replace: true });
     } catch (err) {
       setIsLoading(false);
-      setErrorMessage(err.message || 'Publisher login failed.');
+      setErrorMessage(err.message || 'Invalid email or password.');
     }
   };
 

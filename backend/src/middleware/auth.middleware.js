@@ -7,7 +7,12 @@ const asyncHandler = require('./asyncHandler');
 const verifyToken = asyncHandler(async (req, res, next) => {
   let token;
 
-  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+  // 1. Check HTTP-Only Cookie
+  if (req.cookies && req.cookies.bookverse_token) {
+    token = req.cookies.bookverse_token;
+  }
+  // 2. Check Authorization Bearer Header Fallback
+  else if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     token = req.headers.authorization.split(' ')[1];
   }
 

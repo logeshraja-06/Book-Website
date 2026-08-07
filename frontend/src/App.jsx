@@ -20,7 +20,8 @@ import BlogPage from './pages/public/BlogPage';
 import LoginPage from './pages/auth/LoginPage';
 import PublisherLoginPage from './pages/auth/PublisherLoginPage';
 
-import RegisterPage from './pages/auth/RegisterPage';
+import ReaderRegisterPage from './pages/auth/ReaderRegisterPage';
+import AuthorRegisterPage from './pages/auth/AuthorRegisterPage';
 
 // Reader Module Imports ("My Shelf")
 import ReaderLayout from './components/layout/ReaderLayout';
@@ -76,9 +77,11 @@ export default function App() {
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/blog" element={<BlogPage />} />
             
-            {/* Shared Reader/Author Login & Register */}
+            {/* Dedicated Registration Pages */}
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/register/reader" element={<ReaderRegisterPage />} />
+            <Route path="/register/author" element={<AuthorRegisterPage />} />
+            <Route path="/register" element={<Navigate to="/register/reader" replace />} />
 
             {/* Publisher Internal Login */}
             <Route path="/publisher/login" element={<PublisherLoginPage />} />

@@ -155,13 +155,13 @@ export default function BookReview() {
                         const fileId = book.manuscriptFileId || book.id || book._id;
                         const res = await apiFetch(`/files/manuscript/${fileId}/token`);
                         const downloadUrl = res.data?.downloadUrl
-                          ? `http://localhost:5000${res.data.downloadUrl}`
-                          : (book.manuscriptUrl.startsWith('http') ? book.manuscriptUrl : `http://localhost:5000${book.manuscriptUrl}`);
+                          ? `http://localhost:5001${res.data.downloadUrl}`
+                          : (book.manuscriptUrl.startsWith('http') ? book.manuscriptUrl : `http://localhost:5001${book.manuscriptUrl}`);
                         window.open(downloadUrl, '_blank');
                       } catch (err) {
                         const directUrl = book.manuscriptUrl.startsWith('http')
                           ? book.manuscriptUrl
-                          : `http://localhost:5000${book.manuscriptUrl}`;
+                          : `http://localhost:5001${book.manuscriptUrl}`;
                         window.open(directUrl, '_blank');
                       }
                     }}

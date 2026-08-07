@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
 
 const AuthContext = createContext(null);
 
@@ -32,7 +32,7 @@ const DEFAULT_USERS = {
 };
 
 /**
- * Utility helper for authenticated API requests
+ * Utility helper for API requests with cookie support
  */
 export async function apiFetch(endpoint, options = {}) {
   const token = localStorage.getItem('bookverse_token');
@@ -49,7 +49,12 @@ export async function apiFetch(endpoint, options = {}) {
   }
 
   const url = endpoint.startsWith('http') ? endpoint : `${API_BASE_URL}${endpoint}`;
-  const response = await fetch(url, { ...options, headers });
+  const response = await fetch(url, {
+    ...options,
+    headers,
+    credentials: 'include' // Always include HTTP-Only cookies
+  });
+
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
@@ -66,21 +71,16 @@ export function AuthProvider({ children }) {
       try {
         return JSON.parse(savedUser);
       } catch (e) {
-        console.error('Failed to parse saved user:', e);
+        // ignore
       }
     }
-    return DEFAULT_USERS.reader;
+    return null;
   });
+  const [loading, setLoading] = useState(true);
 
-  const [token, setToken] = useState(() => localStorage.getItem('bookverse_token') || null);
-  const [loading, setLoading] = useState(false);
-
-  // Rehydrate current user profile from backend on app load if token exists
+  // Rehydrate current user profile from backend on app load via GET /auth/me
   useEffect(() => {
     async function rehydrateUser() {
-      const storedToken = localStorage.getItem('bookverse_token');
-      if (!storedToken) return;
-
       try {
         const res = await apiFetch('/auth/me');
         if (res.success && res.data?.user) {
@@ -90,7 +90,9 @@ export function AuthProvider({ children }) {
             name: user.name,
             email: user.email,
             role: user.role,
-            avatarUrl: user.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
+            country: user.country || 'India',
+            penName: user.penName || '',
+            avatarUrl: user.avatarUrl || user.profileImage || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
             bio: user.bio || '',
             handle: user.handle || ''
           };
@@ -98,101 +100,116 @@ export function AuthProvider({ children }) {
           localStorage.setItem('bookverse_user', JSON.stringify(formattedUser));
         }
       } catch (err) {
-        console.warn('Backend user rehydration notice:', err.message);
+        // Session expired or unauthenticated
+      } finally {
+        setLoading(false);
       }
     }
 
     rehydrateUser();
   }, []);
 
-  const login = async (emailOrRole = 'reader', password, customName) => {
+  const login = async (email, password) => {
     setLoading(true);
     try {
-      let email = emailOrRole;
-      let pass = password || 'password123';
-
-      if (DEFAULT_USERS[emailOrRole]) {
-        email = DEFAULT_USERS[emailOrRole].email;
-      }
-
       const res = await apiFetch('/auth/login', {
         method: 'POST',
-        body: JSON.stringify({ email, password: pass })
+        body: JSON.stringify({ email: String(email).trim(), password })
       });
 
       if (res.success && res.data) {
         const { token: jwtToken, user } = res.data;
+        if (jwtToken) {
+          localStorage.setItem('bookverse_token', jwtToken);
+        }
+
         const userProfile = {
           id: user._id || user.id,
           name: user.name,
           email: user.email,
           role: user.role,
-          avatarUrl: user.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
+          country: user.country || 'India',
+          penName: user.penName || '',
+          avatarUrl: user.avatarUrl || user.profileImage || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
           bio: user.bio || '',
           handle: user.handle || ''
         };
 
-        setToken(jwtToken);
         setCurrentUser(userProfile);
-        localStorage.setItem('bookverse_token', jwtToken);
         localStorage.setItem('bookverse_user', JSON.stringify(userProfile));
         setLoading(false);
         return userProfile;
       }
     } catch (err) {
-      console.warn('[Auth API Fallback]:', err.message);
-      // Fallback for mock role clicks if backend unavailable
-      const roleKey = DEFAULT_USERS[emailOrRole] ? emailOrRole : 'reader';
-      const userProfile = {
-        ...(DEFAULT_USERS[roleKey] || DEFAULT_USERS.reader),
-        email: typeof emailOrRole === 'string' && emailOrRole.includes('@') ? emailOrRole : DEFAULT_USERS[roleKey].email,
-        name: customName || DEFAULT_USERS[roleKey].name,
-        role: roleKey
-      };
-      setCurrentUser(userProfile);
-      localStorage.setItem('bookverse_user', JSON.stringify(userProfile));
       setLoading(false);
-      return userProfile;
+      throw err;
     }
   };
 
-  const register = async (name, email, password, role = 'reader') => {
+  const registerReader = async (readerData) => {
     setLoading(true);
-    const res = await apiFetch('/auth/register', {
-      method: 'POST',
-      body: JSON.stringify({ name, email, password, role })
-    });
+    try {
+      const res = await apiFetch('/auth/register/reader', {
+        method: 'POST',
+        body: JSON.stringify(readerData)
+      });
 
-    if (res.success && res.data) {
-      const { token: jwtToken, user } = res.data;
-      const userProfile = {
-        id: user._id || user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        avatarUrl: user.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
-        bio: user.bio || '',
-        handle: user.handle || ''
-      };
-
-      setToken(jwtToken);
-      setCurrentUser(userProfile);
-      localStorage.setItem('bookverse_token', jwtToken);
-      localStorage.setItem('bookverse_user', JSON.stringify(userProfile));
       setLoading(false);
-      return userProfile;
+      return res;
+    } catch (err) {
+      setLoading(false);
+      throw err;
     }
   };
 
-  const logout = () => {
-    setCurrentUser(null);
-    setToken(null);
+  const registerAuthor = async (authorData) => {
+    setLoading(true);
+    try {
+      const res = await apiFetch('/auth/register/author', {
+        method: 'POST',
+        body: JSON.stringify(authorData)
+      });
+
+      setLoading(false);
+      return res;
+    } catch (err) {
+      setLoading(false);
+      throw err;
+    }
+  };
+
+  const updateCurrentUser = (updates) => {
+    setCurrentUser((prev) => {
+      const updated = { ...(prev || {}), ...updates };
+      localStorage.setItem('bookverse_user', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+  const logout = async () => {
+    try {
+      await apiFetch('/auth/logout', { method: 'POST' });
+    } catch (e) {
+      // ignore
+    }
     localStorage.removeItem('bookverse_token');
     localStorage.removeItem('bookverse_user');
+    setCurrentUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ currentUser, token, loading, login, register, logout, DEFAULT_USERS }}>
+    <AuthContext.Provider
+      value={{
+        currentUser,
+        loading,
+        login,
+        registerReader,
+        registerAuthor,
+        updateCurrentUser,
+        logout,
+        DEFAULT_USERS
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

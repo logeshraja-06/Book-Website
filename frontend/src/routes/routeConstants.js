@@ -1,5 +1,5 @@
 // Centralized Route Path Constants
-export className RoutePaths {
+export class RoutePaths {
   // Public
   static HOME = '/';
   static BOOKS = '/books';

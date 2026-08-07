@@ -1,39 +1,67 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams, Link } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { BookOpen, ArrowRight, User, Feather } from 'lucide-react';
+import { BookOpen, ArrowRight, CheckCircle2, User } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
 
-export default function RegisterPage() {
+const COUNTRIES = [
+  'India',
+  'United States',
+  'United Kingdom',
+  'Canada',
+  'Australia',
+  'Singapore',
+  'Germany',
+  'United Arab Emirates',
+  'Other'
+];
+
+export default function ReaderRegisterPage() {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const { register } = useAuth();
-
-  const initialRoleParam = searchParams.get('role');
-  const [selectedRole, setSelectedRole] = useState(
-    initialRoleParam === 'author' ? 'author' : 'reader'
-  );
-
-  useEffect(() => {
-    const roleParam = searchParams.get('role');
-    if (roleParam === 'author' || roleParam === 'reader') {
-      setSelectedRole(roleParam);
-    }
-  }, [searchParams]);
+  const { registerReader } = useAuth();
 
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    country: 'India',
+    acceptTerms: false
   });
 
   const [touched, setTouched] = useState({});
   const [errors, setErrors] = useState({});
   const [serverError, setServerError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  // Calculate Password Strength (0 to 100%)
+  const calculatePasswordStrength = (pass) => {
+    if (!pass) return 0;
+    let score = 0;
+    if (pass.length >= 8) score += 30;
+    if (pass.length >= 12) score += 20;
+    if (/[A-Z]/.test(pass)) score += 20;
+    if (/[0-9]/.test(pass)) score += 15;
+    if (/[^A-Za-z0-9]/.test(pass)) score += 15;
+    return Math.min(100, score);
+  };
+
+  const passwordStrength = calculatePasswordStrength(formData.password);
+
+  const getStrengthLabel = (score) => {
+    if (score === 0) return '';
+    if (score < 40) return 'Weak';
+    if (score < 70) return 'Moderate';
+    return 'Strong';
+  };
+
+  const getStrengthColor = (score) => {
+    if (score < 40) return 'bg-red-400';
+    if (score < 70) return 'bg-amber-400';
+    return 'bg-emerald-500';
+  };
 
   const validateField = (field, values = formData) => {
     let err = '';
@@ -66,6 +94,12 @@ export default function RegisterPage() {
       }
     }
 
+    if (field === 'acceptTerms') {
+      if (!values.acceptTerms) {
+        err = 'You must accept the terms to create an account.';
+      }
+    }
+
     return err;
   };
 
@@ -91,11 +125,6 @@ export default function RegisterPage() {
     setErrors((prev) => ({ ...prev, [field]: err }));
   };
 
-  const handleRoleChange = (role) => {
-    setSelectedRole(role);
-    setServerError('');
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setServerError('');
@@ -104,7 +133,8 @@ export default function RegisterPage() {
       name: true,
       email: true,
       password: true,
-      confirmPassword: true
+      confirmPassword: true,
+      acceptTerms: true
     };
     setTouched(newTouched);
 
@@ -112,36 +142,32 @@ export default function RegisterPage() {
     const emailErr = validateField('email');
     const passErr = validateField('password');
     const confirmErr = validateField('confirmPassword');
+    const termsErr = validateField('acceptTerms');
 
-    const newErrors = {
+    setErrors({
       name: nameErr,
       email: emailErr,
       password: passErr,
-      confirmPassword: confirmErr
-    };
-    setErrors(newErrors);
+      confirmPassword: confirmErr,
+      acceptTerms: termsErr
+    });
 
-    if (nameErr || emailErr || passErr || confirmErr) {
+    if (nameErr || emailErr || passErr || confirmErr || termsErr) {
       return;
     }
 
     setIsLoading(true);
 
     try {
-      const user = await register(
-        formData.name.trim(),
-        formData.email.trim(),
-        formData.password,
-        selectedRole
-      );
+      await registerReader({
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        password: formData.password,
+        country: formData.country
+      });
 
       setIsLoading(false);
-
-      if (user?.role === 'author' || selectedRole === 'author') {
-        navigate('/author/dashboard', { replace: true });
-      } else {
-        navigate('/my-shelf', { replace: true });
-      }
+      navigate('/login?registered=reader', { replace: true });
     } catch (err) {
       setIsLoading(false);
       const msg = err.message || '';
@@ -159,18 +185,16 @@ export default function RegisterPage() {
         {/* Header Branding */}
         <div className="text-center space-y-3">
           <div className="w-12 h-12 rounded-2xl bg-[#F4EEEA] border border-[#E7D9D3] flex items-center justify-center text-[#2B2B2B] mx-auto">
-            <BookOpen className="w-6 h-6 text-[#D3968C]" />
+            <User className="w-6 h-6 text-[#D3968C]" />
           </div>
           <span className="text-xs uppercase tracking-widest font-mono text-[#D3968C] font-semibold block">
-            Join BookVerse Studio
+            Reader Registration
           </span>
           <h1 className="font-editorial-serif text-4xl text-[#2B2B2B] font-normal">
-            Create Your Account
+            Create Reader Account
           </h1>
           <p className="text-xs text-[#6E6A67]">
-            {selectedRole === 'reader'
-              ? 'Start building your personal digital library.'
-              : 'Publish your manuscripts through our Writing Studio.'}
+            Start building your personal digital shelf and discover timeless literature.
           </p>
         </div>
 
@@ -179,51 +203,15 @@ export default function RegisterPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="bg-[#FFFFFF] rounded-3xl p-8 sm:p-10 border border-[#E7D9D3] shadow-sm space-y-8"
+          className="bg-[#FFFFFF] rounded-3xl p-8 sm:p-10 border border-[#E7D9D3] shadow-sm space-y-6"
         >
-          {/* Reader / Author Role Switcher */}
-          <div className="space-y-2">
-            <label className="text-[11px] uppercase font-mono tracking-widest text-[#6E6A67] block text-center font-semibold">
-              Select Account Type
-            </label>
-            <div className="grid grid-cols-2 gap-2 p-1.5 rounded-2xl bg-[#F4EEEA] border border-[#E7D9D3]">
-              <button
-                type="button"
-                onClick={() => handleRoleChange('reader')}
-                className={`py-2.5 rounded-xl text-xs font-mono uppercase tracking-wider transition-all flex items-center justify-center gap-2 ${
-                  selectedRole === 'reader'
-                    ? 'bg-[#FFFFFF] text-[#2B2B2B] font-semibold shadow-sm border border-[#E7D9D3]'
-                    : 'text-[#6E6A67] hover:text-[#2B2B2B]'
-                }`}
-              >
-                <User className="w-4 h-4 text-[#D3968C]" />
-                <span>Reader</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleRoleChange('author')}
-                className={`py-2.5 rounded-xl text-xs font-mono uppercase tracking-wider transition-all flex items-center justify-center gap-2 ${
-                  selectedRole === 'author'
-                    ? 'bg-[#FFFFFF] text-[#2B2B2B] font-semibold shadow-sm border border-[#E7D9D3]'
-                    : 'text-[#6E6A67] hover:text-[#2B2B2B]'
-                }`}
-              >
-                <Feather className="w-4 h-4 text-[#D3968C]" />
-                <span>Author</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Duplicate Email or Server Banner */}
           {serverError && (
             <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-xs text-red-600 text-center font-mono">
               {serverError}
             </div>
           )}
 
-          {/* Registration Form */}
-          <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+          <form onSubmit={handleSubmit} className="space-y-5" noValidate>
             <Input
               label="Full Name"
               type="text"
@@ -246,16 +234,34 @@ export default function RegisterPage() {
               placeholder="e.g. ananya@bookverse.in"
             />
 
-            <Input
-              label="Password"
-              type="password"
-              required
-              value={formData.password}
-              onChange={(e) => handleChange('password', e.target.value)}
-              onBlur={() => handleBlur('password')}
-              error={touched.password ? errors.password : ''}
-              placeholder="Min. 8 characters"
-            />
+            <div className="space-y-2">
+              <Input
+                label="Password"
+                type="password"
+                required
+                value={formData.password}
+                onChange={(e) => handleChange('password', e.target.value)}
+                onBlur={() => handleBlur('password')}
+                error={touched.password ? errors.password : ''}
+                placeholder="Min. 8 characters"
+              />
+
+              {/* Password Strength Meter */}
+              {formData.password && (
+                <div className="space-y-1 pt-1">
+                  <div className="flex justify-between items-center text-[10px] font-mono text-[#6E6A67]">
+                    <span>Password Strength:</span>
+                    <span className="font-semibold">{getStrengthLabel(passwordStrength)}</span>
+                  </div>
+                  <div className="w-full h-1 bg-[#F4EEEA] rounded-full overflow-hidden">
+                    <div
+                      className={`h-full transition-all duration-300 ${getStrengthColor(passwordStrength)}`}
+                      style={{ width: `${passwordStrength}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
 
             <Input
               label="Confirm Password"
@@ -268,32 +274,50 @@ export default function RegisterPage() {
               placeholder="Re-enter your password"
             />
 
+            <Input
+              label="Country"
+              type="select"
+              options={COUNTRIES}
+              value={formData.country}
+              onChange={(e) => handleChange('country', e.target.value)}
+            />
+
+            <div className="space-y-1">
+              <label className="flex items-start gap-2.5 cursor-pointer text-xs font-mono text-[#6E6A67]">
+                <input
+                  type="checkbox"
+                  checked={formData.acceptTerms}
+                  onChange={(e) => handleChange('acceptTerms', e.target.checked)}
+                  className="mt-0.5 rounded border-[#E7D9D3] text-[#D3968C] focus:ring-[#D3968C]"
+                />
+                <span>
+                  I accept the BookVerse Studio Terms of Service & Privacy Policy.
+                </span>
+              </label>
+              {touched.acceptTerms && errors.acceptTerms && (
+                <p className="text-[11px] font-mono text-[#C98579] font-medium">
+                  {errors.acceptTerms}
+                </p>
+              )}
+            </div>
+
             <Button
               type="submit"
               size="lg"
               disabled={isLoading}
-              className="w-full justify-center"
+              className="w-full justify-center mt-2"
               icon={ArrowRight}
             >
-              {isLoading
-                ? 'Creating Account…'
-                : `Create ${selectedRole === 'author' ? 'Author' : 'Reader'} Account`}
+              {isLoading ? 'Creating Reader Account…' : 'Create Reader Account'}
             </Button>
           </form>
 
-          {/* Footer Terms & Navigation */}
-          <div className="pt-4 border-t border-[#E7D9D3] text-center space-y-3">
-            <p className="text-xs text-[#6E6A67]">
+          <div className="pt-4 border-t border-[#E7D9D3] text-center text-xs font-mono text-[#6E6A67]">
+            <p>
               Already have an account?{' '}
-              <Link
-                to="/login"
-                className="text-[#2B2B2B] font-semibold hover:text-[#D3968C] underline"
-              >
+              <Link to="/login" className="text-[#2B2B2B] font-semibold hover:text-[#D3968C] underline">
                 Sign In
               </Link>
-            </p>
-            <p className="text-[11px] font-mono text-[#6E6A67]/80">
-              By creating an account, you agree to our editorial and publishing guidelines.
             </p>
           </div>
         </motion.div>

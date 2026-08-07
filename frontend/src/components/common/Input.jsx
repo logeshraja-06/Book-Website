@@ -1,17 +1,22 @@
-export default function Input({
-  label,
-  type = 'text',
-  value,
-  onChange,
-  placeholder,
-  required = false,
-  rows = 4,
-  options = [],
-  error,
-  hint,
-  className = '',
-  ...props
-}) {
+import { forwardRef } from 'react';
+
+const Input = forwardRef(function Input(
+  {
+    label,
+    type = 'text',
+    value,
+    onChange,
+    placeholder,
+    required = false,
+    rows = 4,
+    options = [],
+    error,
+    hint,
+    className = '',
+    ...props
+  },
+  ref
+) {
   const isSelect = type === 'select';
   const isTextarea = type === 'textarea';
 
@@ -25,6 +30,7 @@ export default function Input({
 
       {isTextarea ? (
         <textarea
+          ref={ref}
           rows={rows}
           required={required}
           value={value}
@@ -35,6 +41,7 @@ export default function Input({
         />
       ) : isSelect ? (
         <select
+          ref={ref}
           required={required}
           value={value}
           onChange={onChange}
@@ -49,6 +56,7 @@ export default function Input({
         </select>
       ) : (
         <input
+          ref={ref}
           type={type}
           required={required}
           value={value}
@@ -63,4 +71,6 @@ export default function Input({
       {error && <p className="text-[11px] font-mono text-[#C98579] font-medium">{error}</p>}
     </div>
   );
-}
+});
+
+export default Input;
