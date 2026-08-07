@@ -12,6 +12,7 @@ import {
   BookOpen,
 } from 'lucide-react';
 import { useData } from '../../context/DataContext';
+import { apiFetch } from '../../context/AuthContext';
 
 export default function BookReview() {
   const { id } = useParams();
@@ -147,14 +148,27 @@ export default function BookReview() {
                 </div>
 
                 {book.manuscriptUrl ? (
-                  <a
-                    href={book.manuscriptUrl}
-                    target="_blank"
-                    rel="noreferrer"
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      try {
+                        const fileId = book.manuscriptFileId || book.id || book._id;
+                        const res = await apiFetch(`/files/manuscript/${fileId}/token`);
+                        const downloadUrl = res.data?.downloadUrl
+                          ? `http://localhost:5000${res.data.downloadUrl}`
+                          : (book.manuscriptUrl.startsWith('http') ? book.manuscriptUrl : `http://localhost:5000${book.manuscriptUrl}`);
+                        window.open(downloadUrl, '_blank');
+                      } catch (err) {
+                        const directUrl = book.manuscriptUrl.startsWith('http')
+                          ? book.manuscriptUrl
+                          : `http://localhost:5000${book.manuscriptUrl}`;
+                        window.open(directUrl, '_blank');
+                      }
+                    }}
                     className="text-[10px] font-mono text-[#D3968C] uppercase tracking-wider font-semibold hover:underline"
                   >
                     Open & Review
-                  </a>
+                  </button>
                 ) : (
                   <span className="text-[10px] font-mono text-[#6E6A67] uppercase tracking-wider">
                     No File Attached

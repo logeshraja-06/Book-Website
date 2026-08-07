@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ShieldCheck, Layers, ArrowRight, Lock } from 'lucide-react';
+import { ShieldCheck, ArrowRight, Lock } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
@@ -11,18 +11,23 @@ export default function PublisherLoginPage() {
   const { login, DEFAULT_USERS } = useAuth();
 
   const [email, setEmail] = useState(DEFAULT_USERS.publisher.email);
-  const [password, setPassword] = useState('••••••••');
+  const [password, setPassword] = useState('password123');
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    setErrorMessage('');
 
-    setTimeout(() => {
-      login('publisher', email, 'Editorial Control Desk');
+    try {
+      await login(email, password, 'publisher');
       setIsLoading(false);
       navigate('/publisher', { replace: true });
-    }, 400);
+    } catch (err) {
+      setIsLoading(false);
+      setErrorMessage(err.message || 'Publisher login failed.');
+    }
   };
 
   return (
@@ -56,6 +61,12 @@ export default function PublisherLoginPage() {
             <Lock className="w-4 h-4 text-[#D3968C] shrink-0" />
             <span>Authorized Editorial Personnel Only</span>
           </div>
+
+          {errorMessage && (
+            <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-xs text-red-600 text-center font-mono">
+              {errorMessage}
+            </div>
+          )}
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">

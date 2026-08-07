@@ -16,6 +16,7 @@ const readerRoutes = require('./routes/reader.routes');
 const studioRoutes = require('./routes/studio.routes');
 const publisherRoutes = require('./routes/publisher.routes');
 const adminRoutes = require('./routes/admin.routes');
+const fileRoutes = require('./routes/file.routes');
 
 const app = express();
 
@@ -33,7 +34,7 @@ app.use(
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        callback(null, true); // Allow during dev
+        callback(null, true);
       }
     },
     credentials: true,
@@ -73,6 +74,7 @@ app.use('/api/reader', readerRoutes);
 app.use('/api/studio', studioRoutes);
 app.use('/api/editorial', publisherRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/files', fileRoutes);
 
 // Fallback 404 Route
 app.use((req, res) => {

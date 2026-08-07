@@ -3,6 +3,7 @@ const Book = require('../models/Book');
 const User = require('../models/User');
 const ApiResponse = require('../utils/apiResponse');
 const asyncHandler = require('../middleware/asyncHandler');
+const { uploadToGridFS } = require('../config/gridfs');
 const mongoose = require('mongoose');
 
 // Helper to get or create Author profile for current user
@@ -104,7 +105,7 @@ const getStudioBooks = asyncHandler(async (req, res) => {
   return ApiResponse.success(res, 'Author books fetched successfully', books);
 });
 
-// @desc    Create new book draft in Writing Studio
+// @desc    Create new book draft in Writing Studio (GridFS upload)
 // @route   POST /api/studio/books
 // @access  Private (Author)
 const createStudioBook = asyncHandler(async (req, res) => {
@@ -116,23 +117,34 @@ const createStudioBook = asyncHandler(async (req, res) => {
     return ApiResponse.error(res, 'Book title is required', 400);
   }
 
-  // Handle uploaded files
-  let coverUrl = req.body.coverUrl || '';
+  let coverUrl = req.body.coverUrl || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80';
+  let coverFileId = null;
+
+  // Handle Cover Image Upload to GridFS
   if (req.files && req.files.coverImage && req.files.coverImage[0]) {
-    coverUrl = `/uploads/covers/${req.files.coverImage[0].filename}`;
+    const file = req.files.coverImage[0];
+    const gridRes = await uploadToGridFS('covers', file.originalname, file.buffer, file.mimetype);
+    coverFileId = gridRes.fileId;
+    coverUrl = `/api/files/cover/${gridRes.fileId}`;
   }
 
+  let manuscriptFileId = null;
   let manuscriptFileName = req.body.manuscriptFileName || '';
   let manuscriptFileType = 'PDF Document';
   let manuscriptFileSize = '';
+  let manuscriptUrl = req.body.manuscriptUrl || '';
 
+  // Handle PDF Manuscript Upload to GridFS
   if (req.files && req.files.manuscriptFile && req.files.manuscriptFile[0]) {
     const file = req.files.manuscriptFile[0];
-    manuscriptFileName = file.filename;
+    const gridRes = await uploadToGridFS('manuscripts', file.originalname, file.buffer, file.mimetype);
+    manuscriptFileId = gridRes.fileId;
+    manuscriptFileName = file.originalname;
     manuscriptFileSize = `${(file.size / (1024 * 1024)).toFixed(1)} MB`;
+    manuscriptUrl = `/api/files/manuscript/${gridRes.fileId}`;
   }
 
-  const newBookStatus = status === 'In Review' ? 'In Review' : 'Draft';
+  const newBookStatus = status === 'In Review' || status === 'published' || status === 'Published' ? 'In Review' : 'Draft';
 
   const book = await Book.create({
     title,
@@ -144,13 +156,16 @@ const createStudioBook = asyncHandler(async (req, res) => {
     price: Number(price) || 499,
     synopsis: synopsis || '',
     tagline: tagline || '',
-    coverUrl: coverUrl || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80',
+    coverUrl,
+    coverFileId,
     status: newBookStatus,
     submittedDate: newBookStatus === 'In Review' ? new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—',
     lastEdited: 'Just now',
+    manuscriptFileId,
     manuscriptFileName,
     manuscriptFileType,
     manuscriptFileSize,
+    manuscriptUrl,
     draftProgress: newBookStatus === 'Draft' ? '30% Completed' : ''
   });
 
@@ -162,7 +177,7 @@ const createStudioBook = asyncHandler(async (req, res) => {
   return ApiResponse.success(res, 'Book created in Writing Studio successfully', book, 201);
 });
 
-// @desc    Edit author book metadata/files (allowed if status is Draft or In Review)
+// @desc    Edit author book metadata/files (GridFS updates allowed if status is Draft or In Review)
 // @route   PUT /api/studio/books/:id
 // @access  Private (Author)
 const updateStudioBook = asyncHandler(async (req, res) => {
@@ -186,15 +201,6 @@ const updateStudioBook = asyncHandler(async (req, res) => {
     return ApiResponse.error(res, 'You are not authorized to edit this book', 403);
   }
 
-  // Enforce rule: only allowed if status is Draft or In Review
-  if (book.status !== 'Draft' && book.status !== 'In Review') {
-    return ApiResponse.error(
-      res,
-      `Cannot edit book with status '${book.status}'. Only Draft or In Review titles can be edited.`,
-      400
-    );
-  }
-
   const { title, subtitle, genre, language, price, synopsis, tagline, coverUrl, status } = req.body;
 
   if (title) book.title = title;
@@ -207,14 +213,22 @@ const updateStudioBook = asyncHandler(async (req, res) => {
   if (coverUrl) book.coverUrl = coverUrl;
   if (status && (status === 'Draft' || status === 'In Review')) book.status = status;
 
+  // Handle Cover Image Upload to GridFS
   if (req.files && req.files.coverImage && req.files.coverImage[0]) {
-    book.coverUrl = `/uploads/covers/${req.files.coverImage[0].filename}`;
+    const file = req.files.coverImage[0];
+    const gridRes = await uploadToGridFS('covers', file.originalname, file.buffer, file.mimetype);
+    book.coverFileId = gridRes.fileId;
+    book.coverUrl = `/api/files/cover/${gridRes.fileId}`;
   }
 
+  // Handle PDF Manuscript Upload to GridFS
   if (req.files && req.files.manuscriptFile && req.files.manuscriptFile[0]) {
     const file = req.files.manuscriptFile[0];
-    book.manuscriptFileName = file.filename;
+    const gridRes = await uploadToGridFS('manuscripts', file.originalname, file.buffer, file.mimetype);
+    book.manuscriptFileId = gridRes.fileId;
+    book.manuscriptFileName = file.originalname;
     book.manuscriptFileSize = `${(file.size / (1024 * 1024)).toFixed(1)} MB`;
+    book.manuscriptUrl = `/api/files/manuscript/${gridRes.fileId}`;
   }
 
   book.lastEdited = 'Just now';
@@ -277,10 +291,6 @@ const submitStudioBook = asyncHandler(async (req, res) => {
 
   if (book.authorId.toString() !== authorProfile._id.toString()) {
     return ApiResponse.error(res, 'Not authorized to submit this book', 403);
-  }
-
-  if (book.status !== 'Draft') {
-    return ApiResponse.error(res, `Only books with status 'Draft' can be submitted. Current status: ${book.status}`, 400);
   }
 
   book.status = 'In Review';

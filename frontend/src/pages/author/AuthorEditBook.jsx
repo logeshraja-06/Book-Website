@@ -52,6 +52,8 @@ export default function AuthorEditBook() {
       const fileUrl = URL.createObjectURL(file);
       setFormData((prev) => ({
         ...prev,
+        pdfFile: file,
+        manuscriptFile: file,
         pdfFileName: file.name,
         pdfFileSize: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
         manuscriptUrl: fileUrl,
@@ -60,10 +62,10 @@ export default function AuthorEditBook() {
     }
   };
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
     if (book) {
-      updateBook(book.id, {
+      await updateBook(book.id || book._id, {
         title: formData.title,
         synopsis: formData.synopsis,
         genre: formData.genre,
@@ -73,6 +75,8 @@ export default function AuthorEditBook() {
         manuscriptFileName: formData.pdfFileName,
         manuscriptFileSize: formData.pdfFileSize,
         manuscriptUrl: formData.manuscriptUrl,
+        manuscriptFile: formData.manuscriptFile || null,
+        coverFile: formData.coverFile || null,
       });
       showToast('✓ Book metadata updated successfully');
       setTimeout(() => navigate('/author/books'), 1200);

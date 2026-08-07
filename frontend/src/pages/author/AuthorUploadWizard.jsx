@@ -36,7 +36,7 @@ export default function AuthorUploadWizard() {
     if (step > 1) setStep((prev) => prev - 1);
   };
 
-  const handlePublish = () => {
+  const handlePublish = async () => {
     const newBook = {
       title: formData.title || 'Untitled Manuscript',
       author: currentUser?.name || 'Kalki Krishnamurthy',
@@ -45,7 +45,10 @@ export default function AuthorUploadWizard() {
       synopsis: formData.description || 'No description provided.',
       price: Number(formData.price) || 499,
       coverUrl: coverPreview,
-      status: 'published',
+      coverFile: formData.coverFile || null,
+      pdfFile: formData.pdfFile || null,
+      manuscriptFile: formData.pdfFile || null,
+      status: 'In Review',
       rating: 5.0,
       reviewsCount: 0,
       publishYear: new Date().getFullYear(),
@@ -58,7 +61,7 @@ export default function AuthorUploadWizard() {
       manuscriptUrl: formData.manuscriptUrl || null,
     };
 
-    addBook(newBook);
+    await addBook(newBook);
     navigate('/author/books');
   };
 
@@ -69,6 +72,7 @@ export default function AuthorUploadWizard() {
       const reader = new FileReader();
       reader.onloadend = () => setCoverPreview(reader.result);
       reader.readAsDataURL(file);
+      setFormData((prev) => ({ ...prev, coverFile: file }));
     }
   };
 

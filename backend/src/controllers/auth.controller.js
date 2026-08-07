@@ -14,24 +14,29 @@ const register = asyncHandler(async (req, res) => {
     return ApiResponse.error(res, 'Name, email, and password are required', 400);
   }
 
-  // Prevent self-registration for publisher/admin
-  let userRole = role || 'reader';
-  if (userRole === 'publisher' || userRole === 'admin') {
-    return ApiResponse.error(res, 'Cannot self-register as publisher or admin', 403);
+  if (password.length < 8) {
+    return ApiResponse.error(res, 'Password must be at least 8 characters long', 400);
   }
 
-  const existingUser = await User.findOne({ email });
+  // Server-side strict role restriction
+  let userRole = role || 'reader';
+  if (userRole !== 'reader' && userRole !== 'author') {
+    return ApiResponse.error(res, 'Registration is restricted to reader or author role only', 400);
+  }
+
+  const existingUser = await User.findOne({ email: email.toLowerCase().trim() });
   if (existingUser) {
-    return ApiResponse.error(res, 'User already exists with this email', 400);
+    return ApiResponse.error(res, 'An account with this email already exists.', 409);
   }
 
   const user = await User.create({
     name,
-    email,
+    email: email.toLowerCase().trim(),
     password,
     role: userRole,
+    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
     bio: bio || '',
-    handle: handle || `@${email.split('@')[0]}`
+    handle: handle || `@${email.split('@')[0].toLowerCase()}`
   });
 
   // If registering as author, also create Author profile if not exists
@@ -41,9 +46,9 @@ const register = asyncHandler(async (req, res) => {
       await Author.create({
         name: user.name,
         userId: user._id,
-        bio: user.bio || 'BookVerse Author',
+        bio: user.bio || 'BookVerse Studio Author',
         handle: user.handle,
-        role: 'Verified Author'
+        role: 'Verified Studio Author'
       });
     }
   }
@@ -71,7 +76,7 @@ const login = asyncHandler(async (req, res) => {
     return ApiResponse.error(res, 'Email and password are required', 400);
   }
 
-  const user = await User.findOne({ email }).select('+password');
+  const user = await User.findOne({ email: email.toLowerCase().trim() }).select('+password');
 
   if (!user || !(await user.matchPassword(password))) {
     return ApiResponse.error(res, 'Invalid credentials', 401);

@@ -9,28 +9,32 @@ import Button from '../../components/common/Button';
 export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login, DEFAULT_USERS } = useAuth();
+  const { login, register, DEFAULT_USERS } = useAuth();
 
   const [selectedRole, setSelectedRole] = useState('reader');
   const [email, setEmail] = useState(DEFAULT_USERS.reader.email);
-  const [password, setPassword] = useState('••••••••');
+  const [password, setPassword] = useState('password123');
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const from = location.state?.from?.pathname;
 
   const handleRoleChange = (role) => {
     setSelectedRole(role);
+    setErrorMessage('');
     if (DEFAULT_USERS[role]) {
       setEmail(DEFAULT_USERS[role].email);
+      setPassword('password123');
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    setErrorMessage('');
 
-    setTimeout(() => {
-      login(selectedRole, email);
+    try {
+      const user = await login(email, password, selectedRole);
       setIsLoading(false);
 
       if (from && !from.startsWith('/publisher')) {
@@ -38,12 +42,37 @@ export default function LoginPage() {
         return;
       }
 
-      if (selectedRole === 'author') {
+      if (user?.role === 'author' || selectedRole === 'author') {
         navigate('/author/dashboard', { replace: true });
       } else {
         navigate('/my-shelf', { replace: true });
       }
-    }, 400);
+    } catch (err) {
+      setIsLoading(false);
+      setErrorMessage(err.message || 'Login failed. Please check your credentials.');
+    }
+  };
+
+  const handleQuickRegister = async (role) => {
+    setIsLoading(true);
+    setErrorMessage('');
+    try {
+      const uniqueSuffix = Math.floor(1000 + Math.random() * 9000);
+      const name = role === 'author' ? `New Author ${uniqueSuffix}` : `New Reader ${uniqueSuffix}`;
+      const regEmail = role === 'author' ? `author${uniqueSuffix}@bookverse.in` : `reader${uniqueSuffix}@bookverse.in`;
+
+      await register(name, regEmail, 'password123', role);
+      setIsLoading(false);
+
+      if (role === 'author') {
+        navigate('/author/dashboard', { replace: true });
+      } else {
+        navigate('/my-shelf', { replace: true });
+      }
+    } catch (err) {
+      setIsLoading(false);
+      setErrorMessage(err.message || 'Registration failed.');
+    }
   };
 
   return (
@@ -107,6 +136,12 @@ export default function LoginPage() {
             </div>
           </div>
 
+          {errorMessage && (
+            <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-xs text-red-600 text-center font-mono">
+              {errorMessage}
+            </div>
+          )}
+
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
             <Input
@@ -148,29 +183,21 @@ export default function LoginPage() {
           <div className="pt-4 border-t border-[#E7D9D3] text-center space-y-2 text-xs font-mono text-[#6E6A67]">
             <p>
               New reader?{' '}
-              <button
-                type="button"
-                onClick={() => {
-                  login('reader', 'newreader@bookverse.in', 'New Reader');
-                  navigate('/my-shelf');
-                }}
+              <Link
+                to="/register?role=reader"
                 className="text-[#2B2B2B] font-semibold hover:text-[#D3968C] underline"
               >
                 Create a Reader Account
-              </button>
+              </Link>
             </p>
             <p>
               Want to publish?{' '}
-              <button
-                type="button"
-                onClick={() => {
-                  login('author', 'newauthor@bookverse.in', 'New Author');
-                  navigate('/author/dashboard');
-                }}
+              <Link
+                to="/register?role=author"
                 className="text-[#2B2B2B] font-semibold hover:text-[#D3968C] underline"
               >
                 Become an Author
-              </button>
+              </Link>
             </p>
           </div>
         </motion.div>

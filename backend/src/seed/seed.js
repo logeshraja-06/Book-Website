@@ -9,6 +9,7 @@ const Author = require('../models/Author');
 const Book = require('../models/Book');
 const Review = require('../models/Review');
 const Category = require('../models/Category');
+const { dropGridFSBuckets } = require('../config/gridfs');
 
 const CATEGORIES_DATA = [
   {
@@ -82,7 +83,7 @@ const AUTHORS_DATA = [
     role: "Behavioral Finance Writer",
     avatarUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80",
     bio: "Partner at Collaborative Fund examining human irrationality, risk, and compound wealth.",
-    fullBio: "Morgan Housel is a partner at the Collaborative Fund and a former columnist at The Motley Fool and The Wall Street Journal. His writing on behavioral finance, risk, and long-term wealth creation has reached millions worldwide. The Psychology of Money sold over 4 million copies and has been translated into 53 languages.",
+    fullBio: "Morgan Housel is a partner at the Collaborative Fund and a former columnist at The Motley Fool and The Wall Street Journal. His writing on behavioral finance, risk, and long-term wealth creation has reached millions worldwide.",
     joinDate: "Since 2021",
     joinedYear: 2021,
     followers: "98k",
@@ -102,7 +103,7 @@ const AUTHORS_DATA = [
     role: "Visionary & Scientist",
     avatarUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&q=80",
     bio: "Scientist, author, and 11th President of India dedicated to empowering youth through science.",
-    fullBio: "Dr. Avul Pakir Jainulabdeen Abdul Kalam was an aerospace scientist who served as the 11th President of India from 2002 to 2007. Known as the 'Missile Man of India,' he played a crucial role in developing India's ballistic missile and nuclear weapons programs. His autobiography Wings of Fire has inspired generations of Indian students and remains one of the most widely read books in India.",
+    fullBio: "Dr. Avul Pakir Jainulabdeen Abdul Kalam was an aerospace scientist who served as the 11th President of India from 2002 to 2007.",
     joinDate: "Since 2015",
     joinedYear: 2015,
     followers: "310k",
@@ -122,7 +123,7 @@ const AUTHORS_DATA = [
     role: "Georgetown Professor & Essayist",
     avatarUrl: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&q=80",
     bio: "Computer science professor writing on digital minimalism, deep focus, and career craftsmanship.",
-    fullBio: "Cal Newport is a professor of computer science at Georgetown University and the author of six books on the intersection of technology, productivity, and the philosophy of work. His most influential work, Deep Work, argues that the ability to focus without distraction is one of the most valuable skills in the modern economy — and one of the rarest.",
+    fullBio: "Cal Newport is a professor of computer science at Georgetown University and the author of six books.",
     joinDate: "Since 2019",
     joinedYear: 2019,
     followers: "86k",
@@ -142,7 +143,7 @@ const AUTHORS_DATA = [
     role: "Mythological Fiction Novelist",
     avatarUrl: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=400&q=80",
     bio: "Pioneer of modern Indian mythological pop-culture with over 6 million printed copies worldwide.",
-    fullBio: "Amish Tripathi is an Indian author known for his mythological fiction series. His debut novel, The Immortals of Meluha, was a self-published success that transformed into one of India's best-selling book series. Amish has sold more than 6 million copies and is credited with creating the market for Indian mythology-based commercial fiction.",
+    fullBio: "Amish Tripathi is an Indian author known for his mythological fiction series.",
     joinDate: "Since 2017",
     joinedYear: 2017,
     followers: "115k",
@@ -162,7 +163,7 @@ const AUTHORS_DATA = [
     role: "Habits & Performance Writer",
     avatarUrl: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80",
     bio: "Author and speaker focused on habits, decision-making, and continuous improvement in work and life.",
-    fullBio: "James Clear is the author of Atomic Habits, the #1 New York Times bestseller. His work focuses on habits, decision-making, and continuous improvement, drawing from fields like biology, neuroscience, philosophy, and psychology. His newsletter has more than 2 million subscribers worldwide.",
+    fullBio: "James Clear is the author of Atomic Habits, the #1 New York Times bestseller.",
     joinDate: "Since 2020",
     joinedYear: 2020,
     followers: "204k",
@@ -182,7 +183,7 @@ const AUTHORS_DATA = [
     role: "Historian & Public Intellectual",
     avatarUrl: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=400&q=80",
     bio: "Israeli historian and professor at Hebrew University, known for sweeping macro-histories of humankind.",
-    fullBio: "Yuval Noah Harari is an Israeli public intellectual, historian, and professor in the department of history at the Hebrew University of Jerusalem. He is the author of Sapiens, Homo Deus, and 21 Lessons for the 21st Century — books that have collectively sold over 27 million copies in more than 50 languages.",
+    fullBio: "Yuval Noah Harari is an Israeli public intellectual, historian, and professor.",
     joinDate: "Since 2016",
     joinedYear: 2016,
     followers: "178k",
@@ -202,7 +203,7 @@ const AUTHORS_DATA = [
     role: "Novelist & Essayist",
     avatarUrl: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&q=80",
     bio: "Booker Prize-winning author and activist whose prose blends lyrical beauty with political urgency.",
-    fullBio: "Arundhati Roy is an Indian author and political activist. Her debut novel, The God of Small Things, won the Booker Prize in 1997 and became a modern classic of postcolonial literature. Roy is equally known for her political essays and her activism on issues of corporate globalization, environmental justice, and indigenous rights.",
+    fullBio: "Arundhati Roy is an Indian author and political activist.",
     joinDate: "Since 2019",
     joinedYear: 2019,
     followers: "92k",
@@ -218,6 +219,9 @@ const AUTHORS_DATA = [
   }
 ];
 
+// Note on Seed Cover URLs:
+// Seeded books use direct Unsplash cover URLs for fast seeding. Real GridFS storage applies
+// to NEW manuscript and cover file uploads created dynamically through the application.
 const BOOKS_DATA = [
   {
     id: "ps-vol1",
@@ -501,11 +505,12 @@ const seedDB = async () => {
     await mongoose.connect(mongoUri);
     console.log('[Seed] Connected to MongoDB for seeding...');
 
-    // Drop legacy collection indexes to prevent unique index issues
+    // Drop GridFS buckets & legacy collection indexes
+    await dropGridFSBuckets();
     try {
       await mongoose.connection.collection('reviews').dropIndexes();
     } catch (e) {
-      // ignore if indexes don't exist
+      // ignore
     }
 
     // 1. Clear Existing Data
@@ -514,9 +519,9 @@ const seedDB = async () => {
     await Book.deleteMany({});
     await Review.deleteMany({});
     await Category.deleteMany({});
-    console.log('[Seed] Cleared existing collections.');
+    console.log('[Seed] Cleared existing collections & GridFS buckets.');
 
-    // 2. Create Seed Users for each role
+    // 2. Create Seed Users for each role with bcrypt passwords
     const readerUser = await User.create({
       name: 'Ananya Sharma',
       email: 'ananya@bookverse.in',
@@ -632,14 +637,19 @@ const seedDB = async () => {
       await readerUser.save();
     }
 
-    console.log('──────────────────────────────────────────────────────────');
+    console.log('==========================================================');
     console.log('✅ BookVerse Studio Database Seeded Successfully!');
-    console.log('Seed Accounts Available:');
-    console.log('  Reader:    ananya@bookverse.in    / password123');
-    console.log('  Author:    kalki@bookverse.in     / password123');
-    console.log('  Publisher: editor@bookverse.studio / password123');
-    console.log('  Admin:     admin@bookverse.studio  / password123');
+    console.log(`   Categories: ${CATEGORIES_DATA.length}`);
+    console.log(`   Authors:    ${AUTHORS_DATA.length}`);
+    console.log(`   Books:      ${BOOKS_DATA.length} (${BOOKS_DATA.filter(b=>b.status==='Published').length} Published, ${BOOKS_DATA.filter(b=>b.status==='In Review').length} In Review, ${BOOKS_DATA.filter(b=>b.status==='Draft').length} Draft)`);
+    console.log(`   Reviews:    ${REVIEWS_DATA.length}`);
     console.log('──────────────────────────────────────────────────────────');
+    console.log('Seed Credentials (password: password123):');
+    console.log('  Reader:    ananya@bookverse.in');
+    console.log('  Author:    kalki@bookverse.in');
+    console.log('  Publisher: editor@bookverse.studio');
+    console.log('  Admin:     admin@bookverse.studio');
+    console.log('==========================================================');
 
     process.exit(0);
   } catch (error) {
