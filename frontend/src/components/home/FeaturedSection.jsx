@@ -88,7 +88,7 @@ export default function FeaturedSection() {
             <div className="pt-6 border-t border-[#E7D9D3] flex items-center justify-between mt-6">
               <div>
                 <span className="text-xs text-[#6E6A67] block">Hardcover Editorial</span>
-                <span className="font-editorial-serif text-2xl font-bold text-[#2B2B2B]">{formatPrice(spotlightBook.price)}</span>
+                <span className="font-editorial-serif font-tabular text-2xl font-bold text-[#2B2B2B]">{formatPrice(spotlightBook.price)}</span>
               </div>
               <Button to={`/books/${spotlightSlug}`} size="sm" icon={ArrowUpRight}>
                 View Details
@@ -133,10 +133,10 @@ export default function FeaturedSection() {
                     </div>
 
                     <div className="pt-4 mt-4 border-t border-[#E7D9D3]/60 flex items-center justify-between">
-                      <span className="font-editorial-serif text-base font-semibold text-[#2B2B2B]">
+                      <span className="font-editorial-serif font-tabular text-base font-semibold text-[#2B2B2B]">
                         {formatPrice(book.price)}
                       </span>
-                      <div className="flex items-center gap-1 text-xs text-[#6E6A67]">
+                      <div className="flex items-center gap-1 text-xs text-[#6E6A67] font-tabular">
                         <Star className="w-3 h-3 text-[#D3968C] fill-[#D3968C]" />
                         <span>{book.rating || 4.8}</span>
                       </div>

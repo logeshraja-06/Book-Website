@@ -118,7 +118,7 @@ export default function AuthorProfile() {
             </div>
 
             {/* Metrics Ribbon */}
-            <div className="py-4 border-y border-[#E7D9D3] flex flex-wrap items-center gap-x-6 gap-y-2 text-xs font-mono text-[#6E6A67]">
+            <div className="py-4 border-y border-[#E7D9D3] flex flex-wrap items-center gap-x-6 gap-y-2 text-xs font-mono font-tabular text-[#6E6A67]">
               <span>
                 <strong className="text-[#2B2B2B] font-semibold">{books.length}</strong> Works in Catalog
               </span>
@@ -235,7 +235,7 @@ export default function AuthorProfile() {
                     </div>
 
                     <div className="pt-4 mt-6 border-t border-[#E7D9D3] flex items-center justify-between">
-                      <span className="font-editorial-serif text-base font-bold text-[#2B2B2B]">
+                      <span className="font-editorial-serif font-tabular text-base font-bold text-[#2B2B2B]">
                         {formatPrice(book.price)}
                       </span>
                       <Link

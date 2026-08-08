@@ -131,7 +131,7 @@ export default function CategoryDetail() {
                   </div>
 
                   <div className="pt-4 mt-6 border-t border-[#E7D9D3] flex items-center justify-between">
-                    <span className="font-editorial-serif text-base font-bold text-[#2B2B2B]">
+                    <span className="font-editorial-serif font-tabular text-base font-bold text-[#2B2B2B]">
                       {formatPrice(book.price)}
                     </span>
                     <Link

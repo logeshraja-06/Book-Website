@@ -1,79 +1,180 @@
-import { motion } from 'framer-motion';
-import { ArrowRight, Sparkles, BookOpen, Star, Compass } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { motion, useInView, useMotionValue, animate } from 'framer-motion';
+import { ArrowRight, Sparkles, Star, Compass } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { FEATURED_BOOKS } from '../../data/mockData';
+import { formatPrice } from '../../utils/format';
+
+function StatCounter({ target, prefix = '', suffix = '', decimals = 0, staticDisplay }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-40px' });
+  const motionVal = useMotionValue(0);
+  const [displayValue, setDisplayValue] = useState(decimals > 0 ? '0.0' : '0');
+
+  useEffect(() => {
+    if (staticDisplay) return;
+    if (isInView) {
+      const controls = animate(motionVal, target, {
+        duration: 1.8,
+        ease: [0.16, 1, 0.3, 1],
+        onUpdate: (latest) => {
+          if (decimals > 0) {
+            setDisplayValue(latest.toFixed(decimals));
+          } else {
+            setDisplayValue(Math.floor(latest).toLocaleString('en-IN'));
+          }
+        },
+      });
+      return () => controls.stop();
+    }
+  }, [isInView, target, decimals, motionVal, staticDisplay]);
+
+  if (staticDisplay) {
+    return (
+      <span className="font-tabular font-editorial-serif text-lg font-bold text-[#2B2B2B] block">
+        {staticDisplay}
+      </span>
+    );
+  }
+
+  return (
+    <span ref={ref} className="font-tabular font-editorial-serif text-lg font-bold text-[#2B2B2B] block">
+      {prefix}{displayValue}{suffix}
+    </span>
+  );
+}
 
 export default function HeroSection() {
   const heroBook = FEATURED_BOOKS[0]; // Ponniyin Selvan
+  const bookSlug = heroBook.slug || heroBook.id;
 
   return (
     <section className="relative overflow-hidden pt-12 pb-24 lg:pt-20 lg:pb-32 bg-[#FAF8F6]">
-      {/* Background Decorative Ambient Gradients */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-gradient-to-tr from-[#E8C8C2]/30 via-[#F4EEEA]/50 to-transparent blur-3xl rounded-full pointer-events-none -z-10" />
+      
+      {/* 1. Full-Bleed Cinematic Background Image Layer with Ken Burns slow zoom */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden select-none -z-20">
+        <motion.div
+          animate={{ scale: [1, 1.05] }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            repeatType: 'mirror',
+            ease: 'easeInOut'
+          }}
+          className="w-full h-full"
+        >
+          <img
+            src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=2000&q=80"
+            alt="Library reading atmosphere"
+            className="w-full h-full object-cover opacity-[0.09] mix-blend-multiply filter contrast-125 [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_85%)]"
+          />
+        </motion.div>
+      </div>
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+      {/* 2. Background Decorative Ambient Gradients */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[720px] h-[420px] bg-gradient-to-tr from-[#E8C8C2]/30 via-[#F4EEEA]/50 to-transparent blur-3xl rounded-full pointer-events-none -z-10" />
+
+      {/* 3. Hero Content Container */}
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           
-          {/* Left Column: Headline & Blur Reveal */}
-          <motion.div 
-            initial={{ opacity: 0, filter: 'blur(12px)', y: 20 }}
-            animate={{ opacity: 1, filter: 'blur(0px)', y: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-7 space-y-8"
-          >
+          {/* Left Column: Headline & Staggered Blur Reveal */}
+          <div className="lg:col-span-7 space-y-8">
+            
             {/* Pill Badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#F4EEEA] border border-[#E7D9D3] text-[#6E6A67] text-xs font-mono uppercase tracking-wider">
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#F4EEEA] border border-[#E7D9D3] text-[#6E6A67] text-xs font-mono uppercase tracking-wider shadow-sm"
+            >
               <Sparkles className="w-3.5 h-3.5 text-[#D3968C]" />
               <span>Digital Publishing Platform</span>
-            </div>
+            </motion.div>
 
-            {/* Main Editorial Headline */}
-            <h1 className="font-editorial-serif text-4xl sm:text-6xl lg:text-7xl tracking-tight text-[#2B2B2B] leading-[1.08] font-normal">
-              Where stories find their <span className="italic font-light text-[#C98579]">eternal form.</span>
-            </h1>
+            {/* Main Editorial Headline with Staggered 2-Line Blur Reveal */}
+            <div className="max-w-2xl">
+              <h1 className="font-editorial-serif text-4xl sm:text-6xl lg:text-7xl tracking-tight text-[#2B2B2B] leading-[1.08] font-normal">
+                <motion.span
+                  initial={{ opacity: 0, filter: 'blur(8px)', y: 18 }}
+                  animate={{ opacity: 1, filter: 'blur(0px)', y: 0 }}
+                  transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
+                  className="block"
+                >
+                  Where stories find their
+                </motion.span>
+                <motion.span
+                  initial={{ opacity: 0, filter: 'blur(8px)', y: 18 }}
+                  animate={{ opacity: 1, filter: 'blur(0px)', y: 0 }}
+                  transition={{ duration: 0.75, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                  className="italic font-light text-[#C98579] block"
+                >
+                  eternal form.
+                </motion.span>
+              </h1>
+            </div>
 
             {/* Sub-Headline Copy */}
-            <p className="text-base sm:text-lg text-[#6E6A67] leading-relaxed max-w-xl font-normal">
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              className="text-base sm:text-lg text-[#6E6A67] leading-relaxed max-w-xl font-normal"
+            >
               BookVerse Studio is an interconnected ecosystem designed for authors to craft manuscripts, independent publishers to curate catalogs, and readers to discover literary treasures.
-            </p>
+            </motion.p>
 
-            {/* CTAs */}
-            <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
-              <Link
-                to="/books"
-                className="inline-flex items-center justify-center gap-3 px-7 py-4 rounded-full bg-[#2B2B2B] text-[#FAF8F6] text-sm font-semibold tracking-wide hover:bg-[#D3968C] transition-all duration-300 shadow-md hover:shadow-lg group min-h-[44px]"
-              >
-                <span>Explore Books</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
+            {/* CTAs with Tactile Hover Lift */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-4"
+            >
+              <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }} transition={{ duration: 0.2 }}>
+                <Link
+                  to="/books"
+                  className="inline-flex items-center justify-center gap-3 px-7 py-4 rounded-full bg-[#2B2B2B] text-[#FAF8F6] text-sm font-semibold tracking-wide hover:bg-[#D3968C] transition-colors duration-300 shadow-md hover:shadow-lg group min-h-[44px] w-full sm:w-auto"
+                >
+                  <span>Explore Books</span>
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </motion.div>
 
-              <a
-                href="#authors"
-                className="inline-flex items-center justify-center gap-2.5 px-7 py-4 rounded-full bg-[#F4EEEA] border border-[#E7D9D3] text-[#2B2B2B] text-sm font-medium hover:border-[#D3968C] hover:bg-[#FAF8F6] transition-all duration-300 min-h-[44px]"
-              >
-                <Compass className="w-4 h-4 text-[#6E6A67]" />
-                <span>Meet Our Authors</span>
-              </a>
-            </div>
+              <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }} transition={{ duration: 0.2 }}>
+                <a
+                  href="#authors"
+                  className="inline-flex items-center justify-center gap-2.5 px-7 py-4 rounded-full bg-[#F4EEEA] border border-[#E7D9D3] text-[#2B2B2B] text-sm font-medium hover:border-[#D3968C] hover:bg-[#FAF8F6] transition-all duration-300 min-h-[44px] w-full sm:w-auto"
+                >
+                  <Compass className="w-4 h-4 text-[#6E6A67]" />
+                  <span>Meet Our Authors</span>
+                </a>
+              </motion.div>
+            </motion.div>
 
-            {/* Micro Credibility Line */}
-            <div className="pt-6 border-t border-[#E7D9D3]/60 flex items-center gap-8 text-xs text-[#6E6A67]">
+            {/* Micro Credibility Line with Animated Numeric Counters */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="pt-6 border-t border-[#E7D9D3]/60 flex items-center gap-8 text-xs text-[#6E6A67]"
+            >
               <div>
-                <span className="font-editorial-serif text-lg font-bold text-[#2B2B2B] block">4,200+</span>
+                <StatCounter target={4200} suffix="+" />
                 <span>Curated Manuscripts</span>
               </div>
               <div className="h-8 w-px bg-[#E7D9D3]" />
               <div>
-                <span className="font-editorial-serif text-lg font-bold text-[#2B2B2B] block">₹0 DRM Fee</span>
+                <StatCounter staticDisplay="₹0 DRM Fee" />
                 <span>Direct Author Revenue</span>
               </div>
               <div className="h-8 w-px bg-[#E7D9D3]" />
               <div>
-                <span className="font-editorial-serif text-lg font-bold text-[#2B2B2B] block">4.9 ★</span>
+                <StatCounter target={4.9} decimals={1} suffix=" ★" />
                 <span>Reader Satisfaction</span>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </div>
 
           {/* Right Column: 3D Interactive Floating Book */}
           <motion.div 
@@ -84,14 +185,24 @@ export default function HeroSection() {
           >
             <div className="book-container relative w-full max-w-sm">
               
-              {/* Floating Badge */}
-              <div className="absolute -top-4 -right-2 z-20 bg-[#FFFFFF] border border-[#E7D9D3] px-3.5 py-1.5 rounded-full shadow-lg flex items-center gap-2 text-xs font-semibold text-[#2B2B2B]">
+              {/* Floating Badge with Soft Drop-Shadow Pulse */}
+              <motion.div
+                animate={{
+                  boxShadow: [
+                    '0 4px 14px -2px rgba(43,43,43,0.08)',
+                    '0 10px 28px -4px rgba(211,150,140,0.28)',
+                    '0 4px 14px -2px rgba(43,43,43,0.08)'
+                  ]
+                }}
+                transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
+                className="absolute -top-4 -right-2 z-20 bg-[#FFFFFF] border border-[#E7D9D3] px-3.5 py-1.5 rounded-full flex items-center gap-2 text-xs font-semibold text-[#2B2B2B]"
+              >
                 <Star className="w-3.5 h-3.5 text-[#D3968C] fill-[#D3968C]" />
-                <span>{heroBook.badge}</span>
-              </div>
+                <span>{heroBook.badge || 'Editor Choice'}</span>
+              </motion.div>
 
               {/* 3D Book Card Element */}
-              <Link to={`/books/${heroBook.id}`} className="book-card-3d relative bg-[#FFFFFF] rounded-2xl p-6 border border-[#E7D9D3] cursor-pointer group block">
+              <Link to={`/books/${bookSlug}`} className="book-card-3d relative bg-[#FFFFFF] rounded-2xl p-6 border border-[#E7D9D3] cursor-pointer group block">
                 <div className="book-spine-depth" />
                 
                 {/* Book Cover Image Container */}
@@ -117,12 +228,12 @@ export default function HeroSection() {
                 <div className="flex items-center justify-between pt-1">
                   <div>
                     <p className="text-xs text-[#6E6A67]">By {heroBook.author}</p>
-                    <p className="font-editorial-serif text-lg font-semibold text-[#2B2B2B] mt-0.5">
-                      ₹{heroBook.price.toLocaleString()}
+                    <p className="font-editorial-serif font-tabular text-lg font-semibold text-[#2B2B2B] mt-0.5">
+                      {formatPrice(heroBook.price)}
                     </p>
                   </div>
                   <div className="text-right">
-                    <span className="inline-block px-2.5 py-1 rounded bg-[#F4EEEA] text-[#2B2B2B] text-xs font-medium">
+                    <span className="inline-block px-2.5 py-1 rounded bg-[#F4EEEA] text-[#2B2B2B] text-xs font-medium font-tabular">
                       {heroBook.rating} ★ ({heroBook.reviewsCount})
                     </span>
                   </div>

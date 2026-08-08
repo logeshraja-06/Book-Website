@@ -332,10 +332,10 @@ function BookCard({ book, index }) {
 
         <div className="p-5 pt-0">
           <div className="flex items-center justify-between pt-3 border-t border-[#E7D9D3]/50">
-            <span className="font-editorial-serif text-lg font-semibold text-[#2B2B2B]">
+            <span className="font-editorial-serif font-tabular text-lg font-semibold text-[#2B2B2B]">
               {formatPrice(book.price)}
             </span>
-            <div className="flex items-center gap-1 text-xs text-[#6E6A67]">
+            <div className="flex items-center gap-1 text-xs text-[#6E6A67] font-tabular">
               <Star className="w-3.5 h-3.5 text-[#D3968C] fill-[#D3968C]" />
               <span className="font-medium">{book.rating || 4.8}</span>
               <span className="text-[#6E6A67]/60 ml-0.5">({book.reviewsCount || '1.2k'})</span>

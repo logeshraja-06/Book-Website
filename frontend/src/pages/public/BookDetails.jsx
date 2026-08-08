@@ -266,7 +266,7 @@ export default function BookDetails() {
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 font-tabular">
               <div className="flex items-center gap-0.5">{renderStars(book.rating)}</div>
               <span className="text-sm font-medium text-[#2B2B2B]">{book.rating || 4.8}</span>
               <span className="text-sm text-[#6E6A67]">({book.reviewsCount || '1.2k'} reviews)</span>
@@ -295,7 +295,7 @@ export default function BookDetails() {
                 {bookSpecs.map((spec) => (
                   <div key={spec.label} className="flex items-center justify-between border-b border-[#E7D9D3]/60 pb-2">
                     <span className="text-[#6E6A67]">{spec.label}</span>
-                    <span className="text-[#2B2B2B] font-semibold">{spec.value}</span>
+                    <span className="text-[#2B2B2B] font-semibold font-tabular">{spec.value}</span>
                   </div>
                 ))}
               </div>
@@ -304,7 +304,7 @@ export default function BookDetails() {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pt-4">
               <div>
                 <span className="text-xs text-[#6E6A67] block mb-1">Editorial Edition</span>
-                <span className="font-editorial-serif text-3xl font-bold text-[#2B2B2B]">
+                <span className="font-editorial-serif font-tabular text-3xl font-bold text-[#2B2B2B]">
                   {formatPrice(book.price)}
                 </span>
               </div>
