@@ -116,12 +116,12 @@ export default function CategoryDetail() {
                     </span>
 
                     <Link to={`/books/${bookSlug}`}>
-                      <h3 className="font-editorial-serif text-lg font-bold text-[#2B2B2B] line-clamp-1 mt-1 group-hover:text-[#C98579] transition-colors">
+                      <h3 className="font-editorial-serif text-[17px] font-semibold tracking-tight text-[#2B2B2B] line-clamp-1 mt-1 group-hover:text-[#C98579] transition-colors duration-500">
                         {book.title}
                       </h3>
                     </Link>
 
-                    <Link to={`/authors/${authorSlug}`} className="text-xs text-[#6E6A67] hover:text-[#2B2B2B] mt-1 block">
+                    <Link to={`/authors/${authorSlug}`} className="text-[13px] font-editorial-sans text-[#6E6A67] hover:text-[#2B2B2B] font-medium block transition-colors mt-1">
                       By {book.author}
                     </Link>
 
@@ -131,7 +131,7 @@ export default function CategoryDetail() {
                   </div>
 
                   <div className="pt-4 mt-6 border-t border-[#E7D9D3] flex items-center justify-between">
-                    <span className="font-editorial-serif font-tabular text-base font-bold text-[#2B2B2B]">
+                    <span className="font-editorial-sans font-tabular text-[15px] font-semibold tracking-tight text-[#2B2B2B]">
                       {formatPrice(book.price)}
                     </span>
                     <Link

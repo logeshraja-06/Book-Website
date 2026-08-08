@@ -239,7 +239,7 @@ export default function BookDetails() {
               </span>
             </div>
 
-            <h1 className="font-editorial-serif text-4xl sm:text-5xl lg:text-[3.5rem] text-[#2B2B2B] tracking-tight leading-[1.1] font-normal">
+            <h1 className="font-editorial-serif text-4xl sm:text-5xl lg:text-[3.5rem] text-[#2B2B2B] tracking-tight leading-[1.1] font-medium">
               {book.title}
             </h1>
 
@@ -304,7 +304,7 @@ export default function BookDetails() {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pt-4">
               <div>
                 <span className="text-xs text-[#6E6A67] block mb-1">Editorial Edition</span>
-                <span className="font-editorial-serif font-tabular text-3xl font-bold text-[#2B2B2B]">
+                <span className="font-editorial-sans font-tabular text-3xl font-bold tracking-tight text-[#2B2B2B]">
                   {formatPrice(book.price)}
                 </span>
               </div>
@@ -418,18 +418,18 @@ export default function BookDetails() {
                     </span>
 
                     <Link to={`/books/${relSlug}`}>
-                      <h3 className="font-editorial-serif text-base font-bold text-[#2B2B2B] line-clamp-1 mt-1 group-hover:text-[#C98579] transition-colors">
+                      <h3 className="font-editorial-serif text-[17px] font-semibold tracking-tight text-[#2B2B2B] line-clamp-1 mt-1 group-hover:text-[#C98579] transition-colors duration-500">
                         {rel.title}
                       </h3>
                     </Link>
 
-                    <Link to={`/authors/${relAuthorSlug}`} className="text-xs text-[#6E6A67] hover:text-[#2B2B2B] mt-1 block">
+                    <Link to={`/authors/${relAuthorSlug}`} className="text-[13px] font-editorial-sans text-[#6E6A67] hover:text-[#2B2B2B] font-medium mt-1 block transition-colors">
                       By {rel.author}
                     </Link>
                   </div>
 
                   <div className="pt-4 mt-6 border-t border-[#E7D9D3] flex items-center justify-between">
-                    <span className="font-editorial-serif text-base font-bold text-[#2B2B2B]">
+                    <span className="font-editorial-sans font-tabular text-[15px] font-semibold tracking-tight text-[#2B2B2B]">
                       {formatPrice(rel.price)}
                     </span>
                     <Link

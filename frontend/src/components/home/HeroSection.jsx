@@ -31,14 +31,14 @@ function StatCounter({ target, prefix = '', suffix = '', decimals = 0, staticDis
 
   if (staticDisplay) {
     return (
-      <span className="font-tabular font-editorial-serif text-lg font-bold text-[#2B2B2B] block">
+      <span className="font-tabular font-editorial-sans text-lg font-bold text-[#2B2B2B] block">
         {staticDisplay}
       </span>
     );
   }
 
   return (
-    <span ref={ref} className="font-tabular font-editorial-serif text-lg font-bold text-[#2B2B2B] block">
+    <span ref={ref} className="font-tabular font-editorial-sans text-lg font-bold text-[#2B2B2B] block">
       {prefix}{displayValue}{suffix}
     </span>
   );
@@ -51,24 +51,32 @@ export default function HeroSection() {
   return (
     <section className="relative overflow-hidden pt-12 pb-24 lg:pt-20 lg:pb-32 bg-[#FAF8F6]">
       
-      {/* 1. Full-Bleed Cinematic Background Image Layer with Ken Burns slow zoom */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden select-none -z-20">
+      {/* Cinematic Background Image Layer */}
+      <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none select-none">
         <motion.div
-          animate={{ scale: [1, 1.05] }}
+          className="absolute inset-0 w-full h-full"
+          animate={{ scale: [1, 1.06, 1] }}
           transition={{
-            duration: 20,
+            duration: 22,
             repeat: Infinity,
-            repeatType: 'mirror',
-            ease: 'easeInOut'
+            repeatType: 'loop',
+            ease: 'easeInOut',
           }}
-          className="w-full h-full"
-        >
-          <img
-            src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=2000&q=80"
-            alt="Library reading atmosphere"
-            className="w-full h-full object-cover opacity-[0.09] mix-blend-multiply filter contrast-125 [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_85%)]"
-          />
-        </motion.div>
+          style={{
+            backgroundImage:
+              "url('https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=2400&q=80')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center 30%',
+            opacity: 0.14,
+            filter: 'grayscale(20%) contrast(1.1)',
+            maskImage:
+              'radial-gradient(ellipse 80% 60% at 50% 35%, black 20%, transparent 75%)',
+            WebkitMaskImage:
+              'radial-gradient(ellipse 80% 60% at 50% 35%, black 20%, transparent 75%)',
+          }}
+        />
+        {/* Solid fade to background color at edges so image never looks "pasted" */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#FAF8F6]/40 via-transparent to-[#FAF8F6]" />
       </div>
 
       {/* 2. Background Decorative Ambient Gradients */}
@@ -227,8 +235,8 @@ export default function HeroSection() {
                 {/* Meta details */}
                 <div className="flex items-center justify-between pt-1">
                   <div>
-                    <p className="text-xs text-[#6E6A67]">By {heroBook.author}</p>
-                    <p className="font-editorial-serif font-tabular text-lg font-semibold text-[#2B2B2B] mt-0.5">
+                    <p className="text-[13px] font-editorial-sans text-[#6E6A67]">By {heroBook.author}</p>
+                    <p className="font-editorial-sans font-tabular text-[17px] font-semibold tracking-tight text-[#2B2B2B] mt-0.5">
                       {formatPrice(heroBook.price)}
                     </p>
                   </div>

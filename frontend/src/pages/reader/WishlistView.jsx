@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bookmark, Trash2, ArrowRight } from 'lucide-react';
 import { useData } from '../../context/DataContext';
+import { formatPrice } from '../../utils/format';
 import EmptyState from '../../components/common/EmptyState';
 import Card from '../../components/common/Card';
 import Button from '../../components/common/Button';
@@ -62,8 +63,8 @@ export default function WishlistView() {
 
                   <div className="pt-4 mt-6 border-t border-[#E7D9D3] flex items-center justify-between">
                     <div>
-                      <span className="font-editorial-serif text-base font-bold text-[#2B2B2B]">
-                        ₹{book.price}
+                      <span className="font-editorial-sans font-tabular text-[15px] font-semibold tracking-tight text-[#2B2B2B]">
+                        {formatPrice(book.price)}
                       </span>
                       <span className="text-[11px] text-[#6E6A67] block">Saved in Wishlist</span>
                     </div>

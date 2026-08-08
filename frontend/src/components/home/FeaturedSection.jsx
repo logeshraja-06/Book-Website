@@ -71,11 +71,11 @@ export default function FeaturedSection() {
                     {spotlightBook.genre}
                   </Link>
                   <Link to={`/books/${spotlightSlug}`}>
-                    <h3 className="font-editorial-serif text-2xl font-bold text-[#2B2B2B] leading-tight group-hover:text-[#C98579] transition-colors">
+                    <h3 className="font-editorial-serif text-2xl font-semibold tracking-tight text-[#2B2B2B] leading-tight group-hover:text-[#C98579] transition-colors duration-500">
                       {spotlightBook.title}
                     </h3>
                   </Link>
-                  <p className="text-sm text-[#6E6A67]">
+                  <p className="text-[13px] font-editorial-sans text-[#6E6A67]">
                     By <Link to={`/authors/${spotlightAuthorSlug}`} className="text-[#2B2B2B] font-medium hover:text-[#D3968C] transition-colors">{spotlightBook.author}</Link>
                   </p>
                   <p className="text-xs text-[#6E6A67] italic leading-relaxed pt-1">
@@ -88,7 +88,7 @@ export default function FeaturedSection() {
             <div className="pt-6 border-t border-[#E7D9D3] flex items-center justify-between mt-6">
               <div>
                 <span className="text-xs text-[#6E6A67] block">Hardcover Editorial</span>
-                <span className="font-editorial-serif font-tabular text-2xl font-bold text-[#2B2B2B]">{formatPrice(spotlightBook.price)}</span>
+                <span className="font-editorial-sans font-tabular text-2xl font-bold tracking-tight text-[#2B2B2B]">{formatPrice(spotlightBook.price)}</span>
               </div>
               <Button to={`/books/${spotlightSlug}`} size="sm" icon={ArrowUpRight}>
                 View Details
@@ -123,17 +123,17 @@ export default function FeaturedSection() {
                         {book.genre}
                       </Link>
                       <Link to={`/books/${bookSlug}`}>
-                        <h4 className="font-editorial-serif text-base font-bold text-[#2B2B2B] line-clamp-1 mt-1 group-hover:text-[#C98579] transition-colors">
+                        <h4 className="font-editorial-serif text-[17px] font-semibold tracking-tight text-[#2B2B2B] line-clamp-1 mt-1 group-hover:text-[#C98579] transition-colors duration-500">
                           {book.title}
                         </h4>
                       </Link>
-                      <Link to={`/authors/${authorSlug}`} className="text-xs text-[#6E6A67] hover:text-[#2B2B2B] transition-colors mt-0.5 block">
-                        {book.author}
+                      <Link to={`/authors/${authorSlug}`} className="text-[13px] font-editorial-sans text-[#6E6A67] hover:text-[#2B2B2B] transition-colors mt-1 block">
+                        By {book.author}
                       </Link>
                     </div>
 
                     <div className="pt-4 mt-4 border-t border-[#E7D9D3]/60 flex items-center justify-between">
-                      <span className="font-editorial-serif font-tabular text-base font-semibold text-[#2B2B2B]">
+                      <span className="font-editorial-sans font-tabular text-[15px] font-semibold tracking-tight text-[#2B2B2B]">
                         {formatPrice(book.price)}
                       </span>
                       <div className="flex items-center gap-1 text-xs text-[#6E6A67] font-tabular">

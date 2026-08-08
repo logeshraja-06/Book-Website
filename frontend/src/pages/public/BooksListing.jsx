@@ -317,13 +317,13 @@ function BookCard({ book, index }) {
 
           <div className="p-5 space-y-2">
             <Link to={`/books/${bookSlug}`}>
-              <h3 className="font-editorial-serif text-base font-bold text-[#2B2B2B] leading-snug line-clamp-2 group-hover:text-[#C98579] transition-colors duration-300">
+              <h3 className="font-editorial-serif text-[17px] font-semibold tracking-tight text-[#2B2B2B] leading-[1.3] line-clamp-2 group-hover:text-[#C98579] transition-colors duration-500">
                 {book.title}
               </h3>
             </Link>
             <Link
               to={`/authors/${authorSlug}`}
-              className="text-xs text-[#6E6A67] hover:text-[#2B2B2B] font-medium block transition-colors"
+              className="text-[13px] font-editorial-sans text-[#6E6A67] hover:text-[#2B2B2B] font-medium block transition-colors mt-1"
             >
               By {book.author}
             </Link>
@@ -332,7 +332,7 @@ function BookCard({ book, index }) {
 
         <div className="p-5 pt-0">
           <div className="flex items-center justify-between pt-3 border-t border-[#E7D9D3]/50">
-            <span className="font-editorial-serif font-tabular text-lg font-semibold text-[#2B2B2B]">
+            <span className="font-editorial-sans font-tabular text-[15px] font-semibold tracking-tight text-[#2B2B2B]">
               {formatPrice(book.price)}
             </span>
             <div className="flex items-center gap-1 text-xs text-[#6E6A67] font-tabular">
