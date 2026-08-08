@@ -19,7 +19,7 @@ export default function DiscoverCarousel() {
   const carouselBooks = publishedBooks.length > 0 ? publishedBooks : books;
 
   return (
-    <section className="py-20 bg-[#FFFDF3] border-b border-[#E9E5C8]">
+    <section className="py-20 bg-[#F5F5DA] border-b border-[#E9E5C8]">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 space-y-8">
         
         {/* Section Header with Arrows */}
@@ -64,7 +64,7 @@ export default function DiscoverCarousel() {
 
             return (
               <div
-                key={bookSlug || idx}
+                key={`${bookSlug || 'disc'}-${idx}`}
                 className="w-72 shrink-0 snap-start bg-[#F5F5DA] rounded-3xl p-5 border border-[#E9E5C8] flex flex-col justify-between shadow-2xs hover:border-[#7B021D] hover:shadow-md transition-all group"
               >
                 <div>

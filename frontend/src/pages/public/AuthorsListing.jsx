@@ -1,18 +1,14 @@
 import { useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Search, ArrowUpRight, BookOpen } from 'lucide-react';
+import { Search, BookOpen } from 'lucide-react';
 import { useData } from '../../context/DataContext';
-import { AuthorCard, FeaturedAuthorSpotlightCard } from '../../components/ui/EditorialCards';
+import AuthorGalleryTile from '../../components/author/AuthorGalleryTile';
 
 export default function AuthorsListing() {
-  const { authors: AUTHORS, books: ALL_BOOKS } = useData();
+  const { authors: AUTHORS } = useData();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRole, setSelectedRole] = useState('All');
 
-  const featuredAuthor = AUTHORS.find((a) => a.id === 'kalki-krishnamurthy' || a.slug === 'kalki-krishnamurthy') || AUTHORS[0];
-
-  const groupedAuthors = useMemo(() => {
+  const filteredAuthors = useMemo(() => {
     let filtered = [...AUTHORS];
 
     if (selectedRole !== 'All') {
@@ -30,16 +26,7 @@ export default function AuthorsListing() {
     }
 
     filtered.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
-
-    const groups = {};
-    filtered.forEach((author) => {
-      const nameStr = author.name || 'Author';
-      const letter = nameStr.charAt(0).toUpperCase();
-      if (!groups[letter]) groups[letter] = [];
-      groups[letter].push(author);
-    });
-
-    return groups;
+    return filtered;
   }, [AUTHORS, searchQuery, selectedRole]);
 
   return (
@@ -88,38 +75,26 @@ export default function AuthorsListing() {
         </div>
       </section>
 
-      {/* Featured Laureate Spotlight Banner */}
-      {featuredAuthor && (
-        <section className="max-w-7xl mx-auto px-6 lg:px-12 pt-12">
-          <FeaturedAuthorSpotlightCard author={featuredAuthor} />
-        </section>
-      )}
+      {/* Guild Count Header */}
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 pt-10 flex items-center justify-between">
+        <span className="text-sm font-editorial-sans text-[#6B5E5E]">
+          <span className="font-editorial-serif text-lg font-bold text-[#211D1D] font-tabular">
+            {filteredAuthors.length}
+          </span>{' '}
+          {filteredAuthors.length === 1 ? 'author' : 'authors'} in the guild
+        </span>
+      </div>
 
-      {/* Alphabetical Authors Directory Grid */}
-      <section className="max-w-7xl mx-auto px-6 lg:px-12 py-16">
-        {Object.keys(groupedAuthors).length > 0 ? (
-          <div className="space-y-16">
-            {Object.keys(groupedAuthors).map((letter) => (
-              <div key={letter} className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                <div className="lg:col-span-2 sticky top-24">
-                  <span className="font-editorial-serif text-5xl font-light text-[#7B021D] block">
-                    {letter}
-                  </span>
-                  <span className="text-[10px] font-mono text-[#6B5E5E] uppercase tracking-widest font-bold">
-                    Index Section
-                  </span>
-                </div>
-
-                <div className="lg:col-span-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {groupedAuthors[letter].map((author, idx) => (
-                    <AuthorCard
-                      key={author.slug || author.id || idx}
-                      author={author}
-                      index={idx}
-                    />
-                  ))}
-                </div>
-              </div>
+      {/* Author Gallery Grid */}
+      <section className="max-w-7xl mx-auto px-6 lg:px-12 py-10 pb-20">
+        {filteredAuthors.length > 0 ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
+            {filteredAuthors.map((author, idx) => (
+              <AuthorGalleryTile
+                key={author.slug || author.id || idx}
+                author={author}
+                index={idx}
+              />
             ))}
           </div>
         ) : (

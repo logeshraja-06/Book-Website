@@ -80,24 +80,50 @@ export default function CategoriesPage() {
 
                   <div className={`lg:col-span-5 ${isEven ? 'lg:order-1' : 'lg:order-2'}`}>
                     <div className="flex items-center justify-center sm:justify-start lg:justify-end gap-4 overflow-hidden py-2">
-                      {matchingBooks.slice(0, 3).map((book, bIdx) => (
+                      {matchingBooks.length > 0 ? (
+                        matchingBooks.slice(0, 3).map((book, bIdx) => (
+                          <motion.div
+                            key={book.id || book._id}
+                            animate={{
+                              y: isHovered ? (bIdx === 1 ? -12 : 0) : 0,
+                              scale: isHovered ? 1.05 : 1,
+                              rotate: isHovered ? (bIdx === 0 ? -3 : bIdx === 2 ? 3 : 0) : 0,
+                            }}
+                            transition={{ duration: 0.4, delay: bIdx * 0.05 }}
+                            className="w-28 sm:w-36 aspect-[2/3] rounded-xl overflow-hidden bg-[#FFFDF3] border border-[#E9E5C8] shadow-md shrink-0 transition-shadow duration-300 group-hover:shadow-xl"
+                          >
+                            <img
+                              src={book.coverImage || book.coverUrl}
+                              alt={book.title}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                e.currentTarget.onerror = null;
+                                e.currentTarget.src =
+                                  'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=1200&q=80';
+                              }}
+                            />
+                          </motion.div>
+                        ))
+                      ) : (
                         <motion.div
-                          key={book.id || book._id}
                           animate={{
-                            y: isHovered ? (bIdx === 1 ? -12 : 0) : 0,
                             scale: isHovered ? 1.05 : 1,
-                            rotate: isHovered ? (bIdx === 0 ? -3 : bIdx === 2 ? 3 : 0) : 0,
                           }}
-                          transition={{ duration: 0.4, delay: bIdx * 0.05 }}
-                          className="w-28 sm:w-36 aspect-[2/3] rounded-xl overflow-hidden bg-[#FFFDF3] border border-[#E9E5C8] shadow-md shrink-0 transition-shadow duration-300 group-hover:shadow-xl"
+                          transition={{ duration: 0.4 }}
+                          className="w-36 sm:w-44 aspect-[2/3] rounded-xl overflow-hidden bg-[#FFFDF3] border border-[#E9E5C8] shadow-md shrink-0 transition-shadow duration-300 group-hover:shadow-xl"
                         >
                           <img
-                            src={book.coverImage || book.coverUrl}
-                            alt={book.title}
+                            src={cat.coverUrl || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=1200&q=80'}
+                            alt={cat.name}
                             className="w-full h-full object-cover"
+                            onError={(e) => {
+                              e.currentTarget.onerror = null;
+                              e.currentTarget.src =
+                                'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=1200&q=80';
+                            }}
                           />
                         </motion.div>
-                      ))}
+                      )}
                     </div>
                   </div>
                 </div>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Quote, ArrowUpRight, Trash2 } from 'lucide-react';
+import { Quote, ArrowUpRight, Trash2, Sparkles, BookOpen } from 'lucide-react';
 import { apiFetch } from '../../context/AuthContext';
 
 export default function BookmarksView() {
@@ -36,36 +36,51 @@ export default function BookmarksView() {
 
   if (loading) {
     return (
-      <div className="py-12 text-center text-xs font-mono text-[#6B5E5E]">
-        Loading your bookmarks & notes…
+      <div className="py-16 text-center text-xs font-mono text-[#6B5E5E]">
+        Loading your saved bookmarks & annotations…
       </div>
     );
   }
 
   return (
-    <div className="space-y-12">
-      {/* Header */}
-      <div className="flex items-end justify-between border-b border-[#E9E5C8] pb-6">
+    <div className="space-y-10">
+      
+      {/* ── 1. HEADER ── */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#E7D9D3] pb-6">
         <div>
-          <h2 className="font-editorial-serif text-3xl text-[#211D1D] font-normal">
+          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#7B021D] font-bold block flex items-center gap-1.5 mb-1">
+            <Quote className="w-3.5 h-3.5 text-[#7B021D]" />
+            Saved Excerpts & Annotations
+          </span>
+          <h2 className="font-editorial-serif text-3xl sm:text-4xl text-[#2B2B2B] font-bold">
             Reading Passages & Notes
           </h2>
-          <p className="text-xs text-[#6B5E5E] mt-1">
+          <p className="text-xs text-[#6B5E5E] mt-1 font-sans">
             Bookmarked excerpts and personal reflections from your shelf
           </p>
         </div>
-        <span className="text-xs font-mono text-[#6B5E5E]">
-          {bookmarks.length} Passages Saved
+        <span className="text-xs font-mono text-[#7B021D] font-bold bg-[#FFFDF3] px-3.5 py-1.5 rounded-full border border-[#E7D9D3]">
+          {bookmarks.length} Passage(s) Saved
         </span>
       </div>
 
-      {/* Quote-Style Reading Notes Cards */}
+      {/* ── 2. QUOTE CARDS LIST ── */}
       {bookmarks.length === 0 ? (
-        <div className="p-12 text-center bg-[#FFFDF3] rounded-3xl border border-[#E9E5C8] text-xs font-mono text-[#6B5E5E] shadow-2xs">
-          No bookmarks saved yet. While reading books on your shelf, bookmark notable quotes and personal annotations!
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="p-12 text-center bg-gradient-to-br from-[#FFFDF3] to-[#FAF8F6] rounded-3xl border border-[#E7D9D3] text-xs font-mono text-[#6B5E5E] shadow-sm space-y-3"
+        >
+          <BookOpen className="w-8 h-8 text-[#7B021D] mx-auto opacity-60" />
+          <h3 className="font-editorial-serif text-xl font-bold text-[#2B2B2B]">
+            No Bookmarks Saved Yet
+          </h3>
+          <p className="max-w-md mx-auto text-[#6B5E5E] font-sans">
+            While reading books on your shelf, click the bookmark icon to capture notable quotes and personal annotations!
+          </p>
+        </motion.div>
       ) : (
-        <div className="space-y-8 max-w-4xl">
+        <div className="space-y-6 max-w-4xl">
           <AnimatePresence mode="popLayout">
             {bookmarks.map((bm, idx) => {
               const book = bm.bookId || {};
@@ -80,23 +95,23 @@ export default function BookmarksView() {
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.3, delay: idx * 0.05 }}
-                  className="bg-[#FFFDF3] rounded-3xl p-8 border border-[#E9E5C8] shadow-2xs space-y-6 hover:border-[#7B021D] transition-all duration-300 relative group"
+                  transition={{ duration: 0.35, delay: idx * 0.05, ease: [0.16, 1, 0.3, 1] }}
+                  className="bg-gradient-to-br from-[#FFFDF3] via-[#FAF8F6] to-[#F4EEEA] rounded-3xl p-8 border border-[#E7D9D3] shadow-md space-y-6 hover:border-[#7B021D] hover:shadow-xl hover:shadow-[#7B021D]/10 transition-all duration-300 relative group"
                 >
-                  <div className="flex items-center justify-between border-b border-[#E9E5C8]/60 pb-4">
+                  <div className="flex items-center justify-between border-b border-[#E7D9D3]/80 pb-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-[#F5F5DA] border border-[#E9E5C8] flex items-center justify-center text-[#7B021D]">
+                      <div className="w-8 h-8 rounded-full bg-[#F4EEEA] border border-[#E7D9D3] flex items-center justify-center text-[#7B021D]">
                         <Quote className="w-4 h-4" />
                       </div>
                       <div>
                         <Link
                           to={`/books/${bookId}`}
-                          className="font-editorial-serif text-base font-bold text-[#211D1D] hover:text-[#7B021D] transition-colors inline-flex items-center gap-1.5"
+                          className="font-editorial-serif text-base font-bold text-[#2B2B2B] hover:text-[#7B021D] transition-colors inline-flex items-center gap-1.5"
                         >
-                          {bookTitle}
+                          <span>{bookTitle}</span>
                           <ArrowUpRight className="w-3.5 h-3.5 text-[#7B021D]" />
                         </Link>
-                        <span className="text-[10px] uppercase font-mono tracking-widest text-[#6B5E5E] block font-bold">
+                        <span className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] block font-bold">
                           {bm.pageRef || 'Page Note'}
                         </span>
                       </div>
@@ -106,25 +121,28 @@ export default function BookmarksView() {
                       <span className="text-xs font-mono text-[#6B5E5E]">
                         {bm.dateSaved || 'Recently'}
                       </span>
-                      <button
+                      <motion.button
+                        type="button"
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
                         onClick={() => handleDeleteBookmark(bmId)}
-                        className="p-1.5 rounded-full text-[#6B5E5E] hover:text-red-700 hover:bg-[#F5F5DA] transition-colors"
+                        className="p-2 rounded-full text-[#6B5E5E] hover:text-rose-600 hover:bg-rose-50 transition-colors"
                         title="Delete Bookmark"
                       >
                         <Trash2 className="w-4 h-4" />
-                      </button>
+                      </motion.button>
                     </div>
                   </div>
 
                   {bm.quote && (
-                    <blockquote className="font-editorial-serif text-xl sm:text-2xl text-[#211D1D] italic leading-relaxed pl-4 border-l-2 border-[#7B021D]">
+                    <blockquote className="font-editorial-serif text-xl sm:text-2xl text-[#2B2B2B] italic leading-relaxed pl-5 border-l-2 border-[#7B021D]">
                       "{bm.quote}"
                     </blockquote>
                   )}
 
                   {bm.note && (
-                    <div className="p-4 rounded-2xl bg-[#F5F5DA]/60 border border-[#E9E5C8] text-xs text-[#6B5E5E] leading-relaxed">
-                      <span className="font-mono uppercase font-bold text-[#211D1D] block mb-1">
+                    <div className="p-4 rounded-2xl bg-[#FFFDF3] border border-[#E7D9D3] text-xs text-[#6B5E5E] leading-relaxed shadow-inner">
+                      <span className="font-mono uppercase font-bold text-[#7B021D] block mb-1">
                         Personal Annotation
                       </span>
                       {bm.note}

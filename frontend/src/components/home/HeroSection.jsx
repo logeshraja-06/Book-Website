@@ -114,7 +114,7 @@ export default function HeroSection() {
       onMouseLeave={handleMouseLeave}
       className="relative overflow-hidden pt-10 pb-20 lg:pt-16 lg:pb-28 bg-[#F5F5DA]"
     >
-      {/* ── 1. CINEMATIC BACKGROUND IMAGE LAYER WITH WARM GRADIENT ── */}
+      {/* ── 1. CINEMATIC BACKGROUND VIDEO LAYER WITH WARM GRADIENT ── */}
       <div className="absolute inset-0 -z-20 overflow-hidden pointer-events-none select-none">
         <motion.div
           style={{ x: bgX, y: bgY }}
@@ -127,16 +127,23 @@ export default function HeroSection() {
           }}
           className="absolute inset-0 w-full h-full"
         >
-          {/* Uploaded Bookshelf Background Image */}
-          <div
-            className="absolute inset-0 w-full h-full opacity-35 mix-blend-multiply"
+          {/* Uploaded Bookshelf Background Video */}
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            poster="/hero-bg.jpg"
+            className="absolute inset-0 w-full h-full object-cover opacity-35 mix-blend-multiply"
             style={{
-              backgroundImage: "url('/hero-bg.jpg')",
-              backgroundSize: 'cover',
-              backgroundPosition: 'center 45%',
+              objectPosition: 'center 45%',
               filter: 'contrast(1.15) saturate(1.1) brightness(0.95)',
             }}
-          />
+          >
+            <source src="/hero-bg.mp4" type="video/mp4" />
+            {/* Fallback image if video can't load / browser unsupported */}
+          </video>
         </motion.div>
 
         {/* ── 2. OVERLAY LAYER (Warm Ivory Cream + Gradient Vignette) ── */}
@@ -161,10 +168,10 @@ export default function HeroSection() {
         className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 relative z-10"
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-          
+
           {/* ── LEFT COLUMN: EDITORIAL HEADLINE & STORYTELLING ── */}
           <div className="lg:col-span-7 space-y-8 text-left">
-            
+
             {/* 1. Small Eyebrow Label */}
             <motion.div
               initial={{ opacity: 0, y: 14 }}
@@ -270,7 +277,7 @@ export default function HeroSection() {
           </div>
 
           {/* ── RIGHT COLUMN: 3D FLOATING BOOK SHOWCASE WITH PARALLAX ── */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.94, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
@@ -309,13 +316,13 @@ export default function HeroSection() {
               >
                 <div className="book-spine-depth" />
                 <div className="relative aspect-[3/4] rounded-xl overflow-hidden shadow-inner bg-[#F5F5DA] mb-4">
-                  <img 
-                    src={heroBook.coverImage || heroBook.coverUrl} 
+                  <img
+                    src={heroBook.coverImage || heroBook.coverUrl}
                     alt={heroBook.title}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#211D1D]/75 via-transparent to-transparent opacity-85" />
-                  
+
                   <div className="absolute bottom-4 left-4 right-4 text-[#F5F5DA]">
                     <span className="text-[11px] font-mono uppercase tracking-[0.16em] text-[#E9E5C8] block mb-1 font-semibold">
                       {heroBook.genre}

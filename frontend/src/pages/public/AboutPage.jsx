@@ -171,32 +171,45 @@ export default function AboutPage() {
       </section>
 
       {/* ── 4. FOUNDATIONAL TENETS ── */}
-      <section className="py-24 bg-[#FFFDF3] border-b border-[#E9E5C8]">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          
+      <section className="relative py-24 border-b border-[#E9E5C8] overflow-hidden">
+        {/* Full background image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage:
+              "url('https://images.unsplash.com/photo-1519682337058-a94d519337bc?auto=format&fit=crop&w=1600&q=80')",
+          }}
+        />
+        {/* Brand Burgundy/Crimson Gradient Overlay for readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#520014]/90 via-[#7B021D]/85 to-[#520014]/90" />
+
+        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12">
           <div className="mb-16 max-w-xl">
-            <span className="text-xs uppercase tracking-widest font-mono text-[#7B021D] font-bold block mb-2">
+            <span className="text-xs uppercase tracking-widest font-mono text-[#E9E5C8] font-bold block mb-2">
               Foundational Principles
             </span>
-            <h2 className="font-editorial-serif text-4xl text-[#211D1D] font-normal">
+            <h2 className="font-editorial-serif text-4xl text-[#FFFDF3] font-normal">
               The Tenets of BookVerse Studio
             </h2>
           </div>
 
-          <div className="divide-y divide-[#E9E5C8] border-y border-[#E9E5C8]">
+          <div className="divide-y divide-[#FFFDF3]/20 border-y border-[#FFFDF3]/20">
             {tenets.map((v) => (
               <div key={v.num} className="py-10 grid grid-cols-1 md:grid-cols-12 gap-6 items-start group">
                 <div className="md:col-span-4 space-y-1">
-                  <span className="font-mono text-xs text-[#7B021D] font-bold block">{v.num}</span>
-                  <h3 className="font-editorial-serif text-2xl font-bold text-[#211D1D] group-hover:text-[#7B021D] transition-colors">{v.title}</h3>
+                  <span className="font-mono text-xs text-[#E9E5C8] font-bold block">{v.num}</span>
+                  <h3 className="font-editorial-serif text-2xl font-bold text-[#FFFDF3] group-hover:text-[#E9E5C8] transition-colors">
+                    {v.title}
+                  </h3>
                 </div>
                 <div className="md:col-span-8">
-                  <p className="text-sm sm:text-base text-[#6B5E5E] leading-relaxed max-w-2xl font-sans">{v.desc}</p>
+                  <p className="text-sm sm:text-base text-[#E9E5C8]/85 leading-relaxed max-w-2xl font-sans">
+                    {v.desc}
+                  </p>
                 </div>
               </div>
             ))}
           </div>
-
         </div>
       </section>
 

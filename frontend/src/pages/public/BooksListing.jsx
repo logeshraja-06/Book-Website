@@ -6,7 +6,6 @@ import {
   SlidersHorizontal,
   X,
   BookOpen,
-  Search,
   ChevronDown,
   Bookmark,
   LayoutGrid,
@@ -16,7 +15,8 @@ import {
 import { ALL_GENRES, ALL_LANGUAGES } from '../../data/mockData';
 import { useData } from '../../context/DataContext';
 import { formatPrice } from '../../utils/format';
-import { MinimalBookCard, CompactCatalogueRow, BookCoverFloatCard } from '../../components/ui/EditorialCards';
+import { CompactCatalogueRow, BookCoverFloatCard } from '../../components/ui/EditorialCards';
+import BookTiltCard from '../../components/book/BookTiltCard';
 
 const SORT_OPTIONS = [
   { value: 'relevance', label: 'Relevance' },
@@ -40,7 +40,7 @@ export default function BooksListing() {
   const [sortBy, setSortBy] = useState('relevance');
   const [searchQuery, setSearchQuery] = useState('');
   const [filterPanelOpen, setFilterPanelOpen] = useState(false);
-  const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'rows' | 'float'
+  const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'rows'
 
   const filteredBooks = useMemo(() => {
     let books = [...publishedBooks];
@@ -116,25 +116,11 @@ export default function BooksListing() {
               Explore our exhaustive index of historical sagas, behavioral finance treatises, performance psychology manuscripts, and rare Tamil literature.
             </p>
           </div>
-
-          {/* Search Input Bar */}
-          <div className="mt-8 max-w-xl">
-            <div className="relative">
-              <Search className="w-4 h-4 text-[#6B5E5E] absolute left-4 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                placeholder="Search titles, authors, genres, or ISBN…"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-11 pr-4 py-3 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] text-sm text-[#211D1D] placeholder-[#6B5E5E]/60 focus:outline-none focus:border-[#7B021D] transition-colors duration-200"
-              />
-            </div>
-          </div>
         </div>
       </section>
 
-      {/* ── 2. FILTER & VIEW CONTROLS TOOLBAR ── */}
-      <section className="sticky top-20 z-30 bg-[#F5F5DA]/95 backdrop-blur-md border-b border-[#E9E5C8]">
+      {/* ── 2. FILTER & VIEW CONTROLS TOOLBAR (Normal Flow, Un-stuck) ── */}
+      <section className="bg-[#F5F5DA] border-b border-[#E9E5C8]">
         <div className="max-w-7xl mx-auto px-6 lg:px-12 py-3.5">
           <div className="flex items-center justify-between gap-4">
             
@@ -280,7 +266,7 @@ export default function BooksListing() {
         )}
       </AnimatePresence>
 
-      {/* ── 4. BOOKS CONTENT DISPLAY (Dynamic View Modes) ── */}
+      {/* ── 4. BOOKS CONTENT DISPLAY (Dynamic 3D Tilt Grid & Row View) ── */}
       <section className="max-w-7xl mx-auto px-6 lg:px-12 py-12">
         <AnimatePresence mode="wait">
           {filteredBooks.length > 0 ? (
@@ -294,7 +280,7 @@ export default function BooksListing() {
               >
                 {filteredBooks.map((book, idx) => (
                   <CompactCatalogueRow
-                    key={book.slug || book.id || book._id}
+                    key={`${book.slug || book.id || book._id || 'row'}-${idx}`}
                     book={book}
                     index={idx}
                   />
@@ -306,14 +292,13 @@ export default function BooksListing() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-7"
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-7 gap-y-12"
               >
                 {filteredBooks.map((book, idx) => (
-                  <MinimalBookCard
-                    key={book.slug || book.id || book._id}
+                  <BookTiltCard
+                    key={`${book.slug || book.id || book._id || 'grid'}-${idx}`}
                     book={book}
                     index={idx}
-                    className="bg-[#FFFDF3] rounded-2xl p-5 border border-[#E9E5C8] shadow-2xs hover:shadow-lg transition-all"
                   />
                 ))}
               </motion.div>
@@ -330,14 +315,14 @@ export default function BooksListing() {
 function FilterSelect({ label, value, onChange, options, fullWidth }) {
   return (
     <div className={`flex items-center gap-2 text-sm ${fullWidth ? 'w-full justify-between' : ''}`}>
-      <span className="text-[#6E6A67] text-xs uppercase tracking-wider font-mono min-w-fit">
+      <span className="text-[#6B5E5E] text-xs uppercase tracking-wider font-mono min-w-fit">
         {label}
       </span>
       <div className="relative inline-block flex-1 sm:flex-initial">
         <select
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="bg-transparent border-b border-[#E7D9D3] text-[#2B2B2B] text-sm py-1 pr-6 appearance-none cursor-pointer focus:outline-none focus:border-[#D3968C] transition-colors font-medium w-full"
+          className="bg-transparent border-b border-[#E9E5C8] text-[#211D1D] text-sm py-1 pr-6 appearance-none cursor-pointer focus:outline-none focus:border-[#7B021D] transition-colors font-medium w-full"
         >
           {options.map((opt) => (
             <option key={opt} value={opt}>
@@ -345,7 +330,7 @@ function FilterSelect({ label, value, onChange, options, fullWidth }) {
             </option>
           ))}
         </select>
-        <ChevronDown className="w-3.5 h-3.5 text-[#6E6A67] absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none" />
+        <ChevronDown className="w-3.5 h-3.5 text-[#6B5E5E] absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none" />
       </div>
     </div>
   );
@@ -360,18 +345,18 @@ function EmptyState({ onClear }) {
       exit={{ opacity: 0 }}
       className="flex flex-col items-center justify-center py-24 text-center"
     >
-      <div className="w-20 h-20 rounded-full bg-[#F4EEEA] border border-[#E7D9D3] flex items-center justify-center mb-6">
-        <BookOpen className="w-8 h-8 text-[#D3968C]" />
+      <div className="w-20 h-20 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] flex items-center justify-center mb-6">
+        <BookOpen className="w-8 h-8 text-[#7B021D]" />
       </div>
-      <h3 className="font-editorial-serif text-2xl text-[#2B2B2B] mb-2">
+      <h3 className="font-editorial-serif text-2xl text-[#211D1D] mb-2">
         No titles match your criteria
       </h3>
-      <p className="text-sm text-[#6E6A67] max-w-sm mb-6 leading-relaxed font-sans">
+      <p className="text-sm text-[#6B5E5E] max-w-sm mb-6 leading-relaxed font-sans">
         Try broadening your filters or resetting your search to explore other manuscripts in our catalog.
       </p>
       <button
         onClick={onClear}
-        className="px-6 py-2.5 rounded-full bg-[#2B2B2B] text-[#FAF8F6] text-xs font-editorial-sans uppercase tracking-wider font-semibold hover:bg-[#D3968C] transition-colors"
+        className="px-6 py-2.5 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-editorial-sans uppercase tracking-wider font-semibold hover:bg-[#520014] transition-colors"
       >
         Clear All Filters
       </button>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Save, ArrowLeft, Image as ImageIcon, FileText, CheckCircle2 } from 'lucide-react';
+import { Save, ArrowLeft, Image as ImageIcon, FileText, CheckCircle2, Feather, AlertCircle } from 'lucide-react';
 import { useData } from '../../context/DataContext';
 
 export default function AuthorEditBook() {
@@ -78,7 +78,7 @@ export default function AuthorEditBook() {
         manuscriptFile: formData.manuscriptFile || null,
         coverFile: formData.coverFile || null,
       });
-      showToast('✓ Book metadata updated successfully');
+      showToast('Book metadata updated successfully');
       setTimeout(() => navigate('/author/books'), 1200);
     }
   };
@@ -86,11 +86,11 @@ export default function AuthorEditBook() {
   if (!book) {
     return (
       <div className="text-center py-16 space-y-4">
-        <h2 className="font-editorial-serif text-2xl">Book Not Found</h2>
+        <h2 className="font-editorial-serif text-2xl text-[#2B2B2B]">Book Record Not Found</h2>
         <button
           type="button"
           onClick={() => navigate('/author/books')}
-          className="text-xs font-mono text-[#D3968C] hover:underline"
+          className="text-xs font-mono text-[#7B021D] hover:underline font-bold"
         >
           Return to My Books
         </button>
@@ -103,96 +103,98 @@ export default function AuthorEditBook() {
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="max-w-3xl mx-auto space-y-8"
+      className="max-w-3xl mx-auto space-y-8 relative"
     >
-      {/* Header */}
-      <div className="flex items-center justify-between border-b border-[#E7D9D3] pb-6">
+      {/* ── 1. HEADER ── */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[#E7D9D3] pb-6">
         <div>
           <button
             type="button"
             onClick={() => navigate('/author/books')}
-            className="text-xs font-mono text-[#6E6A67] hover:text-[#2B2B2B] transition-colors flex items-center gap-1 mb-2"
+            className="text-xs font-mono text-[#6B5E5E] hover:text-[#7B021D] transition-colors flex items-center gap-1 mb-2 font-bold uppercase tracking-wider"
           >
-            <ArrowLeft className="w-3.5 h-3.5" />
+            <ArrowLeft className="w-3.5 h-3.5 text-[#7B021D]" />
             <span>Back to My Books</span>
           </button>
-          <h1 className="font-editorial-serif text-3xl font-normal text-[#2B2B2B]">
-            Edit Book Details
+          <h1 className="font-editorial-serif text-3xl sm:text-4xl font-bold text-[#2B2B2B]">
+            Edit Book Details & Metadata
           </h1>
         </div>
 
-        <button
+        <motion.button
           type="button"
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
           onClick={handleSave}
-          className="px-6 py-3 rounded-full bg-[#2B2B2B] text-[#FAF8F6] text-xs font-semibold uppercase tracking-wider hover:bg-[#D3968C] transition-colors shadow-md flex items-center gap-2"
+          className="px-6 py-3 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#520014] transition-colors shadow-md flex items-center gap-2"
         >
-          <Save className="w-4 h-4 text-[#D3968C]" />
+          <Save className="w-4 h-4 text-[#F5F5DA]" />
           <span>Save Changes</span>
-        </button>
+        </motion.button>
       </div>
 
-      {/* Form Container */}
-      <form onSubmit={handleSave} className="p-8 sm:p-10 rounded-3xl bg-[#FAF8F6] border border-[#E7D9D3] shadow-lg space-y-6">
+      {/* ── 2. DOCUMENT-STYLE FORM CONTAINER ── */}
+      <form onSubmit={handleSave} className="p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-[#FFFDF3] via-[#FAF8F6] to-[#F4EEEA] border border-[#E7D9D3] shadow-md space-y-6">
         <div className="space-y-2">
-          <label className="text-xs font-mono uppercase tracking-wider text-[#6E6A67] block font-semibold">
-            Book Title
+          <label className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] block font-bold">
+            Book Title *
           </label>
           <input
             type="text"
             required
             value={formData.title}
             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-            className="w-full px-4 py-3 rounded-2xl border border-[#E7D9D3] bg-[#FAF8F6] text-sm focus:outline-none focus:border-[#D3968C]"
+            className="w-full px-4 py-3 rounded-2xl border border-[#E7D9D3] bg-[#FFFDF3] text-sm text-[#2B2B2B] focus:outline-none focus:border-[#7B021D] font-editorial-serif shadow-inner"
           />
         </div>
 
         <div className="space-y-2">
-          <label className="text-xs font-mono uppercase tracking-wider text-[#6E6A67] block font-semibold">
-            Synopsis / Description
+          <label className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] block font-bold">
+            Synopsis / Description *
           </label>
           <textarea
             rows={5}
             required
             value={formData.synopsis}
             onChange={(e) => setFormData({ ...formData, synopsis: e.target.value })}
-            className="w-full px-4 py-3 rounded-2xl border border-[#E7D9D3] bg-[#FAF8F6] text-sm focus:outline-none focus:border-[#D3968C] leading-relaxed"
+            className="w-full px-4 py-3 rounded-2xl border border-[#E7D9D3] bg-[#FFFDF3] text-sm text-[#2B2B2B] focus:outline-none focus:border-[#7B021D] leading-relaxed font-sans shadow-inner resize-none"
           />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           <div className="space-y-2">
-            <label className="text-xs font-mono uppercase tracking-wider text-[#6E6A67] block font-semibold">
+            <label className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] block font-bold">
               Genre
             </label>
             <input
               type="text"
               value={formData.genre}
               onChange={(e) => setFormData({ ...formData, genre: e.target.value })}
-              className="w-full px-4 py-3 rounded-2xl border border-[#E7D9D3] bg-[#FAF8F6] text-xs font-mono"
+              className="w-full px-4 py-3 rounded-2xl border border-[#E7D9D3] bg-[#FFFDF3] text-xs font-mono text-[#2B2B2B] focus:outline-none focus:border-[#7B021D] shadow-inner"
             />
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-mono uppercase tracking-wider text-[#6E6A67] block font-semibold">
+            <label className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] block font-bold">
               Language
             </label>
             <input
               type="text"
               value={formData.language}
               onChange={(e) => setFormData({ ...formData, language: e.target.value })}
-              className="w-full px-4 py-3 rounded-2xl border border-[#E7D9D3] bg-[#FAF8F6] text-xs font-mono"
+              className="w-full px-4 py-3 rounded-2xl border border-[#E7D9D3] bg-[#FFFDF3] text-xs font-mono text-[#2B2B2B] focus:outline-none focus:border-[#7B021D] shadow-inner"
             />
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-mono uppercase tracking-wider text-[#6E6A67] block font-semibold">
+            <label className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] block font-bold">
               Price (₹)
             </label>
             <input
               type="number"
               value={formData.price}
               onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-              className="w-full px-4 py-3 rounded-2xl border border-[#E7D9D3] bg-[#FAF8F6] text-xs font-mono"
+              className="w-full px-4 py-3 rounded-2xl border border-[#E7D9D3] bg-[#FFFDF3] text-xs font-mono text-[#2B2B2B] focus:outline-none focus:border-[#7B021D] shadow-inner"
             />
           </div>
         </div>
@@ -200,16 +202,16 @@ export default function AuthorEditBook() {
         {/* Cover Artwork & PDF replacement section */}
         <div className="pt-6 border-t border-[#E7D9D3] grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="space-y-3">
-            <label className="text-xs font-mono uppercase tracking-wider text-[#6E6A67] block font-semibold">
+            <label className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] block font-bold">
               Cover Image URL
             </label>
             <div className="flex items-center gap-4">
-              <div className="w-16 aspect-[2/3] rounded-lg overflow-hidden border border-[#E7D9D3] shrink-0 bg-[#F4EEEA]">
+              <div className="w-16 aspect-[2/3] rounded-xl overflow-hidden border border-[#E7D9D3] shrink-0 bg-[#F4EEEA] shadow-2xs">
                 {formData.coverUrl ? (
                   <img src={formData.coverUrl} alt="Cover" className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
-                    <ImageIcon className="w-5 h-5 text-[#D3968C]" />
+                    <ImageIcon className="w-5 h-5 text-[#7B021D]" />
                   </div>
                 )}
               </div>
@@ -217,21 +219,21 @@ export default function AuthorEditBook() {
                 type="text"
                 value={formData.coverUrl}
                 onChange={(e) => setFormData({ ...formData, coverUrl: e.target.value })}
-                className="flex-1 px-3 py-2 rounded-xl border border-[#E7D9D3] text-xs font-mono"
+                className="flex-1 px-3.5 py-2.5 rounded-2xl border border-[#E7D9D3] bg-[#FFFDF3] text-xs font-mono text-[#2B2B2B] focus:outline-none focus:border-[#7B021D] shadow-inner"
               />
             </div>
           </div>
 
           <div className="space-y-3">
-            <label className="text-xs font-mono uppercase tracking-wider text-[#6E6A67] block font-semibold">
+            <label className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] block font-bold">
               Manuscript File (PDF)
             </label>
-            <div className="p-3 rounded-xl border border-[#E7D9D3] bg-[#F4EEEA]/50 flex items-center justify-between text-xs font-mono relative">
+            <div className="p-3.5 rounded-2xl border border-[#E7D9D3] bg-[#FFFDF3] flex items-center justify-between text-xs font-mono relative shadow-inner">
               <div className="flex items-center gap-2">
-                <FileText className="w-4 h-4 text-[#D3968C]" />
-                <span className="truncate max-w-[150px]">{formData.pdfFileName}</span>
+                <FileText className="w-4 h-4 text-[#7B021D]" />
+                <span className="truncate max-w-[150px] font-bold text-[#2B2B2B]">{formData.pdfFileName}</span>
               </div>
-              <label className="text-[11px] text-[#D3968C] font-semibold hover:underline cursor-pointer">
+              <label className="text-[11px] text-[#7B021D] font-bold hover:underline cursor-pointer">
                 Replace PDF
                 <input
                   type="file"
@@ -245,26 +247,28 @@ export default function AuthorEditBook() {
         </div>
 
         <div className="pt-4 flex justify-end">
-          <button
+          <motion.button
             type="submit"
-            className="px-8 py-3.5 rounded-full bg-[#2B2B2B] text-[#FAF8F6] text-xs font-semibold uppercase tracking-wider hover:bg-[#D3968C] transition-colors shadow-lg flex items-center gap-2"
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            className="px-8 py-3.5 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#520014] transition-colors shadow-lg flex items-center gap-2"
           >
-            <Save className="w-4 h-4 text-[#D3968C]" />
+            <Save className="w-4 h-4 text-[#F5F5DA]" />
             <span>Save Metadata Changes</span>
-          </button>
+          </motion.button>
         </div>
       </form>
 
-      {/* Toast Notification */}
+      {/* ── 3. TOAST NOTIFICATION ── */}
       <AnimatePresence>
         {toastMessage && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            className="fixed bottom-6 right-6 z-[130] px-5 py-3.5 rounded-2xl bg-[#2B2B2B] text-[#FAF8F6] text-xs font-mono shadow-2xl flex items-center gap-3 border border-white/10"
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            className="fixed bottom-6 right-6 z-[130] px-5 py-3.5 rounded-2xl bg-[#7B021D] text-[#F5F5DA] text-xs font-mono shadow-2xl flex items-center gap-3 border border-[#E7D9D3]/30"
           >
-            <CheckCircle2 className="w-4 h-4 text-[#D3968C]" />
+            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
             <span>{toastMessage}</span>
           </motion.div>
         )}

@@ -593,7 +593,7 @@ export function BookShelfShowcase({ books = [], title = "Editorial Shelf" }) {
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
         {books.slice(0, 5).map((book, idx) => (
-          <BookCatalogCard key={book.id || book._id || idx} book={book} index={idx} />
+          <BookCatalogCard key={`${book.id || book._id || 'cat'}-${idx}`} book={book} index={idx} />
         ))}
       </div>
     </div>
