@@ -183,20 +183,20 @@ export default function AuthorRegisterPage() {
   };
 
   return (
-    <div className="min-h-[85vh] flex items-center justify-center bg-[#FAF8F6] py-16 px-6">
+    <div className="min-h-[85vh] flex items-center justify-center bg-[#F5F5DA] py-16 px-6">
       <div className="w-full max-w-lg space-y-8">
         {/* Header Branding */}
         <div className="text-center space-y-3">
-          <div className="w-12 h-12 rounded-2xl bg-[#F4EEEA] border border-[#E7D9D3] flex items-center justify-center text-[#2B2B2B] mx-auto">
-            <Feather className="w-6 h-6 text-[#D3968C]" />
+          <div className="w-12 h-12 rounded-2xl bg-[#FFFDF3] border border-[#E9E5C8] flex items-center justify-center text-[#211D1D] mx-auto shadow-2xs">
+            <Feather className="w-6 h-6 text-[#7B021D]" />
           </div>
-          <span className="text-xs uppercase tracking-widest font-mono text-[#D3968C] font-semibold block">
+          <span className="text-xs uppercase tracking-widest font-mono text-[#7B021D] font-bold block">
             Author Application
           </span>
-          <h1 className="font-editorial-serif text-4xl text-[#2B2B2B] font-normal">
+          <h1 className="font-editorial-serif text-4xl text-[#211D1D] font-normal">
             Become a Studio Author
           </h1>
-          <p className="text-xs text-[#6E6A67]">
+          <p className="text-xs text-[#6B5E5E]">
             Publish your manuscripts, track analytics, and reach global readers.
           </p>
         </div>
@@ -206,10 +206,10 @@ export default function AuthorRegisterPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="bg-[#FFFFFF] rounded-3xl p-8 sm:p-10 border border-[#E7D9D3] shadow-sm space-y-6"
+          className="bg-[#FFFDF3] rounded-3xl p-8 sm:p-10 border border-[#E9E5C8] shadow-sm space-y-6"
         >
           {serverError && (
-            <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-xs text-red-600 text-center font-mono">
+            <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 text-center font-mono">
               {serverError}
             </div>
           )}
@@ -261,11 +261,11 @@ export default function AuthorRegisterPage() {
                 />
                 {formData.password && (
                   <div className="space-y-1 pt-1">
-                    <div className="flex justify-between items-center text-[10px] font-mono text-[#6E6A67]">
+                    <div className="flex justify-between items-center text-[10px] font-mono text-[#6B5E5E]">
                       <span>Strength:</span>
                       <span className="font-semibold">{getStrengthLabel(passwordStrength)}</span>
                     </div>
-                    <div className="w-full h-1 bg-[#F4EEEA] rounded-full overflow-hidden">
+                    <div className="w-full h-1 bg-[#F5F5DA] rounded-full overflow-hidden">
                       <div
                         className={`h-full transition-all duration-300 ${getStrengthColor(passwordStrength)}`}
                         style={{ width: `${passwordStrength}%` }}
@@ -305,19 +305,19 @@ export default function AuthorRegisterPage() {
             />
 
             <div className="space-y-1">
-              <label className="flex items-start gap-2.5 cursor-pointer text-xs font-mono text-[#6E6A67]">
+              <label className="flex items-start gap-2.5 cursor-pointer text-xs font-mono text-[#6B5E5E]">
                 <input
                   type="checkbox"
                   checked={formData.acceptTerms}
                   onChange={(e) => handleChange('acceptTerms', e.target.checked)}
-                  className="mt-0.5 rounded border-[#E7D9D3] text-[#D3968C] focus:ring-[#D3968C]"
+                  className="mt-0.5 rounded border-[#E9E5C8] text-[#7B021D] focus:ring-[#7B021D]"
                 />
                 <span>
                   I agree to the BookVerse Studio Author Agreement and Copyright Policy.
                 </span>
               </label>
               {touched.acceptTerms && errors.acceptTerms && (
-                <p className="text-[11px] font-mono text-[#C98579] font-medium">
+                <p className="text-[11px] font-mono text-[#7B021D] font-medium">
                   {errors.acceptTerms}
                 </p>
               )}
@@ -327,17 +327,17 @@ export default function AuthorRegisterPage() {
               type="submit"
               size="lg"
               disabled={isLoading}
-              className="w-full justify-center mt-2"
+              className="w-full justify-center mt-2 bg-[#7B021D] text-[#F5F5DA] hover:bg-[#520014]"
               icon={ArrowRight}
             >
               {isLoading ? 'Submitting Application…' : 'Complete Author Registration'}
             </Button>
           </form>
 
-          <div className="pt-4 border-t border-[#E7D9D3] text-center text-xs font-mono text-[#6E6A67]">
+          <div className="pt-4 border-t border-[#E9E5C8] text-center text-xs font-mono text-[#6B5E5E]">
             <p>
               Already registered as an author?{' '}
-              <Link to="/login" className="text-[#2B2B2B] font-semibold hover:text-[#D3968C] underline">
+              <Link to="/login" className="text-[#211D1D] font-bold hover:text-[#7B021D] underline">
                 Sign In
               </Link>
             </p>

@@ -34,7 +34,7 @@ export default function LoginPage() {
 
   const handleForgotPassword = (e) => {
     e.preventDefault();
-    setToastMessage('ℹ Password reset service coming in V2. Contact support@bookverse.in.');
+    setToastMessage('ℹ Password reset service available. Contact editorial support.');
     setTimeout(() => setToastMessage(''), 4000);
   };
 
@@ -85,16 +85,16 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-[85vh] flex items-center justify-center bg-[#FAF8F6] py-16 px-6 relative">
+    <div className="min-h-[85vh] flex items-center justify-center bg-[#F5F5DA] py-16 px-6 relative">
       {/* Success / Notification Toast Banner */}
       {toastMessage && (
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          className="fixed top-6 right-6 z-50 px-4 py-3 rounded-2xl bg-[#2B2B2B] text-[#FAF8F6] shadow-xl border border-[#E7D9D3]/20 flex items-center gap-3 text-xs font-mono"
+          className="fixed top-6 right-6 z-50 px-4 py-3 rounded-2xl bg-[#211D1D] text-[#F5F5DA] shadow-xl border border-[#E9E5C8]/20 flex items-center gap-3 text-xs font-mono"
         >
-          <CheckCircle2 className="w-4 h-4 text-[#D3968C]" />
+          <CheckCircle2 className="w-4 h-4 text-[#7B021D]" />
           <span>{toastMessage}</span>
         </motion.div>
       )}
@@ -102,16 +102,16 @@ export default function LoginPage() {
       <div className="w-full max-w-md space-y-8">
         {/* Header Branding */}
         <div className="text-center space-y-3">
-          <div className="w-12 h-12 rounded-2xl bg-[#F4EEEA] border border-[#E7D9D3] flex items-center justify-center text-[#2B2B2B] mx-auto">
-            <BookOpen className="w-6 h-6 text-[#D3968C]" />
+          <div className="w-12 h-12 rounded-2xl bg-[#FFFDF3] border border-[#E9E5C8] flex items-center justify-center text-[#211D1D] mx-auto shadow-2xs">
+            <BookOpen className="w-6 h-6 text-[#7B021D]" />
           </div>
-          <span className="text-xs uppercase tracking-widest font-mono text-[#D3968C] font-semibold block">
+          <span className="text-xs uppercase tracking-widest font-mono text-[#7B021D] font-bold block">
             BookVerse Sign In
           </span>
-          <h1 className="font-editorial-serif text-4xl text-[#2B2B2B] font-normal">
+          <h1 className="font-editorial-serif text-4xl text-[#211D1D] font-normal">
             Welcome to BookVerse
           </h1>
-          <p className="text-xs text-[#6E6A67]">
+          <p className="text-xs text-[#6B5E5E]">
             Sign in to access your personal digital shelf or manage your manuscripts.
           </p>
         </div>
@@ -121,10 +121,10 @@ export default function LoginPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="bg-[#FFFFFF] rounded-3xl p-8 sm:p-10 border border-[#E7D9D3] shadow-sm space-y-8"
+          className="bg-[#FFFDF3] rounded-3xl p-8 sm:p-10 border border-[#E9E5C8] shadow-sm space-y-8"
         >
           {errorMessage && (
-            <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-xs text-red-600 text-center font-mono">
+            <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 text-center font-mono">
               {errorMessage}
             </div>
           )}
@@ -154,25 +154,25 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-2 top-8 text-[#6E6A67] hover:text-[#2B2B2B] p-1"
+                className="absolute right-2 top-8 text-[#6B5E5E] hover:text-[#211D1D] p-1"
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
                 {showPassword ? (
-                  <EyeOff className="w-4 h-4 text-[#6E6A67]" />
+                  <EyeOff className="w-4 h-4 text-[#6B5E5E]" />
                 ) : (
-                  <Eye className="w-4 h-4 text-[#6E6A67]" />
+                  <Eye className="w-4 h-4 text-[#6B5E5E]" />
                 )}
               </button>
             </div>
 
             {/* Remember Me & Forgot Password Row */}
-            <div className="flex items-center justify-between text-xs font-mono text-[#6E6A67] pt-1">
+            <div className="flex items-center justify-between text-xs font-mono text-[#6B5E5E] pt-1">
               <label className="flex items-center gap-2 cursor-pointer select-none">
                 <input
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="rounded border-[#E7D9D3] text-[#D3968C] focus:ring-[#D3968C] w-3.5 h-3.5"
+                  className="rounded border-[#E9E5C8] text-[#7B021D] focus:ring-[#7B021D] w-3.5 h-3.5"
                 />
                 <span>Remember me</span>
               </label>
@@ -180,7 +180,7 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={handleForgotPassword}
-                className="text-[#6E6A67] hover:text-[#D3968C] underline"
+                className="text-[#6B5E5E] hover:text-[#7B021D] underline"
               >
                 Forgot Password?
               </button>
@@ -190,7 +190,7 @@ export default function LoginPage() {
               type="submit"
               size="lg"
               disabled={isLoading}
-              className="w-full justify-center"
+              className="w-full justify-center bg-[#7B021D] text-[#F5F5DA] hover:bg-[#520014]"
               icon={ArrowRight}
             >
               {isLoading ? 'Signing In…' : 'Sign In'}
@@ -198,12 +198,12 @@ export default function LoginPage() {
           </form>
 
           {/* Dedicated Registration Links */}
-          <div className="pt-4 border-t border-[#E7D9D3] text-center space-y-2 text-xs font-mono text-[#6E6A67]">
+          <div className="pt-4 border-t border-[#E9E5C8] text-center space-y-2 text-xs font-mono text-[#6B5E5E]">
             <p>
               New reader?{' '}
               <Link
                 to="/register/reader"
-                className="text-[#2B2B2B] font-semibold hover:text-[#D3968C] underline"
+                className="text-[#211D1D] font-bold hover:text-[#7B021D] underline"
               >
                 Create a Reader Account
               </Link>
@@ -212,7 +212,7 @@ export default function LoginPage() {
               Want to publish?{' '}
               <Link
                 to="/register/author"
-                className="text-[#2B2B2B] font-semibold hover:text-[#D3968C] underline"
+                className="text-[#211D1D] font-bold hover:text-[#7B021D] underline"
               >
                 Become an Author
               </Link>

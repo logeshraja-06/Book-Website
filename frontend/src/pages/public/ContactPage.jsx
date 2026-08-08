@@ -17,18 +17,18 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF8F6]">
+    <div className="min-h-screen bg-[#F5F5DA] text-[#211D1D]">
       
       {/* ── Editorial Header ── */}
-      <section className="border-b border-[#E7D9D3] bg-[#FAF8F6] pt-16 pb-14">
+      <section className="border-b border-[#E9E5C8] bg-[#F5F5DA] pt-16 pb-14">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          <span className="text-xs uppercase tracking-widest font-mono text-[#D3968C] font-semibold block mb-2">
+          <span className="text-xs uppercase tracking-widest font-mono text-[#7B021D] font-bold block mb-2">
             Correspondence & Submissions
           </span>
-          <h1 className="font-editorial-serif text-4xl sm:text-6xl text-[#2B2B2B] font-normal tracking-tight max-w-4xl leading-tight">
+          <h1 className="font-editorial-serif text-4xl sm:text-6xl text-[#211D1D] font-normal tracking-tight max-w-4xl leading-tight">
             Inquiries, Submissions & Editorial Correspondence
           </h1>
-          <p className="text-sm text-[#6E6A67] max-w-xl mt-4 leading-relaxed">
+          <p className="text-sm text-[#6B5E5E] max-w-xl mt-4 leading-relaxed font-sans">
             Have a manuscript query, rights inquiry, or press question? Reach out directly to our editorial board.
           </p>
         </div>
@@ -44,16 +44,16 @@ export default function ContactPage() {
               <motion.div
                 initial={{ opacity: 0, scale: 0.96 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="bg-[#FFFFFF] rounded-2xl p-10 border border-[#E7D9D3] space-y-4 text-center"
+                className="bg-[#FFFDF3] rounded-3xl p-10 border border-[#E9E5C8] space-y-4 text-center shadow-2xs"
               >
-                <CheckCircle2 className="w-12 h-12 text-[#D3968C] mx-auto" />
-                <h3 className="font-editorial-serif text-3xl text-[#2B2B2B]">Correspondence Received</h3>
-                <p className="text-sm text-[#6E6A67] max-w-md mx-auto leading-relaxed">
-                  Thank you for reaching out. Our editorial team reviews submissions weekly and will reply to <strong className="text-[#2B2B2B]">{formData.email}</strong> within 3 business days.
+                <CheckCircle2 className="w-12 h-12 text-[#7B021D] mx-auto" />
+                <h3 className="font-editorial-serif text-3xl text-[#211D1D]">Correspondence Received</h3>
+                <p className="text-sm text-[#6B5E5E] max-w-md mx-auto leading-relaxed font-sans">
+                  Thank you for reaching out. Our editorial team reviews submissions weekly and will reply to <strong className="text-[#211D1D]">{formData.email}</strong> within 3 business days.
                 </p>
                 <button
                   onClick={() => setSubmitted(false)}
-                  className="mt-4 px-6 py-2.5 rounded-full bg-[#F4EEEA] border border-[#E7D9D3] text-xs font-semibold uppercase tracking-wider text-[#2B2B2B] hover:border-[#D3968C] transition-colors"
+                  className="mt-4 px-6 py-2.5 rounded-full bg-[#F5F5DA] border border-[#E9E5C8] text-xs font-bold uppercase tracking-wider text-[#211D1D] hover:border-[#7B021D] transition-colors"
                 >
                   Send Another Message
                 </button>
@@ -63,7 +63,7 @@ export default function ContactPage() {
                 
                 {/* Underline Style Input: Name */}
                 <div className="relative group">
-                  <label className="text-xs uppercase font-mono tracking-widest text-[#6E6A67] block mb-2">
+                  <label className="text-xs uppercase font-mono tracking-widest text-[#6B5E5E] font-bold block mb-2">
                     Your Name
                   </label>
                   <input
@@ -72,13 +72,13 @@ export default function ContactPage() {
                     placeholder="e.g. Arundhati Roy"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full bg-transparent border-b-2 border-[#E7D9D3] focus:border-[#D3968C] py-3 text-lg text-[#2B2B2B] placeholder-[#6E6A67]/40 focus:outline-none transition-colors duration-300 font-editorial-serif"
+                    className="w-full bg-transparent border-b-2 border-[#E9E5C8] focus:border-[#7B021D] py-3 text-lg text-[#211D1D] placeholder-[#6B5E5E]/40 focus:outline-none transition-colors duration-300 font-editorial-serif"
                   />
                 </div>
 
                 {/* Underline Style Input: Email */}
                 <div className="relative group">
-                  <label className="text-xs uppercase font-mono tracking-widest text-[#6E6A67] block mb-2">
+                  <label className="text-xs uppercase font-mono tracking-widest text-[#6B5E5E] font-bold block mb-2">
                     Email Address
                   </label>
                   <input
@@ -87,19 +87,19 @@ export default function ContactPage() {
                     placeholder="arundhati@bookverse.studio"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full bg-transparent border-b-2 border-[#E7D9D3] focus:border-[#D3968C] py-3 text-lg text-[#2B2B2B] placeholder-[#6E6A67]/40 focus:outline-none transition-colors duration-300 font-editorial-serif"
+                    className="w-full bg-transparent border-b-2 border-[#E9E5C8] focus:border-[#7B021D] py-3 text-lg text-[#211D1D] placeholder-[#6B5E5E]/40 focus:outline-none transition-colors duration-300 font-editorial-serif"
                   />
                 </div>
 
                 {/* Underline Style Select: Inquiry Type */}
                 <div className="relative group">
-                  <label className="text-xs uppercase font-mono tracking-widest text-[#6E6A67] block mb-2">
+                  <label className="text-xs uppercase font-mono tracking-widest text-[#6B5E5E] font-bold block mb-2">
                     Inquiry Type
                   </label>
                   <select
                     value={formData.subject}
                     onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                    className="w-full bg-transparent border-b-2 border-[#E7D9D3] focus:border-[#D3968C] py-3 text-lg text-[#2B2B2B] focus:outline-none transition-colors duration-300 font-editorial-serif cursor-pointer"
+                    className="w-full bg-transparent border-b-2 border-[#E9E5C8] focus:border-[#7B021D] py-3 text-lg text-[#211D1D] focus:outline-none transition-colors duration-300 font-editorial-serif cursor-pointer"
                   >
                     <option value="Author Submission">Manuscript & Author Submission</option>
                     <option value="Publisher Partnership">Independent Publisher Inquiry</option>
@@ -110,7 +110,7 @@ export default function ContactPage() {
 
                 {/* Underline Style Textarea: Message */}
                 <div className="relative group">
-                  <label className="text-xs uppercase font-mono tracking-widest text-[#6E6A67] block mb-2">
+                  <label className="text-xs uppercase font-mono tracking-widest text-[#6B5E5E] font-bold block mb-2">
                     Your Message / Synopsis
                   </label>
                   <textarea
@@ -119,14 +119,14 @@ export default function ContactPage() {
                     placeholder="Describe your inquiry or manuscript details…"
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full bg-transparent border-b-2 border-[#E7D9D3] focus:border-[#D3968C] py-3 text-lg text-[#2B2B2B] placeholder-[#6E6A67]/40 focus:outline-none transition-colors duration-300 font-editorial-serif resize-none"
+                    className="w-full bg-transparent border-b-2 border-[#E9E5C8] focus:border-[#7B021D] py-3 text-lg text-[#211D1D] placeholder-[#6B5E5E]/40 focus:outline-none transition-colors duration-300 font-editorial-serif resize-none"
                   />
                 </div>
 
                 {/* Submit CTA */}
                 <button
                   type="submit"
-                  className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-[#2B2B2B] text-[#FAF8F6] text-xs font-semibold uppercase tracking-wider hover:bg-[#D3968C] transition-all duration-300 shadow-md group"
+                  className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-bold uppercase tracking-wider hover:bg-[#520014] transition-all duration-300 shadow-md group"
                 >
                   <span>Dispatch Message</span>
                   <Send className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -136,52 +136,52 @@ export default function ContactPage() {
             )}
           </div>
 
-          {/* Right Column: Text Colophon (No Boxed Icon-Cards) */}
-          <div className="lg:col-span-5 space-y-10 lg:pl-8 lg:border-l lg:border-[#E7D9D3]">
+          {/* Right Column: Text Colophon */}
+          <div className="lg:col-span-5 space-y-10 lg:pl-8 lg:border-l lg:border-[#E9E5C8]">
             
             <div className="space-y-3">
-              <span className="text-xs uppercase tracking-widest font-mono text-[#D3968C] font-semibold">
+              <span className="text-xs uppercase tracking-widest font-mono text-[#7B021D] font-bold">
                 Editorial Colophon
               </span>
-              <h3 className="font-editorial-serif text-2xl text-[#2B2B2B] font-normal">
+              <h3 className="font-editorial-serif text-2xl text-[#211D1D] font-normal">
                 Direct Contact & Bureaus
               </h3>
             </div>
 
-            <div className="space-y-8 text-sm text-[#6E6A67] leading-relaxed">
+            <div className="space-y-8 text-sm text-[#6B5E5E] leading-relaxed font-sans">
               
               {/* Bureau 1 */}
               <div className="space-y-1">
-                <h4 className="font-editorial-serif text-base font-bold text-[#2B2B2B]">
+                <h4 className="font-editorial-serif text-base font-bold text-[#211D1D]">
                   Chennai Studio & Library
                 </h4>
                 <p>14 Poes Garden, Alwarpet</p>
                 <p>Chennai, Tamil Nadu 600018</p>
-                <p className="font-mono text-xs text-[#2B2B2B] pt-1">chennai@bookverse.studio</p>
+                <p className="font-mono text-xs text-[#211D1D] pt-1 font-bold">chennai@bookverse.studio</p>
               </div>
 
               {/* Bureau 2 */}
               <div className="space-y-1">
-                <h4 className="font-editorial-serif text-base font-bold text-[#2B2B2B]">
+                <h4 className="font-editorial-serif text-base font-bold text-[#211D1D]">
                   Bengaluru Editorial Office
                 </h4>
                 <p>88 Indiranagar 100ft Road</p>
                 <p>Bengaluru, Karnataka 560038</p>
-                <p className="font-mono text-xs text-[#2B2B2B] pt-1">bengaluru@bookverse.studio</p>
+                <p className="font-mono text-xs text-[#211D1D] pt-1 font-bold">bengaluru@bookverse.studio</p>
               </div>
 
               {/* Rights & Press */}
-              <div className="space-y-1 pt-4 border-t border-[#E7D9D3]">
-                <h4 className="font-editorial-serif text-base font-bold text-[#2B2B2B]">
+              <div className="space-y-1 pt-4 border-t border-[#E9E5C8]">
+                <h4 className="font-editorial-serif text-base font-bold text-[#211D1D]">
                   Rights & Syndication
                 </h4>
                 <p>For international translation rights, licensing, and adaptation inquiries:</p>
-                <p className="font-mono text-xs text-[#D3968C] font-semibold pt-1">rights@bookverse.studio</p>
+                <p className="font-mono text-xs text-[#7B021D] font-bold pt-1">rights@bookverse.studio</p>
               </div>
 
               {/* Review Cadence */}
-              <div className="p-5 rounded-2xl bg-[#F4EEEA] border border-[#E7D9D3] text-xs text-[#6E6A67] space-y-2">
-                <span className="font-mono uppercase font-semibold text-[#2B2B2B] block">Submission Policy</span>
+              <div className="p-5 rounded-2xl bg-[#FFFDF3] border border-[#E9E5C8] text-xs text-[#6B5E5E] space-y-2 shadow-2xs">
+                <span className="font-mono uppercase font-bold text-[#211D1D] block">Submission Policy</span>
                 <p>
                   Unsolicited manuscripts are reviewed on a rolling monthly basis. Please allow up to 14 days for initial response from our readers.
                 </p>
@@ -195,17 +195,17 @@ export default function ContactPage() {
       </section>
 
       {/* ── FAQ Accordion Section ── */}
-      <section className="border-t border-[#E7D9D3] py-24 bg-[#F4EEEA]">
+      <section className="border-t border-[#E9E5C8] py-24 bg-[#FFFDF3]">
         <div className="max-w-4xl mx-auto px-6 space-y-12">
           
           <div className="text-center space-y-2">
-            <span className="text-xs uppercase tracking-widest font-mono text-[#D3968C] font-semibold">
+            <span className="text-xs uppercase tracking-widest font-mono text-[#7B021D] font-bold">
               Platform FAQ & Knowledge Base
             </span>
-            <h2 className="font-editorial-serif text-3xl sm:text-4xl text-[#2B2B2B] font-normal">
+            <h2 className="font-editorial-serif text-3xl sm:text-4xl text-[#211D1D] font-normal">
               Frequently Asked Questions
             </h2>
-            <p className="text-xs text-[#6E6A67]">
+            <p className="text-xs text-[#6B5E5E] font-sans">
               Common queries regarding manuscript submission, DRM policies, and editorial review
             </p>
           </div>
@@ -257,15 +257,15 @@ function FaqAccordion() {
         return (
           <div
             key={idx}
-            className="bg-[#FFFFFF] rounded-2xl border border-[#E7D9D3] overflow-hidden transition-colors"
+            className="bg-[#F5F5DA] rounded-2xl border border-[#E9E5C8] overflow-hidden transition-colors"
           >
             <button
               type="button"
               onClick={() => setOpenIndex(isOpen ? null : idx)}
-              className="w-full p-6 text-left flex items-center justify-between gap-4 font-editorial-serif text-lg font-bold text-[#2B2B2B] hover:text-[#C98579] transition-colors"
+              className="w-full p-6 text-left flex items-center justify-between gap-4 font-editorial-serif text-lg font-bold text-[#211D1D] hover:text-[#7B021D] transition-colors"
             >
               <span>{item.q}</span>
-              <span className="text-xl font-mono text-[#D3968C]">{isOpen ? '−' : '+'}</span>
+              <span className="text-xl font-mono text-[#7B021D]">{isOpen ? '−' : '+'}</span>
             </button>
 
             {isOpen && (
@@ -274,7 +274,7 @@ function FaqAccordion() {
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.3, ease: 'easeInOut' }}
-                className="px-6 pb-6 text-xs text-[#6E6A67] leading-relaxed border-t border-[#E7D9D3]/60 pt-4"
+                className="px-6 pb-6 text-xs text-[#6B5E5E] leading-relaxed border-t border-[#E9E5C8]/60 pt-4 font-sans"
               >
                 {item.a}
               </motion.div>

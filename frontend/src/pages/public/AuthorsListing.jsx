@@ -41,41 +41,41 @@ export default function AuthorsListing() {
   }, [AUTHORS, searchQuery, selectedRole]);
 
   return (
-    <div className="min-h-screen bg-[#FAF8F6]">
-      <section className="border-b border-[#E7D9D3] bg-[#FAF8F6] pt-14 pb-12">
+    <div className="min-h-screen bg-[#F5F5DA]">
+      <section className="border-b border-[#E9E5C8] bg-[#F5F5DA] pt-14 pb-12">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div className="space-y-3">
-              <span className="text-xs uppercase tracking-widest font-mono text-[#D3968C] font-semibold block">
+              <span className="text-xs uppercase tracking-widest font-mono text-[#7B021D] font-bold block">
                 The Contributor Index
               </span>
-              <h1 className="font-editorial-serif text-4xl sm:text-5xl lg:text-6xl text-[#2B2B2B] font-normal tracking-tight">
+              <h1 className="font-editorial-serif text-4xl sm:text-5xl lg:text-6xl text-[#211D1D] font-normal tracking-tight">
                 Authors & Voices
               </h1>
-              <p className="text-sm text-[#6E6A67] max-w-xl leading-relaxed">
+              <p className="text-sm text-[#6B5E5E] max-w-xl leading-relaxed font-sans">
                 An index of storytellers, historians, essayists, and scientists publishing through the BookVerse Studio ecosystem.
               </p>
             </div>
 
             <div className="relative w-full md:w-80">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6E6A67]" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B5E5E]" />
               <input
                 type="text"
                 placeholder="Search by author or discipline…"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-11 pr-4 py-3 rounded-full bg-[#FFFFFF] border border-[#E7D9D3] text-sm text-[#2B2B2B] placeholder-[#6E6A67]/60 focus:outline-none focus:border-[#D3968C] transition-colors"
+                className="w-full pl-11 pr-4 py-3 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] text-sm text-[#211D1D] placeholder-[#6B5E5E]/60 focus:outline-none focus:border-[#7B021D] transition-colors"
               />
             </div>
           </div>
 
-          <div className="flex items-center gap-6 border-t border-[#E7D9D3]/60 pt-6 mt-8 overflow-x-auto text-xs font-mono">
+          <div className="flex items-center gap-6 border-t border-[#E9E5C8] pt-6 mt-8 overflow-x-auto text-xs font-mono">
             {['All', 'Historical', 'Fiction', 'Essayist', 'Scholar'].map((role) => (
               <button
                 key={role}
                 onClick={() => setSelectedRole(role)}
                 className={`py-1 uppercase tracking-wider transition-colors whitespace-nowrap ${
-                  selectedRole === role ? 'text-[#2B2B2B] font-semibold border-b-2 border-[#D3968C]' : 'text-[#6E6A67] hover:text-[#2B2B2B]'
+                  selectedRole === role ? 'text-[#211D1D] font-bold border-b-2 border-[#7B021D]' : 'text-[#6B5E5E] hover:text-[#211D1D]'
                 }`}
               >
                 {role === 'All' ? 'All Disciplines' : role}
@@ -91,78 +91,64 @@ export default function AuthorsListing() {
             {Object.keys(groupedAuthors).map((letter) => (
               <div key={letter} className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                 <div className="lg:col-span-2 sticky top-24">
-                  <span className="font-editorial-serif text-5xl font-light text-[#D3968C] block">
+                  <span className="font-editorial-serif text-5xl font-light text-[#7B021D] block">
                     {letter}
                   </span>
-                  <span className="text-[10px] font-mono text-[#6E6A67] uppercase tracking-widest">
+                  <span className="text-[10px] font-mono text-[#6B5E5E] uppercase tracking-widest font-bold">
                     Index Section
                   </span>
                 </div>
 
-                <div className="lg:col-span-10 divide-y divide-[#E7D9D3] border-y border-[#E7D9D3]">
+                <div className="lg:col-span-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {groupedAuthors[letter].map((author) => {
-                    const authorId = author._id || author.id;
+                    const authorSlug = author.slug || author.id || author.name?.toLowerCase().replace(/\s+/g, '-');
                     const authorBooks = ALL_BOOKS.filter(
-                      (b) => b.authorId === authorId || b.author === author.name
+                      (b) => b.authorId === author.id || (b.author && b.author.toLowerCase().includes(author.name?.toLowerCase()))
                     );
 
                     return (
                       <motion.div
-                        key={authorId}
-                        initial={{ opacity: 0, y: 15 }}
+                        key={authorSlug}
+                        initial={{ opacity: 0, y: 16 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: '-40px' }}
-                        transition={{ duration: 0.5 }}
-                        className="py-8 group flex flex-col md:flex-row md:items-center justify-between gap-6 hover:bg-[#F4EEEA]/50 px-4 -mx-4 rounded-xl transition-all duration-300"
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.4 }}
                       >
-                        <div className="flex items-center gap-6">
-                          <div className="w-16 h-16 rounded-full overflow-hidden border border-[#E7D9D3] group-hover:border-[#D3968C] transition-colors shrink-0 bg-[#F4EEEA]">
-                            <img
-                              src={author.avatarUrl || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80'}
-                              alt={author.name}
-                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                            />
+                        <Link
+                          to={`/authors/${authorSlug}`}
+                          className="bg-[#FFFDF3] rounded-2xl p-6 border border-[#E9E5C8] hover:border-[#7B021D] shadow-2xs hover:shadow-xl hover:shadow-[#520014]/[0.06] transition-all duration-300 flex flex-col justify-between h-full group block"
+                        >
+                          <div className="space-y-4">
+                            <div className="flex items-center gap-4">
+                              <img
+                                src={author.avatarUrl || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80'}
+                                alt={author.name}
+                                className="w-14 h-14 rounded-full object-cover border border-[#E9E5C8] group-hover:scale-105 transition-transform"
+                              />
+                              <div className="min-w-0">
+                                <span className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] font-bold block truncate">
+                                  {author.role || 'Author'}
+                                </span>
+                                <h3 className="font-editorial-serif text-xl font-semibold text-[#211D1D] group-hover:text-[#7B021D] transition-colors truncate">
+                                  {author.name}
+                                </h3>
+                              </div>
+                            </div>
+
+                            <p className="text-xs text-[#6B5E5E] leading-relaxed line-clamp-3 italic">
+                              "{author.bio || 'Contributing seminal manuscripts to the BookVerse catalog.'}"
+                            </p>
                           </div>
 
-                          <div className="space-y-1">
-                            <Link
-                              to={`/authors/${author.slug || authorId}`}
-                              className="font-editorial-serif text-2xl font-bold text-[#2B2B2B] hover:text-[#C98579] transition-colors inline-flex items-center gap-2"
-                            >
-                              {author.name}
-                              <ArrowUpRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity text-[#D3968C]" />
-                            </Link>
-                            <p className="text-xs font-mono uppercase tracking-wider text-[#6E6A67]">
-                              {author.role || 'Verified Author'}
-                            </p>
-                            <p className="text-xs text-[#6E6A67] max-w-md line-clamp-1 italic">
-                              "{author.bio || 'Author on BookVerse Studio'}"
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center justify-between md:justify-end gap-8 pt-4 md:pt-0 border-t md:border-t-0 border-[#E7D9D3]/60">
-                          <div className="text-left md:text-right">
-                            <span className="text-xs text-[#6E6A67] block">Key Work</span>
-                            <span className="font-editorial-serif text-sm font-semibold text-[#2B2B2B]">
-                              {author.bookTitle || (authorBooks[0]?.title) || 'Featured Title'}
+                          <div className="pt-4 mt-6 border-t border-[#E9E5C8] flex items-center justify-between text-xs font-mono">
+                            <span className="text-[#6B5E5E]">
+                              {authorBooks.length || author.worksCount || 1} Works Archived
+                            </span>
+                            <span className="inline-flex items-center gap-1 text-[#211D1D] group-hover:text-[#7B021D] transition-colors font-semibold">
+                              View Profile <ArrowUpRight className="w-3.5 h-3.5" />
                             </span>
                           </div>
-
-                          <div className="text-right">
-                            <span className="text-xs text-[#6E6A67] block">Followers</span>
-                            <span className="font-mono text-xs font-semibold text-[#2B2B2B]">
-                              {author.followers || '1.2k'}
-                            </span>
-                          </div>
-
-                          <Link
-                            to={`/authors/${author.slug || authorId}`}
-                            className="px-4 py-2 rounded-full border border-[#E7D9D3] text-xs font-medium text-[#2B2B2B] group-hover:bg-[#2B2B2B] group-hover:text-[#FAF8F6] group-hover:border-[#2B2B2B] transition-all duration-300"
-                          >
-                            View Profile
-                          </Link>
-                        </div>
+                        </Link>
                       </motion.div>
                     );
                   })}
@@ -171,10 +157,10 @@ export default function AuthorsListing() {
             ))}
           </div>
         ) : (
-          <div className="text-center py-20">
-            <BookOpen className="w-10 h-10 text-[#D3968C] mx-auto mb-4" />
-            <h3 className="font-editorial-serif text-2xl text-[#2B2B2B]">No authors found</h3>
-            <p className="text-sm text-[#6E6A67] mt-1">Try searching with a different keyword.</p>
+          <div className="text-center py-24 space-y-3">
+            <BookOpen className="w-8 h-8 text-[#7B021D] mx-auto" />
+            <h3 className="font-editorial-serif text-2xl text-[#211D1D]">No Authors Found</h3>
+            <p className="text-xs text-[#6B5E5E]">Try clearing search parameters to browse the full guild.</p>
           </div>
         )}
       </section>

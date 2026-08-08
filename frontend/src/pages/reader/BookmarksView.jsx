@@ -36,7 +36,7 @@ export default function BookmarksView() {
 
   if (loading) {
     return (
-      <div className="py-12 text-center text-xs font-mono text-[#6E6A67]">
+      <div className="py-12 text-center text-xs font-mono text-[#6B5E5E]">
         Loading your bookmarks & notes…
       </div>
     );
@@ -45,23 +45,23 @@ export default function BookmarksView() {
   return (
     <div className="space-y-12">
       {/* Header */}
-      <div className="flex items-end justify-between border-b border-[#E7D9D3] pb-6">
+      <div className="flex items-end justify-between border-b border-[#E9E5C8] pb-6">
         <div>
-          <h2 className="font-editorial-serif text-3xl text-[#2B2B2B] font-normal">
+          <h2 className="font-editorial-serif text-3xl text-[#211D1D] font-normal">
             Reading Passages & Notes
           </h2>
-          <p className="text-xs text-[#6E6A67] mt-1">
+          <p className="text-xs text-[#6B5E5E] mt-1">
             Bookmarked excerpts and personal reflections from your shelf
           </p>
         </div>
-        <span className="text-xs font-mono text-[#6E6A67]">
+        <span className="text-xs font-mono text-[#6B5E5E]">
           {bookmarks.length} Passages Saved
         </span>
       </div>
 
       {/* Quote-Style Reading Notes Cards */}
       {bookmarks.length === 0 ? (
-        <div className="p-12 text-center bg-[#FFFFFF] rounded-2xl border border-[#E7D9D3] text-xs font-mono text-[#6E6A67]">
+        <div className="p-12 text-center bg-[#FFFDF3] rounded-3xl border border-[#E9E5C8] text-xs font-mono text-[#6B5E5E] shadow-2xs">
           No bookmarks saved yet. While reading books on your shelf, bookmark notable quotes and personal annotations!
         </div>
       ) : (
@@ -81,34 +81,34 @@ export default function BookmarksView() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.3, delay: idx * 0.05 }}
-                  className="bg-[#FFFFFF] rounded-2xl p-8 border border-[#E7D9D3] shadow-sm space-y-6 hover:border-[#D3968C] transition-all duration-300 relative group"
+                  className="bg-[#FFFDF3] rounded-3xl p-8 border border-[#E9E5C8] shadow-2xs space-y-6 hover:border-[#7B021D] transition-all duration-300 relative group"
                 >
-                  <div className="flex items-center justify-between border-b border-[#E7D9D3]/60 pb-4">
+                  <div className="flex items-center justify-between border-b border-[#E9E5C8]/60 pb-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-[#F4EEEA] border border-[#E7D9D3] flex items-center justify-center text-[#D3968C]">
+                      <div className="w-8 h-8 rounded-full bg-[#F5F5DA] border border-[#E9E5C8] flex items-center justify-center text-[#7B021D]">
                         <Quote className="w-4 h-4" />
                       </div>
                       <div>
                         <Link
                           to={`/books/${bookId}`}
-                          className="font-editorial-serif text-base font-bold text-[#2B2B2B] hover:text-[#C98579] transition-colors inline-flex items-center gap-1.5"
+                          className="font-editorial-serif text-base font-bold text-[#211D1D] hover:text-[#7B021D] transition-colors inline-flex items-center gap-1.5"
                         >
                           {bookTitle}
-                          <ArrowUpRight className="w-3.5 h-3.5 text-[#D3968C]" />
+                          <ArrowUpRight className="w-3.5 h-3.5 text-[#7B021D]" />
                         </Link>
-                        <span className="text-[10px] uppercase font-mono tracking-widest text-[#6E6A67] block">
+                        <span className="text-[10px] uppercase font-mono tracking-widest text-[#6B5E5E] block font-bold">
                           {bm.pageRef || 'Page Note'}
                         </span>
                       </div>
                     </div>
 
                     <div className="flex items-center gap-3">
-                      <span className="text-xs font-mono text-[#6E6A67]">
+                      <span className="text-xs font-mono text-[#6B5E5E]">
                         {bm.dateSaved || 'Recently'}
                       </span>
                       <button
                         onClick={() => handleDeleteBookmark(bmId)}
-                        className="p-1.5 rounded-full text-[#6E6A67] hover:text-rose-600 hover:bg-[#F4EEEA] transition-colors"
+                        className="p-1.5 rounded-full text-[#6B5E5E] hover:text-red-700 hover:bg-[#F5F5DA] transition-colors"
                         title="Delete Bookmark"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -117,14 +117,14 @@ export default function BookmarksView() {
                   </div>
 
                   {bm.quote && (
-                    <blockquote className="font-editorial-serif text-xl sm:text-2xl text-[#2B2B2B] italic leading-relaxed pl-4 border-l-2 border-[#D3968C]">
+                    <blockquote className="font-editorial-serif text-xl sm:text-2xl text-[#211D1D] italic leading-relaxed pl-4 border-l-2 border-[#7B021D]">
                       "{bm.quote}"
                     </blockquote>
                   )}
 
                   {bm.note && (
-                    <div className="p-4 rounded-xl bg-[#F4EEEA]/60 border border-[#E7D9D3]/50 text-xs text-[#6E6A67] leading-relaxed">
-                      <span className="font-mono uppercase font-semibold text-[#2B2B2B] block mb-1">
+                    <div className="p-4 rounded-2xl bg-[#F5F5DA]/60 border border-[#E9E5C8] text-xs text-[#6B5E5E] leading-relaxed">
+                      <span className="font-mono uppercase font-bold text-[#211D1D] block mb-1">
                         Personal Annotation
                       </span>
                       {bm.note}

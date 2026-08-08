@@ -3,25 +3,30 @@ import { BookOpen, ArrowUpRight, Lock } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="bg-[#F4EEEA] border-t border-[#E7D9D3] text-[#6E6A67] pt-20 pb-12">
+    <footer className="bg-[#520014] text-[#F5F5DA] pt-20 pb-12 border-t border-[#E9E5C8]/20 selection:bg-[#7B021D] selection:text-[#F5F5DA]">
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-12 pb-16 border-b border-[#E7D9D3]">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-12 pb-16 border-b border-[#E9E5C8]/15">
           
           {/* Brand & Manifesto Column */}
           <div className="md:col-span-2 space-y-6">
             <Link to="/" className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-lg bg-[#FAF8F6] border border-[#E7D9D3] flex items-center justify-center text-[#2B2B2B]">
+              <div className="w-10 h-10 rounded-xl bg-[#7B021D] border border-[#E9E5C8]/30 flex items-center justify-center text-[#F5F5DA]">
                 <BookOpen className="w-5 h-5" />
               </div>
-              <span className="font-editorial-serif text-2xl font-semibold text-[#2B2B2B]">
-                BookVerse<span className="text-[#D3968C]">.</span>
-              </span>
+              <div className="flex flex-col">
+                <span className="font-editorial-serif text-2xl font-bold tracking-tight text-[#F5F5DA]">
+                  BOOKVERSE
+                </span>
+                <span className="font-editorial-sans text-[10px] uppercase tracking-[0.2em] text-[#E9E5C8]/80 font-bold">
+                  STUDIO IMPRINT
+                </span>
+              </div>
             </Link>
-            <p className="text-sm leading-relaxed max-w-sm text-[#6E6A67]">
-              BookVerse Studio is a digital publishing ecosystem crafted for authors, independent publishers, and discerning readers who cherish the art of literature.
+            <p className="text-sm leading-relaxed max-w-sm text-[#FFFDF3]/80 font-sans">
+              BookVerse Studio is a luxury digital publishing house and literary catalogue crafted for authors, independent publishers, and discerning readers who cherish the craft of literature.
             </p>
             <div className="pt-2">
-              <span className="text-xs uppercase tracking-widest font-mono text-[#2B2B2B]/60">
+              <span className="text-xs uppercase tracking-widest font-mono text-[#E9E5C8]/60 font-semibold">
                 Designed for Editorial Excellence
               </span>
             </div>
@@ -29,43 +34,43 @@ export default function Footer() {
 
           {/* Platform Column */}
           <div className="space-y-4">
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-[#2B2B2B]">Platform</h4>
-            <ul className="space-y-2.5 text-sm">
-              <li><Link to="/books" className="hover:text-[#2B2B2B] transition-colors">Catalog Overview</Link></li>
-              <li><Link to="/categories" className="hover:text-[#2B2B2B] transition-colors">Genre Taxonomy</Link></li>
-              <li><Link to="/authors" className="hover:text-[#2B2B2B] transition-colors">Author Directory</Link></li>
-              <li><Link to="/about" className="hover:text-[#2B2B2B] transition-colors">Platform Philosophy</Link></li>
+            <h4 className="text-xs font-bold uppercase tracking-wider text-[#F5F5DA] font-mono">Platform</h4>
+            <ul className="space-y-2.5 text-sm text-[#FFFDF3]/80 font-sans">
+              <li><Link to="/books" className="hover:text-[#F5F5DA] transition-colors">Catalog Overview</Link></li>
+              <li><Link to="/categories" className="hover:text-[#F5F5DA] transition-colors">Genre Taxonomy</Link></li>
+              <li><Link to="/authors" className="hover:text-[#F5F5DA] transition-colors">Author Guild</Link></li>
+              <li><Link to="/about" className="hover:text-[#F5F5DA] transition-colors">Platform Philosophy</Link></li>
             </ul>
           </div>
 
           {/* Creators & Workspaces */}
           <div className="space-y-4">
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-[#2B2B2B]">Workspaces</h4>
-            <ul className="space-y-2.5 text-sm">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-[#F5F5DA] font-mono">Workspaces</h4>
+            <ul className="space-y-2.5 text-sm text-[#FFFDF3]/80 font-sans">
               <li>
-                <Link to="/author/dashboard" className="inline-flex items-center gap-1.5 hover:text-[#2B2B2B] transition-colors text-[#2B2B2B] font-medium">
-                  Author Portal <ArrowUpRight className="w-3 h-3 text-[#D3968C]" />
+                <Link to="/my-shelf" className="inline-flex items-center gap-1.5 hover:text-[#F5F5DA] transition-colors font-medium">
+                  My Reading Shelf <ArrowUpRight className="w-3 h-3 text-[#A64A5B]" />
                 </Link>
               </li>
               <li>
-                <Link to="/my-shelf" className="inline-flex items-center gap-1.5 hover:text-[#2B2B2B] transition-colors text-[#2B2B2B] font-medium">
-                  My Shelf Reader Portal <ArrowUpRight className="w-3 h-3 text-[#D3968C]" />
+                <Link to="/authors" className="inline-flex items-center gap-1.5 hover:text-[#F5F5DA] transition-colors font-medium">
+                  Author Index <ArrowUpRight className="w-3 h-3 text-[#A64A5B]" />
                 </Link>
               </li>
-              <li><Link to="/about" className="hover:text-[#2B2B2B] transition-colors">Publishing Guidelines</Link></li>
+              <li><Link to="/about" className="hover:text-[#F5F5DA] transition-colors">Publishing Guidelines</Link></li>
             </ul>
           </div>
 
           {/* Institutional / Internal */}
           <div className="space-y-4">
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-[#2B2B2B]">Colophon & Access</h4>
-            <ul className="space-y-2.5 text-sm">
-              <li><span className="text-[#6E6A67]">Version 1.0 (V1 Release)</span></li>
-              <li><Link to="/about" className="hover:text-[#2B2B2B] transition-colors">Editorial Terms</Link></li>
+            <h4 className="text-xs font-bold uppercase tracking-wider text-[#F5F5DA] font-mono">Colophon & Access</h4>
+            <ul className="space-y-2.5 text-sm text-[#FFFDF3]/80 font-sans">
+              <li><span className="text-[#E9E5C8]/70">Version 1.0 (Editorial Release)</span></li>
+              <li><Link to="/about" className="hover:text-[#F5F5DA] transition-colors">Editorial Terms</Link></li>
               <li>
-                <Link to="/publisher/login" className="inline-flex items-center gap-1.5 text-xs font-mono text-[#6E6A67] hover:text-[#2B2B2B] transition-colors">
-                  <Lock className="w-3 h-3 text-[#D3968C]" />
-                  <span>Publisher / Internal Access</span>
+                <Link to="/publisher/login" className="inline-flex items-center gap-1.5 text-xs font-mono text-[#E9E5C8]/90 hover:text-[#F5F5DA] transition-colors">
+                  <Lock className="w-3 h-3 text-[#A64A5B]" />
+                  <span>Publisher Access Portal</span>
                 </Link>
               </li>
             </ul>
@@ -73,12 +78,12 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
+        <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-[#E9E5C8]/70 font-editorial-sans">
           <p>© {new Date().getFullYear()} BookVerse Studio Inc. All rights reserved. Built with editorial intention.</p>
           <div className="flex items-center gap-6">
-            <a href="https://twitter.com" target="_blank" rel="noreferrer" className="hover:text-[#2B2B2B] transition-colors">Twitter</a>
-            <a href="https://github.com" target="_blank" rel="noreferrer" className="hover:text-[#2B2B2B] transition-colors">GitHub</a>
-            <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="hover:text-[#2B2B2B] transition-colors">LinkedIn</a>
+            <a href="https://twitter.com" target="_blank" rel="noreferrer" className="hover:text-[#F5F5DA] transition-colors">Twitter</a>
+            <a href="https://github.com" target="_blank" rel="noreferrer" className="hover:text-[#F5F5DA] transition-colors">GitHub</a>
+            <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="hover:text-[#F5F5DA] transition-colors">LinkedIn</a>
           </div>
         </div>
       </div>

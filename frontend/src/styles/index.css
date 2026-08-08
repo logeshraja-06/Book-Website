@@ -1,60 +1,69 @@
 @import "tailwindcss";
 
 @theme {
-  --font-serif: 'Fraunces', Georgia, Cambria, serif;
-  --font-sans: 'Geist', 'General Sans', system-ui, -apple-system, sans-serif;
-  --font-editorial-serif: 'Fraunces', Georgia, serif;
-  --font-editorial-sans: 'Geist', sans-serif;
+  --color-ivory: #F5F5DA;
+  --color-crimson: #7B021D;
+  --color-burgundy: #520014;
+  --color-soft-ivory: #FFFDF3;
+  --color-charcoal: #211D1D;
+  --color-muted-wine: #A64A5B;
+  --color-champagne: #E9E5C8;
+
+  --font-serif: 'Cormorant Garamond', Garamond, Georgia, serif;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-ui: 'Manrope', 'Montserrat', sans-serif;
+  --font-editorial-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-editorial-sans: 'Manrope', 'Montserrat', sans-serif;
 }
 
 @layer base {
   :root {
-    --background: #FAF8F6;
-    --secondary: #F4EEEA;
-    --card: #FFFFFF;
-    --accent: #D3968C;
-    --accent-hover: #C98579;
-    --accent-light: #E8C8C2;
-    --text-primary: #2B2B2B;
-    --text-secondary: #6E6A67;
-    --border: #E7D9D3;
+    --background: #F5F5DA;
+    --secondary: #FFFDF3;
+    --card: #FFFDF3;
+    --accent: #7B021D;
+    --accent-hover: #520014;
+    --accent-light: #A64A5B;
+    --text-primary: #211D1D;
+    --text-secondary: #6B5E5E;
+    --border: #E9E5C8;
+    --border-subtle: #E9E5C8;
   }
 
   body {
-    background-color: var(--background);
-    color: var(--text-primary);
-    font-family: 'Geist', 'General Sans', system-ui, -apple-system, sans-serif;
+    background-color: #F5F5DA;
+    color: #211D1D;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    line-height: 1.6;
-    letter-spacing: -0.01em;
+    line-height: 1.65;
+    letter-spacing: -0.011em;
   }
 
-  h1, h2, h3, h4, .font-serif, .font-editorial-serif {
-    font-family: 'Fraunces', Georgia, serif;
+  h1, h2, h3, h4, .font-serif, .font-editorial-serif, .font-cormorant {
+    font-family: 'Cormorant Garamond', Garamond, Georgia, serif;
     font-optical-sizing: auto;
-    letter-spacing: normal;
+    letter-spacing: -0.015em;
   }
 }
 
 /* Explicit Editorial & Typography Utility Classes */
-.font-editorial-serif {
-  font-family: 'Fraunces', Georgia, serif;
+.font-editorial-serif, .font-cormorant {
+  font-family: 'Cormorant Garamond', Garamond, Georgia, serif;
   font-optical-sizing: auto;
-  letter-spacing: normal;
 }
 
-.font-editorial-sans {
-  font-family: 'Geist', 'General Sans', system-ui, sans-serif;
+.font-editorial-sans, .font-ui, .font-manrope, .font-montserrat {
+  font-family: 'Manrope', 'Montserrat', sans-serif;
   letter-spacing: -0.01em;
 }
 
 .font-serif {
-  font-family: 'Fraunces', Georgia, serif;
+  font-family: 'Cormorant Garamond', Georgia, serif;
 }
 
-.font-sans {
-  font-family: 'Geist', 'General Sans', system-ui, sans-serif;
+.font-sans, .font-inter {
+  font-family: 'Inter', system-ui, sans-serif;
 }
 
 .font-tabular {
@@ -62,12 +71,12 @@
   font-feature-settings: "tnum" 1;
 }
 
-/* Glassmorphism Header */
+/* Glassmorphism / Editorial Translucent Surface */
 .glass-header {
-  background-color: rgba(250, 248, 246, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
+  background-color: rgba(245, 245, 218, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid #E9E5C8;
 }
 
 /* Book 3D Container & Physics */
@@ -77,13 +86,13 @@
 
 .book-card-3d {
   transform-style: preserve-3d;
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: -12px 18px 30px -10px rgba(43, 43, 43, 0.18), -2px 4px 10px -2px rgba(43, 43, 43, 0.08);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: -10px 16px 28px -8px rgba(33, 29, 29, 0.14), -2px 4px 10px -2px rgba(33, 29, 29, 0.06);
 }
 
 .book-card-3d:hover {
-  transform: rotateY(-18deg) rotateX(6deg) translateY(-8px);
-  box-shadow: -20px 30px 45px -12px rgba(43, 43, 43, 0.28), -4px 8px 16px -4px rgba(43, 43, 43, 0.12);
+  transform: rotateY(-14deg) rotateX(4deg) translateY(-6px);
+  box-shadow: -16px 24px 38px -10px rgba(82, 0, 20, 0.25), -3px 6px 14px -3px rgba(33, 29, 29, 0.1);
 }
 
 .book-spine-depth {
@@ -92,9 +101,33 @@
   left: 0;
   bottom: 0;
   width: 14px;
-  background: linear-gradient(90deg, rgba(0,0,0,0.25) 0%, rgba(255,255,255,0.1) 50%, rgba(0,0,0,0.15) 100%);
+  background: linear-gradient(90deg, rgba(33,29,29,0.3) 0%, rgba(245,245,218,0.15) 50%, rgba(33,29,29,0.2) 100%);
   transform: rotateY(90deg) translateZ(0px);
   border-radius: 2px 0 0 2px;
+}
+
+/* Card System Classes */
+.card-editorial {
+  background-color: #FFFDF3;
+  border: 1px solid #E9E5C8;
+  border-radius: 1.25rem;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.card-editorial:hover {
+  border-color: #7B021D;
+  box-shadow: 0 16px 32px -8px rgba(33, 29, 29, 0.08);
+}
+
+.card-paper {
+  background-color: #F5F5DA;
+  border: 1px solid #E9E5C8;
+  border-radius: 1.25rem;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.card-paper:hover {
+  background-color: #FFFDF3;
+  border-color: #7B021D;
+  box-shadow: 0 12px 24px -6px rgba(33, 29, 29, 0.06);
 }
 
 /* Hover Accent Line Reveal */
@@ -109,8 +142,8 @@
   left: 0;
   width: 0%;
   height: 2px;
-  background-color: var(--accent);
-  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  background-color: #7B021D;
+  transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .hover-underline-accent:hover::after {
@@ -124,16 +157,16 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--background);
+  background: #F5F5DA;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border);
+  background: #E9E5C8;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--accent-light);
+  background: #A64A5B;
 }
 
 /* Hide scrollbar for horizontal scroll strips */

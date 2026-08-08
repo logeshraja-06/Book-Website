@@ -14,7 +14,7 @@ export default function Button({
   ...props
 }) {
   const baseStyles =
-    'inline-flex items-center justify-center font-semibold tracking-wider uppercase transition-all duration-300 min-h-[44px] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed';
+    'inline-flex items-center justify-center font-bold tracking-wider uppercase transition-all duration-300 min-h-[44px] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed';
 
   const sizeStyles = {
     sm: 'px-4 py-2 text-[11px] rounded-full gap-1.5',
@@ -24,13 +24,13 @@ export default function Button({
 
   const variantStyles = {
     primary:
-      'bg-[#2B2B2B] text-[#FAF8F6] hover:bg-[#D3968C] hover:text-[#FAF8F6] shadow-sm',
+      'bg-[#7B021D] text-[#F5F5DA] hover:bg-[#520014] shadow-sm',
     secondary:
-      'bg-[#F4EEEA] border border-[#E7D9D3] text-[#2B2B2B] hover:border-[#D3968C] hover:text-[#D3968C]',
+      'bg-[#FFFDF3] border border-[#E9E5C8] text-[#211D1D] hover:border-[#7B021D] hover:text-[#7B021D]',
     ghost:
-      'border border-[#E7D9D3] text-[#2B2B2B] hover:border-[#2B2B2B] hover:text-[#2B2B2B]',
+      'border border-[#E9E5C8] text-[#211D1D] hover:border-[#7B021D] hover:text-[#7B021D]',
     text:
-      'text-[#2B2B2B] hover:text-[#D3968C] py-1 px-0 min-h-0 normal-case tracking-normal font-medium hover:underline',
+      'text-[#211D1D] hover:text-[#7B021D] py-1 px-0 min-h-0 normal-case tracking-normal font-medium hover:underline',
   };
 
   const combinedClasses = `${baseStyles} ${sizeStyles[size] || sizeStyles.md} ${

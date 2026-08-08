@@ -6,8 +6,8 @@ export default function Card({
   ...props
 }) {
   const base =
-    'bg-[#FFFFFF] rounded-2xl p-6 border border-[#E7D9D3] shadow-sm transition-all duration-300';
-  const hover = hoverable ? 'hover:border-[#D3968C]' : '';
+    'bg-[#FFFDF3] rounded-2xl p-6 border border-[#E9E5C8] shadow-2xs transition-all duration-300';
+  const hover = hoverable ? 'hover:border-[#7B021D]' : '';
   const clickable = onClick ? 'cursor-pointer' : '';
 
   return (

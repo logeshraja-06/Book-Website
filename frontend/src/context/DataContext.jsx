@@ -35,7 +35,12 @@ export function DataProvider({ children }) {
       if (booksRes.status === 'fulfilled' && booksRes.value?.success && booksRes.value.data) {
         setBooks(prev => {
           const map = new Map(prev.map(b => [b.id || b._id, b]));
-          (booksRes.value.data || []).forEach(b => map.set(b.id || b._id, b));
+          (booksRes.value.data || []).forEach(b => {
+            const key = b.id || b._id;
+            const existing = map.get(key);
+            const coverImage = existing?.coverImage || (b.coverUrl && !b.coverUrl.includes('unsplash') ? b.coverUrl : null) || b.coverImage || `/books/${b.id || b.slug}.jpg`;
+            map.set(key, { ...existing, ...b, coverImage, coverUrl: coverImage });
+          });
           return Array.from(map.values());
         });
       }

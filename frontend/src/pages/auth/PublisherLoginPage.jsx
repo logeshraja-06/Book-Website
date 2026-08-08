@@ -31,21 +31,21 @@ export default function PublisherLoginPage() {
   };
 
   return (
-    <div className="min-h-[85vh] flex items-center justify-center bg-[#FAF8F6] py-16 px-6">
+    <div className="min-h-[85vh] flex items-center justify-center bg-[#F5F5DA] py-16 px-6">
       <div className="w-full max-w-md space-y-8">
         
         {/* Header Branding */}
         <div className="text-center space-y-3">
-          <div className="w-12 h-12 rounded-2xl bg-[#2B2B2B] text-[#FAF8F6] flex items-center justify-center mx-auto shadow-md">
-            <ShieldCheck className="w-6 h-6 text-[#D3968C]" />
+          <div className="w-12 h-12 rounded-2xl bg-[#FFFDF3] border border-[#E9E5C8] text-[#211D1D] flex items-center justify-center mx-auto shadow-2xs">
+            <ShieldCheck className="w-6 h-6 text-[#7B021D]" />
           </div>
-          <span className="text-xs uppercase tracking-widest font-mono text-[#D3968C] font-semibold block">
+          <span className="text-xs uppercase tracking-widest font-mono text-[#7B021D] font-bold block">
             Internal Editorial Desk
           </span>
-          <h1 className="font-editorial-serif text-3xl text-[#2B2B2B] font-bold">
+          <h1 className="font-editorial-serif text-3xl text-[#211D1D] font-bold">
             Publisher Control Center
           </h1>
-          <p className="text-xs text-[#6E6A67]">
+          <p className="text-xs text-[#6B5E5E]">
             Restricted internal access point for catalog registrars & chief editorial staff.
           </p>
         </div>
@@ -55,51 +55,48 @@ export default function PublisherLoginPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="bg-[#FFFFFF] rounded-3xl p-8 sm:p-10 border border-[#E7D9D3] shadow-md space-y-6"
+          className="bg-[#FFFDF3] rounded-3xl p-8 sm:p-10 border border-[#E9E5C8] shadow-sm space-y-6"
         >
-          <div className="p-3.5 rounded-2xl bg-[#F4EEEA] border border-[#E7D9D3] text-xs font-mono text-[#6E6A67] flex items-center gap-2">
-            <Lock className="w-4 h-4 text-[#D3968C] shrink-0" />
-            <span>Authorized Editorial Personnel Only</span>
+          <div className="p-3.5 rounded-2xl bg-[#F5F5DA] border border-[#E9E5C8] text-xs font-mono text-[#6B5E5E] flex items-center gap-2">
+            <Lock className="w-4 h-4 text-[#7B021D] shrink-0" />
+            <span>Authorized credentials preloaded for quick evaluation.</span>
           </div>
 
           {errorMessage && (
-            <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-xs text-red-600 text-center font-mono">
+            <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 text-center font-mono">
               {errorMessage}
             </div>
           )}
 
-          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
             <Input
-              label="Publisher Credentials (Email)"
+              label="Editorial Email"
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              placeholder="e.g. publisher@bookverse.in"
             />
 
             <Input
-              label="Security Clearance Key"
+              label="Password"
               type="password"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
             />
 
             <Button
               type="submit"
               size="lg"
               disabled={isLoading}
-              className="w-full justify-center"
+              className="w-full justify-center bg-[#7B021D] text-[#F5F5DA] hover:bg-[#520014]"
               icon={ArrowRight}
             >
-              {isLoading ? 'Verifying Credentials…' : 'Access Publisher Workspace'}
+              {isLoading ? 'Verifying Desk…' : 'Enter Workspace'}
             </Button>
           </form>
-
-          <div className="pt-2 text-center text-[11px] font-mono text-[#6E6A67]">
-            BookVerse Publishing & Distribution Infrastructure v2.4
-          </div>
         </motion.div>
       </div>
     </div>

@@ -24,14 +24,14 @@ export default function TestimonialsSection() {
   ];
 
   return (
-    <section className="py-24 bg-[#FAF8F6]">
+    <section className="py-24 bg-[#F5F5DA]">
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
         
         <div className="text-center max-w-xl mx-auto mb-16 space-y-2">
-          <span className="text-xs uppercase tracking-widest font-mono text-[#D3968C] font-semibold">
+          <span className="text-xs uppercase tracking-widest font-mono text-[#7B021D] font-bold">
             Literary Perspectives
           </span>
-          <h2 className="font-editorial-serif text-4xl text-[#2B2B2B] font-normal">
+          <h2 className="font-editorial-serif text-4xl text-[#211D1D] font-normal">
             Voices from the Studio
           </h2>
         </div>
@@ -45,20 +45,22 @@ export default function TestimonialsSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: idx * 0.1 }}
-              className="bg-[#FFFFFF] rounded-3xl p-8 border border-[#E7D9D3] shadow-sm flex flex-col justify-between hover:border-[#D3968C] transition-colors"
+              className="bg-[#FFFDF3] rounded-3xl p-8 border border-[#E9E5C8] shadow-2xs flex flex-col justify-between hover:border-[#7B021D] transition-colors"
             >
               <div className="space-y-4">
-                <Quote className="w-8 h-8 text-[#D3968C]/40" />
-                <blockquote className="font-editorial-serif text-lg italic text-[#2B2B2B] leading-relaxed">
+                <Quote className="w-8 h-8 text-[#7B021D]/30" />
+                <blockquote className="font-editorial-serif text-lg italic text-[#211D1D] leading-relaxed">
                   "{item.quote}"
                 </blockquote>
               </div>
 
-              <div className="pt-6 mt-6 border-t border-[#E7D9D3]">
-                <h4 className="font-editorial-serif text-base font-bold text-[#2B2B2B]">
+              <div className="pt-6 mt-6 border-t border-[#E9E5C8]">
+                <h4 className="font-editorial-serif text-base font-bold text-[#211D1D]">
                   {item.author}
                 </h4>
-                <p className="text-xs font-mono text-[#6E6A67]">{item.role}</p>
+                <p className="text-xs font-editorial-sans text-[#6B5E5E]">
+                  {item.role}
+                </p>
               </div>
             </motion.div>
           ))}

@@ -13,7 +13,7 @@ import ClosingCTA from '../../components/home/ClosingCTA';
 export default function Home() {
   return (
     <SmoothScroll>
-      <div className="min-h-screen bg-[#FAF8F6] text-[#2B2B2B]">
+      <div className="min-h-screen bg-[#F5F5DA] text-[#211D1D]">
         <HeroSection />
         <FeaturedSection />
         <PublishingProcessSection />

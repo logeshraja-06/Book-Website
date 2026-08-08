@@ -16,15 +16,15 @@ export default function PublisherHome() {
     <div className="space-y-12">
       
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 border-b border-[#E7D9D3] pb-6">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 border-b border-[#E9E5C8] pb-6">
         <div>
-          <span className="text-[11px] font-mono uppercase tracking-widest text-[#D3968C] font-semibold block">
+          <span className="text-[11px] font-mono uppercase tracking-widest text-[#7B021D] font-bold block">
             Publisher & Admin Control Desk
           </span>
-          <h2 className="font-editorial-serif text-3xl text-[#2B2B2B] font-normal mt-1">
+          <h2 className="font-editorial-serif text-3xl text-[#211D1D] font-normal mt-1">
             Publisher Workspace
           </h2>
-          <p className="text-xs text-[#6E6A67] mt-1">
+          <p className="text-xs text-[#6B5E5E] mt-1">
             Centralized back-office for manuscript evaluation, author management, and catalog taxonomy
           </p>
         </div>
@@ -33,13 +33,13 @@ export default function PublisherHome() {
         <div className="flex items-center gap-3">
           <Link
             to="/publisher/categories"
-            className="px-4 py-2.5 rounded-full border border-[#E7D9D3] text-[#2B2B2B] text-xs font-semibold uppercase tracking-wider hover:border-[#D3968C] transition-colors"
+            className="px-4 py-2.5 rounded-full border border-[#E9E5C8] text-[#211D1D] text-xs font-bold uppercase tracking-wider hover:border-[#7B021D] transition-colors"
           >
             Manage Categories
           </Link>
           <Link
             to="/publisher/queue"
-            className="px-5 py-2.5 rounded-full bg-[#2B2B2B] text-[#FAF8F6] text-xs font-semibold uppercase tracking-wider hover:bg-[#D3968C] transition-colors"
+            className="px-5 py-2.5 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-bold uppercase tracking-wider hover:bg-[#520014] transition-colors shadow-sm"
           >
             Open Review Queue ({pendingCount})
           </Link>
@@ -47,39 +47,39 @@ export default function PublisherHome() {
       </div>
 
       {/* Quiet Typographic Overview */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 py-6 border-y border-[#E7D9D3]">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 py-6 border-y border-[#E9E5C8]">
         <div className="space-y-1">
-          <span className="text-[10px] uppercase font-mono tracking-widest text-[#6E6A67]">
+          <span className="text-[10px] uppercase font-mono tracking-widest text-[#6B5E5E] font-bold">
             Today's Submissions
           </span>
-          <p className="font-editorial-serif text-3xl font-bold text-[#2B2B2B]">
+          <p className="font-editorial-serif text-3xl font-bold text-[#211D1D]">
             2 Manuscripts
           </p>
         </div>
 
         <div className="space-y-1">
-          <span className="text-[10px] uppercase font-mono tracking-widest text-[#6E6A67]">
+          <span className="text-[10px] uppercase font-mono tracking-widest text-[#6B5E5E] font-bold">
             Pending Reviews
           </span>
-          <p className="font-editorial-serif text-3xl font-bold text-[#2B2B2B]">
+          <p className="font-editorial-serif text-3xl font-bold text-[#211D1D]">
             {pendingCount}
           </p>
         </div>
 
         <div className="space-y-1">
-          <span className="text-[10px] uppercase font-mono tracking-widest text-[#6E6A67]">
+          <span className="text-[10px] uppercase font-mono tracking-widest text-[#6B5E5E] font-bold">
             Approved Manuscripts
           </span>
-          <p className="font-editorial-serif text-3xl font-bold text-[#2B2B2B]">
+          <p className="font-editorial-serif text-3xl font-bold text-[#211D1D]">
             {approvedCount}
           </p>
         </div>
 
         <div className="space-y-1">
-          <span className="text-[10px] uppercase font-mono tracking-widest text-[#6E6A67]">
+          <span className="text-[10px] uppercase font-mono tracking-widest text-[#6B5E5E] font-bold">
             Average Review Time
           </span>
-          <p className="font-editorial-serif text-3xl font-bold text-[#2B2B2B]">
+          <p className="font-editorial-serif text-3xl font-bold text-[#211D1D]">
             1.8 Days
           </p>
         </div>
@@ -90,13 +90,13 @@ export default function PublisherHome() {
         
         {/* Left 7 Columns: Recent Submissions Preview */}
         <div className="lg:col-span-7 space-y-6">
-          <div className="flex items-center justify-between border-b border-[#E7D9D3] pb-3">
-            <h3 className="font-editorial-serif text-xl font-bold text-[#2B2B2B]">
+          <div className="flex items-center justify-between border-b border-[#E9E5C8] pb-3">
+            <h3 className="font-editorial-serif text-xl font-bold text-[#211D1D]">
               Latest Submissions Activity
             </h3>
             <Link
               to="/publisher/queue"
-              className="text-xs font-mono text-[#D3968C] hover:underline inline-flex items-center gap-1"
+              className="text-xs font-mono text-[#7B021D] hover:underline inline-flex items-center gap-1 font-bold"
             >
               <span>View Queue</span>
               <ArrowRight className="w-3 h-3" />
@@ -107,25 +107,25 @@ export default function PublisherHome() {
             {recentSubmissions.map((book, idx) => (
               <div
                 key={book.id || book._id || `recent-${idx}`}
-                className="bg-[#FFFFFF] rounded-2xl p-4 border border-[#E7D9D3] flex items-center justify-between gap-4 hover:border-[#D3968C] transition-colors shadow-sm"
+                className="bg-[#FFFDF3] rounded-2xl p-4 border border-[#E9E5C8] flex items-center justify-between gap-4 hover:border-[#7B021D] transition-colors shadow-2xs"
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-14 rounded overflow-hidden bg-[#F4EEEA] shrink-0 border border-[#E7D9D3]">
-                    <img src={book.coverUrl} alt={book.title} className="w-full h-full object-cover" />
+                  <div className="w-10 h-14 rounded overflow-hidden bg-[#F5F5DA] shrink-0 border border-[#E9E5C8]">
+                    <img src={book.coverImage || book.coverUrl} alt={book.title} className="w-full h-full object-cover" />
                   </div>
                   <div>
-                    <h4 className="font-editorial-serif text-base font-bold text-[#2B2B2B]">{book.title}</h4>
-                    <p className="text-xs text-[#6E6A67]">By {book.author} · {book.genre}</p>
+                    <h4 className="font-editorial-serif text-base font-bold text-[#211D1D]">{book.title}</h4>
+                    <p className="text-xs text-[#6B5E5E]">By {book.author} · {book.genre}</p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-4">
-                  <span className="text-[10px] font-mono uppercase tracking-wider font-semibold text-[#2B2B2B]">
+                  <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-[#7B021D]">
                     {book.status}
                   </span>
                   <Link
                     to={`/publisher/review/${book.id || book._id}`}
-                    className="text-xs font-semibold uppercase font-mono text-[#2B2B2B] hover:text-[#D3968C]"
+                    className="text-xs font-bold uppercase font-mono text-[#211D1D] hover:text-[#7B021D]"
                   >
                     Review
                   </Link>
@@ -137,28 +137,28 @@ export default function PublisherHome() {
 
         {/* Right 5 Columns: Quick Actions & Editorial Policy */}
         <div className="lg:col-span-5 space-y-6">
-          <div className="bg-[#FFFFFF] rounded-2xl p-6 border border-[#E7D9D3] shadow-sm space-y-4">
-            <h3 className="font-editorial-serif text-lg font-bold text-[#2B2B2B]">
+          <div className="bg-[#FFFDF3] rounded-3xl p-6 border border-[#E9E5C8] shadow-2xs space-y-4">
+            <h3 className="font-editorial-serif text-lg font-bold text-[#211D1D]">
               Publisher Protocol
             </h3>
-            <p className="text-xs text-[#6E6A67] leading-relaxed">
+            <p className="text-xs text-[#6B5E5E] leading-relaxed">
               All submitted manuscripts are checked for offline manuscript file integrity, metadata accuracy, and catalog suitability. Publisher decisions are communicated via quiet text labels, maintaining our dignified review philosophy.
             </p>
 
-            <div className="pt-2 border-t border-[#E7D9D3] space-y-2">
+            <div className="pt-2 border-t border-[#E9E5C8] space-y-2">
               <Link
                 to="/publisher/queue"
-                className="w-full flex items-center justify-between p-3 rounded-xl bg-[#F4EEEA] hover:bg-[#FAF8F6] border border-[#E7D9D3] text-xs font-mono text-[#2B2B2B] transition-colors"
+                className="w-full flex items-center justify-between p-3 rounded-xl bg-[#F5F5DA] hover:bg-[#FFFDF3] border border-[#E9E5C8] text-xs font-mono text-[#211D1D] transition-colors"
               >
                 <span>Submission Queue</span>
-                <ArrowRight className="w-4 h-4 text-[#D3968C]" />
+                <ArrowRight className="w-4 h-4 text-[#7B021D]" />
               </Link>
               <Link
                 to="/publisher/categories"
-                className="w-full flex items-center justify-between p-3 rounded-xl bg-[#F4EEEA] hover:bg-[#FAF8F6] border border-[#E7D9D3] text-xs font-mono text-[#2B2B2B] transition-colors"
+                className="w-full flex items-center justify-between p-3 rounded-xl bg-[#F5F5DA] hover:bg-[#FFFDF3] border border-[#E9E5C8] text-xs font-mono text-[#211D1D] transition-colors"
               >
                 <span>Taxonomy & Categories</span>
-                <ArrowRight className="w-4 h-4 text-[#D3968C]" />
+                <ArrowRight className="w-4 h-4 text-[#7B021D]" />
               </Link>
             </div>
           </div>

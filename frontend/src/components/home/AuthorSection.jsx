@@ -1,96 +1,73 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, Feather } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { useData } from '../../context/DataContext';
+import { AuthorFeatureCard, AuthorPortraitTile } from '../ui/EditorialCards';
 
 export default function AuthorSection() {
-  const { authors } = useData();
+  const { authors = [] } = useData();
+
+  // Featured laureate author: Kalki Krishnamurthy or first author
+  const featuredAuthor =
+    authors.find((a) => a.id === 'kalki-krishnamurthy' || a.slug === 'kalki-krishnamurthy') ||
+    authors[0];
+
+  // Supporting 4 authors for portrait tiles
+  const supportingAuthors = authors
+    .filter((a) => (a.id || a.slug) !== (featuredAuthor?.id || featuredAuthor?.slug))
+    .slice(0, 4);
+
+  if (!featuredAuthor) return null;
 
   return (
-    <section id="authors" className="py-24 bg-[#F4EEEA] border-y border-[#E7D9D3] overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 lg:px-12">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-16 gap-6">
+    <section id="authors" className="py-24 sm:py-28 lg:py-32 bg-[#F5F5DA] border-y border-[#E9E5C8] overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 space-y-16 sm:space-y-20">
+        
+        {/* ── SECTION HEADER ── */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
-            <span className="text-xs uppercase tracking-widest font-mono text-[#D3968C] block mb-2 font-semibold">
-              The Writers Guild
+            <span className="text-[11px] uppercase tracking-[0.2em] font-editorial-sans text-[#7B021D] block mb-2.5 font-bold">
+              The Literary Guild & Salon
             </span>
-            <h2 className="font-editorial-serif text-4xl sm:text-5xl text-[#2B2B2B] font-normal tracking-tight">
+            <h2 className="font-editorial-serif text-4xl sm:text-5xl lg:text-[3.5rem] text-[#211D1D] font-normal tracking-tight leading-tight">
               Meet the Authors
             </h2>
           </div>
-          <Link
-            to="/authors"
-            className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#2B2B2B] hover:text-[#D3968C] transition-colors"
-          >
-            <span>Explore Author Index</span>
-            <ArrowUpRight className="w-4 h-4" />
-          </Link>
+          <div className="space-y-2 max-w-md">
+            <p className="text-sm sm:text-base text-[#6B5E5E] leading-relaxed font-sans">
+              An illustrious circle of novelists, essayists, researchers, and historians whose works form the intellectual cornerstone of BookVerse Studio.
+            </p>
+            <Link
+              to="/authors"
+              className="inline-flex items-center gap-1.5 text-xs font-editorial-sans font-bold uppercase tracking-[0.1em] text-[#7B021D] hover:text-[#520014] transition-colors"
+            >
+              <span>Explore Complete Author Index</span>
+              <ArrowUpRight className="w-4 h-4" />
+            </Link>
+          </div>
         </div>
 
-        {/* Grid Strip */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-          {authors.map((author, idx) => {
-            const authorSlug = author.slug || author.id || author.name.toLowerCase().replace(/\s+/g, '-');
-            return (
-              <motion.div
-                key={authorSlug || idx}
-                initial={{ opacity: 0, y: 25 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-50px' }}
-                transition={{ duration: 0.6, delay: idx * 0.1 }}
-                whileHover={{ y: -8, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
-              >
-                <Link
-                  to={`/authors/${authorSlug}`}
-                  className="relative bg-[#FFFFFF] rounded-3xl p-7 border border-[#E7D9D3] flex flex-col justify-between shadow-sm hover:shadow-xl hover:shadow-[#2B2B2B]/[0.06] transition-all duration-500 group block h-full overflow-hidden"
-                >
-                  {/* Subtle accent glow on hover */}
-                  <div className="absolute -top-16 -right-16 w-40 h-40 bg-[#D3968C]/0 group-hover:bg-[#D3968C]/[0.08] rounded-full blur-3xl transition-all duration-700 pointer-events-none" />
+        {/* ── ASYMMETRIC MAGAZINE LAYOUT: FEATURED LAUREATE + PORTRAIT TILES ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+          
+          {/* Left Column: Full Feature Card for Laureate */}
+          <div className="lg:col-span-6">
+            <AuthorFeatureCard author={featuredAuthor} className="h-full" />
+          </div>
 
-                  <div className="relative z-10">
-                    {/* Avatar with animated ring */}
-                    <div className="relative w-20 h-20 mx-auto mb-5">
-                      <motion.div
-                        className="absolute inset-0 rounded-full border-2 border-[#D3968C]/0 group-hover:border-[#D3968C]/60"
-                        transition={{ duration: 0.4 }}
-                      />
-                      <div className="w-full h-full rounded-full overflow-hidden border-2 border-[#E7D9D3] group-hover:border-transparent transition-colors duration-300">
-                        <img
-                          src={author.avatarUrl}
-                          alt={author.name}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-                        />
-                      </div>
-                    </div>
+          {/* Right Column: 2x2 Magazine Portrait Tiles */}
+          <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {supportingAuthors.map((author, idx) => (
+              <AuthorPortraitTile
+                key={author.slug || author.id || idx}
+                author={author}
+                index={idx}
+              />
+            ))}
+          </div>
 
-                    <div className="text-center space-y-2">
-                      <h3 className="font-editorial-serif text-[19px] font-semibold tracking-tight text-[#2B2B2B] group-hover:text-[#C98579] transition-colors duration-400">
-                        {author.name}
-                      </h3>
-                      <p className="text-[11px] font-editorial-sans uppercase tracking-[0.12em] text-[#D3968C] font-semibold">
-                        {author.role}
-                      </p>
-                      <p className="text-[13px] font-editorial-sans text-[#6E6A67] leading-relaxed pt-2 line-clamp-3 italic">
-                        "{author.bio}"
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="relative z-10 pt-5 mt-6 border-t border-[#E7D9D3]/70 flex items-center justify-between text-[12px] font-editorial-sans">
-                    <span className="text-[#6E6A67] font-tabular">
-                      {author.publications || author.booksCount || 0} Works
-                    </span>
-                    <span className="font-semibold text-[#2B2B2B] flex items-center gap-1.5 font-tabular">
-                      <Feather className="w-3 h-3 text-[#D3968C]" />
-                      {author.followers || '1.2k'}
-                    </span>
-                  </div>
-                </Link>
-              </motion.div>
-            );
-          })}
         </div>
+
       </div>
     </section>
   );

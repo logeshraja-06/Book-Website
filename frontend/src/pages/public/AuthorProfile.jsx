@@ -1,42 +1,32 @@
-import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, BookOpen, ArrowUpRight, CheckCircle2, Award, Globe, Feather } from 'lucide-react';
-import { apiFetch } from '../../context/AuthContext';
+import { ArrowLeft, BookOpen, ArrowUpRight, Share2, Feather, Star } from 'lucide-react';
+import { getAuthorById } from '../../data/mockData';
+import { useData } from '../../context/DataContext';
 import { formatPrice } from '../../utils/format';
 import SkeletonCard from '../../components/ui/SkeletonCard';
 import EmptyState from '../../components/common/EmptyState';
+import BookCover from '../../components/book/BookCover';
+import { AuthorBookCard } from '../../components/book/BookCardComponents';
 
 export default function AuthorProfile() {
   const { id: slug } = useParams();
-  const [author, setAuthor] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { authors = [], books: allCatalogBooks = [], loading } = useData();
 
-  useEffect(() => {
-    let isMounted = true;
-    async function fetchAuthor() {
-      setLoading(true);
-      try {
-        const res = await apiFetch(`/authors/${slug}`);
-        if (isMounted && res.data) {
-          setAuthor(res.data);
-        }
-      } catch (err) {
-        console.error('Failed to load author profile:', err);
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    }
-    fetchAuthor();
-    return () => {
-      isMounted = false;
-    };
-  }, [slug]);
+  // Find author by slug or id or name slug
+  const author =
+    authors.find(
+      (a) =>
+        a.slug === slug ||
+        a.id === slug ||
+        a._id === slug ||
+        a.name?.toLowerCase().replace(/\s+/g, '-') === slug
+    ) || getAuthorById(slug);
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#FAF8F6]">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 py-12">
+      <div className="min-h-screen bg-[#F5F5DA] py-20">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <SkeletonCard type="detail" />
         </div>
       </div>
@@ -45,7 +35,7 @@ export default function AuthorProfile() {
 
   if (!author) {
     return (
-      <div className="min-h-screen bg-[#FAF8F6] py-20">
+      <div className="min-h-screen bg-[#F5F5DA] py-20">
         <EmptyState
           icon={BookOpen}
           title="Author Profile Not Found"
@@ -57,15 +47,22 @@ export default function AuthorProfile() {
     );
   }
 
-  const books = author.authorBooks || author.books || [];
+  const books =
+    author.authorBooks ||
+    author.books ||
+    allCatalogBooks.filter(
+      (b) =>
+        b.authorId === author.id ||
+        (b.author && b.author.toLowerCase().includes(author.name?.toLowerCase()))
+    );
 
   return (
-    <div className="min-h-screen bg-[#FAF8F6]">
+    <div className="min-h-screen bg-[#F5F5DA]">
       {/* Breadcrumb Navigation */}
       <div className="max-w-7xl mx-auto px-6 lg:px-12 pt-8 pb-4">
         <Link
           to="/authors"
-          className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#6E6A67] hover:text-[#2B2B2B] transition-colors"
+          className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#6B5E5E] hover:text-[#211D1D] transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Author Index</span>
@@ -82,19 +79,19 @@ export default function AuthorProfile() {
             transition={{ duration: 0.6 }}
             className="lg:col-span-5 flex justify-center"
           >
-            <div className="relative w-full max-w-md aspect-[4/5] rounded-3xl overflow-hidden shadow-xl border-4 border-[#FFFFFF] bg-[#F4EEEA]">
+            <div className="relative w-full max-w-md aspect-[4/5] rounded-3xl overflow-hidden shadow-xl border-4 border-[#FFFDF3] bg-[#FFFDF3]">
               <img
                 src={author.avatarUrl || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80'}
                 alt={author.name}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#2B2B2B]/60 via-transparent to-transparent pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#211D1D]/70 via-transparent to-transparent pointer-events-none" />
 
-              <div className="absolute bottom-6 left-6 right-6 text-[#FAF8F6]">
-                <span className="px-3 py-1 rounded-full bg-[#FFFFFF]/20 backdrop-blur-md text-[10px] uppercase font-mono tracking-widest text-[#FAF8F6] border border-[#FFFFFF]/30 inline-block mb-2">
+              <div className="absolute bottom-6 left-6 right-6 text-[#F5F5DA]">
+                <span className="px-3 py-1 rounded-full bg-[#FFFDF3]/25 backdrop-blur-md text-[10px] uppercase font-mono tracking-widest text-[#F5F5DA] border border-[#FFFDF3]/30 inline-block mb-2 font-bold">
                   Verified Literary Byline
                 </span>
-                <p className="text-xs font-mono text-[#E8C8C2]">
+                <p className="text-xs font-mono text-[#E9E5C8]">
                   {author.name} · {author.joinDate || 'BookVerse Contributor'}
                 </p>
               </div>
@@ -109,146 +106,77 @@ export default function AuthorProfile() {
             className="lg:col-span-7 space-y-6"
           >
             <div className="space-y-2">
-              <span className="text-xs font-mono uppercase tracking-widest text-[#D3968C] font-semibold block">
+              <span className="text-xs font-mono uppercase tracking-widest text-[#7B021D] font-bold block">
                 {author.role || 'Published Author'}
               </span>
-              <h1 className="font-editorial-serif text-4xl sm:text-5xl lg:text-6xl text-[#2B2B2B] font-normal tracking-tight">
+              <h1 className="font-editorial-serif text-4xl sm:text-5xl lg:text-6xl text-[#211D1D] font-normal tracking-tight">
                 {author.name}
               </h1>
             </div>
 
             {/* Metrics Ribbon */}
-            <div className="py-4 border-y border-[#E7D9D3] flex flex-wrap items-center gap-x-6 gap-y-2 text-xs font-mono font-tabular text-[#6E6A67]">
+            <div className="py-4 border-y border-[#E9E5C8] flex flex-wrap items-center gap-x-6 gap-y-2 text-xs font-mono font-tabular text-[#6B5E5E]">
               <span>
-                <strong className="text-[#2B2B2B] font-semibold">{books.length}</strong> Works in Catalog
+                <strong className="text-[#211D1D] font-bold">{books.length}</strong> Works in Catalog
               </span>
-              <span className="text-[#E7D9D3]">·</span>
+              <span className="text-[#E9E5C8]">·</span>
               <span>
-                <strong className="text-[#2B2B2B] font-semibold">{author.avgRating || '4.8 ★'}</strong> Average Rating
+                <strong className="text-[#211D1D] font-bold">{author.avgRating || '4.8 ★'}</strong> Average Rating
               </span>
-              <span className="text-[#E7D9D3]">·</span>
+              <span className="text-[#E9E5C8]">·</span>
               <span>
-                <strong className="text-[#2B2B2B] font-semibold">{author.stats?.totalReads || '120k'}</strong> Total Reads
+                <strong className="text-[#211D1D] font-bold">{author.stats?.totalReads || '120k'}</strong> Total Reads
               </span>
             </div>
 
-            <blockquote className="font-editorial-serif text-xl sm:text-2xl italic text-[#2B2B2B] leading-relaxed border-l-2 border-[#D3968C] pl-6">
+            <blockquote className="font-editorial-serif text-xl sm:text-2xl italic text-[#211D1D] leading-relaxed border-l-2 border-[#7B021D] pl-6">
               "{author.bio}"
             </blockquote>
 
-            {author.fullBio && (
-              <p className="text-sm text-[#6E6A67] leading-relaxed">
-                {author.fullBio}
-              </p>
-            )}
-
-            {/* Genres Tag Cloud */}
-            {author.genres && author.genres.length > 0 && (
-              <div className="space-y-2 pt-2">
-                <span className="text-[10px] uppercase font-mono tracking-widest text-[#6E6A67] block">
-                  Literary Specialties
-                </span>
-                <div className="flex flex-wrap gap-2">
-                  {author.genres.map((g, i) => (
-                    <span key={i} className="px-3 py-1 rounded-full bg-[#F4EEEA] border border-[#E7D9D3] text-xs font-mono text-[#2B2B2B]">
-                      {g}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Social & Connect Links */}
-            <div className="pt-2 flex items-center gap-6 text-xs font-mono text-[#6E6A67]">
-              <span className="uppercase tracking-wider text-[10px]">Links:</span>
-              <a href={author.socialLinks?.website || '#'} className="hover:text-[#2B2B2B] transition-colors flex items-center gap-1">
-                <Globe className="w-3.5 h-3.5 text-[#D3968C]" />
-                <span>Official Archive</span>
-              </a>
-              <span>·</span>
-              <a href={author.socialLinks?.twitter || '#'} className="hover:text-[#2B2B2B] transition-colors flex items-center gap-1">
-                <Feather className="w-3.5 h-3.5 text-[#D3968C]" />
-                <span>{author.handle || '@author'}</span>
-              </a>
+            {/* Action Bar */}
+            <div className="pt-2 flex flex-wrap items-center gap-4">
+              <Link
+                to={`/books`}
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-bold uppercase tracking-wider hover:bg-[#520014] transition-colors shadow-sm"
+              >
+                <Feather className="w-3.5 h-3.5" />
+                <span>Explore Works ({books.length})</span>
+              </Link>
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* Author Bibliography Grid */}
-      <section className="py-16 bg-[#F4EEEA] border-t border-[#E7D9D3]">
+      {/* Author Catalog Grid */}
+      <section className="py-16 border-t border-[#E9E5C8] bg-[#F5F5DA]">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-4">
             <div>
-              <span className="text-xs uppercase tracking-widest font-mono text-[#D3968C] font-semibold block mb-1">
+              <span className="text-xs uppercase tracking-widest font-mono text-[#7B021D] font-bold block mb-1">
                 Catalog Bibliography
               </span>
-              <h2 className="font-editorial-serif text-3xl sm:text-4xl text-[#2B2B2B] font-normal">
+              <h2 className="font-editorial-serif text-3xl sm:text-4xl text-[#211D1D] font-normal">
                 Published Titles by {author.name}
               </h2>
             </div>
-            <p className="text-xs text-[#6E6A67] font-mono">
+            <p className="text-xs text-[#6B5E5E] font-mono">
               Showing {books.length} title(s) in BookVerse Studio
             </p>
           </div>
 
           {books.length === 0 ? (
-            <div className="bg-[#FFFFFF] rounded-2xl p-8 text-center text-xs font-mono text-[#6E6A67] border border-[#E7D9D3]">
+            <div className="bg-[#FFFDF3] rounded-2xl p-8 text-center text-xs font-mono text-[#6B5E5E] border border-[#E9E5C8]">
               No published titles in the catalog yet for this author.
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-              {books.map((book) => {
-                const bookSlug = book.slug || book.id || book._id;
-                const categorySlug = book.genre?.toLowerCase().replace(/[^a-z0-9]+/g, '-') || 'general';
-                return (
-                  <motion.div
-                    key={bookSlug}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4 }}
-                    className="bg-[#FFFFFF] rounded-2xl p-6 border border-[#E7D9D3] flex flex-col justify-between hover:border-[#D3968C] transition-all duration-300 group shadow-sm h-full"
-                  >
-                    <div>
-                      <Link to={`/books/${bookSlug}`} className="block aspect-[3/4] rounded-xl overflow-hidden bg-[#F4EEEA] mb-4">
-                        <img
-                          src={book.coverUrl}
-                          alt={book.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                      </Link>
-
-                      <Link to={`/categories/${categorySlug}`} className="text-[10px] uppercase font-mono tracking-widest text-[#6E6A67] hover:text-[#D3968C] transition-colors">
-                        {book.genre}
-                      </Link>
-
-                      <Link to={`/books/${bookSlug}`}>
-                        <h3 className="font-editorial-serif text-[17px] font-semibold tracking-tight text-[#2B2B2B] line-clamp-1 mt-1 group-hover:text-[#C98579] transition-colors duration-500">
-                          {book.title}
-                        </h3>
-                      </Link>
-
-                      <p className="text-xs text-[#6E6A67] mt-1 line-clamp-2 italic">
-                        "{book.synopsis}"
-                      </p>
-                    </div>
-
-                    <div className="pt-4 mt-6 border-t border-[#E7D9D3] flex items-center justify-between">
-                      <span className="font-editorial-sans font-tabular text-[15px] font-semibold tracking-tight text-[#2B2B2B]">
-                        {formatPrice(book.price)}
-                      </span>
-                      <Link
-                        to={`/books/${bookSlug}`}
-                        className="inline-flex items-center gap-1 text-xs font-semibold text-[#2B2B2B] group-hover:text-[#D3968C] transition-colors"
-                      >
-                        <span>Details</span>
-                        <ArrowUpRight className="w-3.5 h-3.5" />
-                      </Link>
-                    </div>
-                  </motion.div>
-                );
-              })}
+              {books.map((book, idx) => (
+                <AuthorBookCard
+                  key={book.slug || book.id || book._id || idx}
+                  book={book}
+                  index={idx}
+                />
+              ))}
             </div>
           )}
         </div>
