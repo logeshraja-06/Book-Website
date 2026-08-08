@@ -2,6 +2,8 @@ const User = require('../models/User');
 const Book = require('../models/Book');
 const Review = require('../models/Review');
 const Bookmark = require('../models/Bookmark');
+const Purchase = require('../models/Purchase');
+const ReadingProgress = require('../models/ReadingProgress');
 const ApiResponse = require('../utils/apiResponse');
 const asyncHandler = require('../middleware/asyncHandler');
 const mongoose = require('mongoose');
@@ -66,6 +68,145 @@ const toggleLibrary = asyncHandler(async (req, res) => {
     `Book ${action} shelf successfully`,
     updatedUser.library
   );
+});
+
+// @desc    Purchase a book & add to library
+// @route   POST /api/reader/purchase
+// @access  Private
+const purchaseBook = asyncHandler(async (req, res) => {
+  const { bookId, price } = req.body;
+
+  if (!bookId) {
+    return ApiResponse.error(res, 'Book ID is required', 400);
+  }
+
+  const resolvedId = await resolveBookId(bookId);
+  if (!resolvedId) {
+    return ApiResponse.error(res, 'Book not found', 404);
+  }
+
+  const book = await Book.findById(resolvedId);
+
+  // Check or create Purchase record
+  let purchase = await Purchase.findOne({ userId: req.user._id, bookId: resolvedId });
+  if (!purchase) {
+    purchase = await Purchase.create({
+      userId: req.user._id,
+      bookId: resolvedId,
+      price: price || book.price || 499,
+      currency: book.currency || 'INR',
+      status: 'completed'
+    });
+  }
+
+  // Ensure book is in user's library
+  const user = await User.findById(req.user._id);
+  const existingItem = user.library.find(
+    (item) => item.bookId && item.bookId.toString() === resolvedId.toString()
+  );
+
+  if (!existingItem) {
+    user.library.push({
+      bookId: resolvedId,
+      progress: 0,
+      currentPage: 1,
+      totalPages: book.pages || 350,
+      status: 'Currently Reading',
+      lastRead: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+    });
+    await user.save();
+  }
+
+  const updatedUser = await User.findById(user._id).populate('library.bookId');
+
+  return ApiResponse.success(res, 'Book purchased successfully', {
+    purchase,
+    library: updatedUser.library
+  }, 201);
+});
+
+// @desc    Save reading progress and current page
+// @route   POST /api/reader/progress
+// @access  Private
+const saveReadingProgress = asyncHandler(async (req, res) => {
+  const { bookId, currentPage, totalPages } = req.body;
+
+  if (!bookId || !currentPage) {
+    return ApiResponse.error(res, 'Book ID and current page are required', 400);
+  }
+
+  const resolvedId = await resolveBookId(bookId);
+  if (!resolvedId) {
+    return ApiResponse.error(res, 'Book not found', 404);
+  }
+
+  const pagesCount = totalPages || 350;
+  const progressPercent = Math.min(100, Math.round((currentPage / pagesCount) * 100));
+
+  const progressRecord = await ReadingProgress.findOneAndUpdate(
+    { userId: req.user._id, bookId: resolvedId },
+    {
+      currentPage,
+      totalPages: pagesCount,
+      progressPercent,
+      status: progressPercent >= 100 ? 'Completed' : 'Currently Reading',
+      lastReadAt: new Date()
+    },
+    { new: true, upsert: true }
+  );
+
+  // Sync to User library array
+  const user = await User.findById(req.user._id);
+  const libItem = user.library.find(
+    (item) => item.bookId && item.bookId.toString() === resolvedId.toString()
+  );
+
+  if (libItem) {
+    libItem.currentPage = currentPage;
+    libItem.totalPages = pagesCount;
+    libItem.progress = progressPercent;
+    libItem.status = progressPercent >= 100 ? 'Completed' : 'Currently Reading';
+    libItem.lastRead = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  } else {
+    user.library.push({
+      bookId: resolvedId,
+      currentPage,
+      totalPages: pagesCount,
+      progress: progressPercent,
+      status: 'Currently Reading',
+      lastRead: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+    });
+  }
+  await user.save();
+
+  return ApiResponse.success(res, 'Reading progress saved successfully', progressRecord);
+});
+
+// @desc    Get reading progress for a book
+// @route   GET /api/reader/progress/:bookId
+// @access  Private
+const getReadingProgress = asyncHandler(async (req, res) => {
+  const { bookId } = req.params;
+  const resolvedId = await resolveBookId(bookId);
+
+  if (!resolvedId) {
+    return ApiResponse.error(res, 'Book not found', 404);
+  }
+
+  let progress = await ReadingProgress.findOne({ userId: req.user._id, bookId: resolvedId });
+  if (!progress) {
+    const user = await User.findById(req.user._id);
+    const libItem = user.library.find(
+      (item) => item.bookId && item.bookId.toString() === resolvedId.toString()
+    );
+    progress = {
+      currentPage: libItem ? libItem.currentPage : 1,
+      totalPages: libItem ? libItem.totalPages : 350,
+      progressPercent: libItem ? libItem.progress : 0
+    };
+  }
+
+  return ApiResponse.success(res, 'Reading progress fetched successfully', progress);
 });
 
 // @desc    Get user wishlist
@@ -262,6 +403,9 @@ const updateProfile = asyncHandler(async (req, res) => {
 module.exports = {
   getLibrary,
   toggleLibrary,
+  purchaseBook,
+  saveReadingProgress,
+  getReadingProgress,
   getWishlist,
   toggleWishlist,
   getBookmarks,

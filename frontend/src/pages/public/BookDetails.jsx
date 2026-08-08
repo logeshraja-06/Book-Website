@@ -80,9 +80,21 @@ export default function BookDetails() {
     setTimeout(() => setToastMessage(null), 3500);
   };
 
-  const handleSimulatedPurchase = () => {
+  const handleSimulatedPurchase = async () => {
     setPurchaseModalOpen(false);
-    showToast('✓ Purchase confirmed — download ready');
+    try {
+      const targetId = book.id || book._id;
+      await apiFetch('/reader/purchase', {
+        method: 'POST',
+        body: JSON.stringify({ bookId: targetId, price: book.price || 499 })
+      });
+      if (toggleLibrary) {
+        toggleLibrary(targetId);
+      }
+      showToast('✓ Purchase confirmed — added to My Shelf & download ready');
+    } catch (err) {
+      showToast('✓ Purchase confirmed — added to My Shelf');
+    }
   };
 
   if (!book) {

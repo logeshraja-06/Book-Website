@@ -3,11 +3,14 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Search, ArrowUpRight, BookOpen } from 'lucide-react';
 import { useData } from '../../context/DataContext';
+import { AuthorCard, FeaturedAuthorSpotlightCard } from '../../components/ui/EditorialCards';
 
 export default function AuthorsListing() {
   const { authors: AUTHORS, books: ALL_BOOKS } = useData();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRole, setSelectedRole] = useState('All');
+
+  const featuredAuthor = AUTHORS.find((a) => a.id === 'kalki-krishnamurthy' || a.slug === 'kalki-krishnamurthy') || AUTHORS[0];
 
   const groupedAuthors = useMemo(() => {
     let filtered = [...AUTHORS];
@@ -22,8 +25,7 @@ export default function AuthorsListing() {
         (a) =>
           (a.name || '').toLowerCase().includes(q) ||
           (a.role || '').toLowerCase().includes(q) ||
-          (a.bio || '').toLowerCase().includes(q) ||
-          (a.bookTitle || '').toLowerCase().includes(q)
+          (a.bio || '').toLowerCase().includes(q)
       );
     }
 
@@ -42,6 +44,7 @@ export default function AuthorsListing() {
 
   return (
     <div className="min-h-screen bg-[#F5F5DA]">
+      {/* Header Section */}
       <section className="border-b border-[#E9E5C8] bg-[#F5F5DA] pt-14 pb-12">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -85,6 +88,14 @@ export default function AuthorsListing() {
         </div>
       </section>
 
+      {/* Featured Laureate Spotlight Banner */}
+      {featuredAuthor && (
+        <section className="max-w-7xl mx-auto px-6 lg:px-12 pt-12">
+          <FeaturedAuthorSpotlightCard author={featuredAuthor} />
+        </section>
+      )}
+
+      {/* Alphabetical Authors Directory Grid */}
       <section className="max-w-7xl mx-auto px-6 lg:px-12 py-16">
         {Object.keys(groupedAuthors).length > 0 ? (
           <div className="space-y-16">
@@ -100,58 +111,13 @@ export default function AuthorsListing() {
                 </div>
 
                 <div className="lg:col-span-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {groupedAuthors[letter].map((author) => {
-                    const authorSlug = author.slug || author.id || author.name?.toLowerCase().replace(/\s+/g, '-');
-                    const authorBooks = ALL_BOOKS.filter(
-                      (b) => b.authorId === author.id || (b.author && b.author.toLowerCase().includes(author.name?.toLowerCase()))
-                    );
-
-                    return (
-                      <motion.div
-                        key={authorSlug}
-                        initial={{ opacity: 0, y: 16 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.4 }}
-                      >
-                        <Link
-                          to={`/authors/${authorSlug}`}
-                          className="bg-[#FFFDF3] rounded-2xl p-6 border border-[#E9E5C8] hover:border-[#7B021D] shadow-2xs hover:shadow-xl hover:shadow-[#520014]/[0.06] transition-all duration-300 flex flex-col justify-between h-full group block"
-                        >
-                          <div className="space-y-4">
-                            <div className="flex items-center gap-4">
-                              <img
-                                src={author.avatarUrl || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80'}
-                                alt={author.name}
-                                className="w-14 h-14 rounded-full object-cover border border-[#E9E5C8] group-hover:scale-105 transition-transform"
-                              />
-                              <div className="min-w-0">
-                                <span className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] font-bold block truncate">
-                                  {author.role || 'Author'}
-                                </span>
-                                <h3 className="font-editorial-serif text-xl font-semibold text-[#211D1D] group-hover:text-[#7B021D] transition-colors truncate">
-                                  {author.name}
-                                </h3>
-                              </div>
-                            </div>
-
-                            <p className="text-xs text-[#6B5E5E] leading-relaxed line-clamp-3 italic">
-                              "{author.bio || 'Contributing seminal manuscripts to the BookVerse catalog.'}"
-                            </p>
-                          </div>
-
-                          <div className="pt-4 mt-6 border-t border-[#E9E5C8] flex items-center justify-between text-xs font-mono">
-                            <span className="text-[#6B5E5E]">
-                              {authorBooks.length || author.worksCount || 1} Works Archived
-                            </span>
-                            <span className="inline-flex items-center gap-1 text-[#211D1D] group-hover:text-[#7B021D] transition-colors font-semibold">
-                              View Profile <ArrowUpRight className="w-3.5 h-3.5" />
-                            </span>
-                          </div>
-                        </Link>
-                      </motion.div>
-                    );
-                  })}
+                  {groupedAuthors[letter].map((author, idx) => (
+                    <AuthorCard
+                      key={author.slug || author.id || idx}
+                      author={author}
+                      index={idx}
+                    />
+                  ))}
                 </div>
               </div>
             ))}

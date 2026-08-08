@@ -10,7 +10,8 @@ import {
 } from 'framer-motion';
 import { ArrowRight, Sparkles, Star, Compass } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { FEATURED_BOOKS } from '../../data/mockData';
+import { useData } from '../../context/DataContext';
+import { BOOKS, FEATURED_BOOKS } from '../../data/booksData';
 import { formatPrice } from '../../utils/format';
 
 function StatCounter({ target, prefix = '', suffix = '', decimals = 0, staticDisplay }) {
@@ -39,27 +40,31 @@ function StatCounter({ target, prefix = '', suffix = '', decimals = 0, staticDis
 
   if (staticDisplay) {
     return (
-      <span className="font-editorial-sans font-tabular text-lg font-bold text-[#2B2B2B] block tracking-tight">
+      <span className="font-editorial-sans font-tabular text-lg font-bold text-[#211D1D] block tracking-tight">
         {staticDisplay}
       </span>
     );
   }
 
   return (
-    <span ref={ref} className="font-editorial-sans font-tabular text-lg font-bold text-[#2B2B2B] block tracking-tight">
+    <span ref={ref} className="font-editorial-sans font-tabular text-lg font-bold text-[#211D1D] block tracking-tight">
       {prefix}{displayValue}{suffix}
     </span>
   );
 }
 
 export default function HeroSection() {
-  const heroBook = FEATURED_BOOKS[0]; // Ponniyin Selvan
+  const { books } = useData();
+
+  // Featured Hero Book: "The Psychology of Money"
+  const heroBook =
+    books?.find((b) => (b.slug || b.id || b._id) === 'psychology-of-money') ||
+    BOOKS?.find((b) => b.id === 'psychology-of-money') ||
+    FEATURED_BOOKS?.find((b) => b.id === 'psychology-of-money') ||
+    FEATURED_BOOKS[0];
+
   const bookSlug = heroBook.slug || heroBook.id;
   const sectionRef = useRef(null);
-  const videoRef = useRef(null);
-  
-  const [videoLoaded, setVideoLoaded] = useState(false);
-  const [videoError, setVideoError] = useState(false);
 
   // Check prefers-reduced-motion
   const prefersReducedMotion =
@@ -109,11 +114,11 @@ export default function HeroSection() {
       onMouseLeave={handleMouseLeave}
       className="relative overflow-hidden pt-10 pb-20 lg:pt-16 lg:pb-28 bg-[#F5F5DA]"
     >
-      {/* ── 1. VIDEO LAYER + STATIC FALLBACK LAYER ── */}
+      {/* ── 1. CINEMATIC BACKGROUND IMAGE LAYER WITH WARM GRADIENT ── */}
       <div className="absolute inset-0 -z-20 overflow-hidden pointer-events-none select-none">
         <motion.div
           style={{ x: bgX, y: bgY }}
-          animate={{ scale: [1, 1.04, 1] }}
+          animate={{ scale: [1, 1.03, 1] }}
           transition={{
             duration: 22,
             repeat: Infinity,
@@ -122,60 +127,32 @@ export default function HeroSection() {
           }}
           className="absolute inset-0 w-full h-full"
         >
-          {/* Background Video (Autoplay, Loop, Muted, PlaysInline) */}
-          {!prefersReducedMotion && !videoError && (
-            <video
-              ref={videoRef}
-              autoPlay
-              loop
-              muted
-              playsInline
-              preload="metadata"
-              onCanPlayThrough={() => setVideoLoaded(true)}
-              onError={() => setVideoError(true)}
-              className={`w-full h-full object-cover transition-opacity duration-1000 ${
-                videoLoaded ? 'opacity-[0.14]' : 'opacity-0'
-              }`}
-              style={{
-                filter: 'grayscale(40%) contrast(1.15) brightness(1.02)',
-              }}
-            >
-              <source
-                src="https://assets.mixkit.co/videos/preview/mixkit-hands-turning-the-pages-of-a-book-43407-large.mp4"
-                type="video/mp4"
-              />
-            </video>
-          )}
-
-          {/* Static High-Resolution Fallback Image */}
+          {/* Uploaded Bookshelf Background Image */}
           <div
-            className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ${
-              videoLoaded ? 'opacity-0' : 'opacity-[0.12]'
-            }`}
+            className="absolute inset-0 w-full h-full opacity-35 mix-blend-multiply"
             style={{
-              backgroundImage:
-                "url('https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=2400&q=80')",
+              backgroundImage: "url('/hero-bg.jpg')",
               backgroundSize: 'cover',
-              backgroundPosition: 'center 30%',
-              filter: 'grayscale(30%) contrast(1.1)',
+              backgroundPosition: 'center 45%',
+              filter: 'contrast(1.15) saturate(1.1) brightness(0.95)',
             }}
           />
         </motion.div>
 
-        {/* ── 2. OVERLAY LAYER (Warm Ivory Cream + Radial Vignette for Contrast) ── */}
+        {/* ── 2. OVERLAY LAYER (Warm Ivory Cream + Gradient Vignette) ── */}
         <div
-          className="absolute inset-0 bg-gradient-to-b from-[#F5F5DA]/60 via-[#F5F5DA]/20 to-[#F5F5DA]"
+          className="absolute inset-0 bg-gradient-to-b from-[#F5F5DA]/85 via-[#F5F5DA]/65 to-[#F5F5DA]"
           style={{
             maskImage:
-              'radial-gradient(ellipse 85% 65% at 50% 35%, black 30%, transparent 80%)',
+              'radial-gradient(ellipse 90% 75% at 50% 35%, black 35%, transparent 85%)',
             WebkitMaskImage:
-              'radial-gradient(ellipse 85% 65% at 50% 35%, black 30%, transparent 80%)',
+              'radial-gradient(ellipse 90% 75% at 50% 35%, black 35%, transparent 85%)',
           }}
         />
-        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#F5F5DA] to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#F5F5DA] via-[#F5F5DA]/90 to-transparent" />
       </div>
 
-      {/* ── 3. AMBIENT GLOW BLOBS (Quiet Luxury Soft Tonality) ── */}
+      {/* ── 3. AMBIENT GLOW BLOBS ── */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[760px] h-[440px] bg-gradient-to-tr from-[#7B021D]/[0.08] via-[#E9E5C8]/40 to-transparent blur-3xl rounded-full pointer-events-none -z-10" />
 
       {/* ── 4. HERO CONTENT LAYER ── */}
@@ -193,7 +170,7 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] text-[#7B021D] text-[11px] font-editorial-sans uppercase tracking-[0.18em] shadow-2xs font-semibold"
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] text-[#7B021D] text-[11px] font-editorial-sans uppercase tracking-[0.18em] shadow-2xs font-bold"
             >
               <Sparkles className="w-3.5 h-3.5 text-[#7B021D]" />
               <span>The Digital Publishing Studio</span>
@@ -229,7 +206,7 @@ export default function HeroSection() {
               </h1>
             </div>
 
-            {/* 3. Supporting Description in Inter */}
+            {/* 3. Supporting Description */}
             <motion.p
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
@@ -249,7 +226,7 @@ export default function HeroSection() {
               <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }} transition={{ duration: 0.2 }}>
                 <Link
                   to="/books"
-                  className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-[#7B021D] text-[#F5F5DA] text-[14px] font-editorial-sans font-semibold tracking-[0.04em] hover:bg-[#520014] transition-colors duration-300 shadow-md hover:shadow-lg group min-h-[48px] w-full sm:w-auto"
+                  className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-[#7B021D] text-[#F5F5DA] text-[14px] font-editorial-sans font-bold tracking-[0.04em] hover:bg-[#520014] transition-colors duration-300 shadow-md hover:shadow-lg group min-h-[48px] w-full sm:w-auto"
                 >
                   <span>Explore Books</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -259,7 +236,7 @@ export default function HeroSection() {
               <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }} transition={{ duration: 0.2 }}>
                 <a
                   href="#authors"
-                  className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] text-[#211D1D] text-[14px] font-editorial-sans font-medium hover:border-[#7B021D] hover:bg-[#F5F5DA] transition-all duration-300 min-h-[48px] w-full sm:w-auto shadow-2xs"
+                  className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] text-[#211D1D] text-[14px] font-editorial-sans font-bold hover:border-[#7B021D] hover:bg-[#F5F5DA] transition-all duration-300 min-h-[48px] w-full sm:w-auto shadow-2xs"
                 >
                   <Compass className="w-4 h-4 text-[#6B5E5E]" />
                   <span>Meet the Authors</span>
@@ -308,7 +285,7 @@ export default function HeroSection() {
               }}
               className="book-container relative w-full max-w-sm"
             >
-              {/* Floating Badge with Soft Drop-Shadow Pulse */}
+              {/* Floating Badge */}
               <motion.div
                 style={{ x: badgeX, y: badgeY }}
                 animate={{
@@ -325,7 +302,7 @@ export default function HeroSection() {
                 <span>Featured Hardcover</span>
               </motion.div>
 
-              {/* Physical 3D Book Object */}
+              {/* Physical 3D Book Object: The Psychology of Money */}
               <Link
                 to={`/books/${bookSlug}`}
                 className="book-card-3d relative rounded-2xl overflow-hidden bg-[#FFFDF3] border border-[#E9E5C8] p-5 shadow-2xl block group cursor-pointer"
@@ -349,7 +326,7 @@ export default function HeroSection() {
                   </div>
                 </div>
 
-                {/* Meta details with Cormorant Garamond + Inter + Montserrat tabular price */}
+                {/* Meta details */}
                 <div className="flex items-center justify-between pt-1">
                   <div>
                     <p className="text-[13px] font-sans text-[#6B5E5E]">By {heroBook.author}</p>

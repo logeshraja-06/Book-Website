@@ -30,8 +30,8 @@ export default function BookReview() {
   if (!book) {
     return (
       <div className="py-20 text-center space-y-4">
-        <h3 className="font-editorial-serif text-2xl text-[#2B2B2B]">Manuscript Record Not Found</h3>
-        <Link to="/publisher/queue" className="text-xs font-mono text-[#D3968C] hover:underline">
+        <h3 className="font-editorial-serif text-2xl text-[#211D1D]">Manuscript Record Not Found</h3>
+        <Link to="/publisher/queue" className="text-xs font-mono text-[#7B021D] hover:underline font-bold">
           Return to Review Queue
         </Link>
       </div>
@@ -105,62 +105,66 @@ export default function BookReview() {
   return (
     <div className="space-y-10">
       {/* Back Navigation Bar */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-[#E7D9D3] pb-4 gap-2 sm:gap-0">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-[#E9E5C8] pb-4 gap-2 sm:gap-0">
         <Link
           to="/publisher/queue"
-          className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#6E6A67] hover:text-[#2B2B2B] transition-colors min-h-[44px] sm:min-h-0"
+          className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#6B5E5E] hover:text-[#211D1D] transition-colors min-h-[44px] sm:min-h-0"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Review Queue</span>
         </Link>
 
-        <span className="text-xs font-mono text-[#D3968C] uppercase tracking-wider font-semibold">
+        <span className="text-xs font-mono text-[#7B021D] uppercase tracking-wider font-bold">
           Manuscript Review Protocol #{String(targetId).slice(-6).toUpperCase()}
         </span>
       </div>
 
-      {/* ── 3-Column Review Layout ── */}
+      {/* 3-Column Review Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* LEFT COLUMN: Book Metadata (3 Cols) */}
-        <div className="lg:col-span-3 space-y-6 bg-[#FFFFFF] rounded-3xl p-6 border border-[#E7D9D3] shadow-sm">
-          <div className="aspect-[3/4] rounded-xl overflow-hidden bg-[#F4EEEA] shadow-md border border-[#E7D9D3]">
-            <img src={book.coverUrl} alt={book.title} className="w-full h-full object-cover" />
+        <div className="lg:col-span-3 space-y-6 bg-[#FFFDF3] rounded-3xl p-6 border border-[#E9E5C8] shadow-2xs">
+          <div className="aspect-[3/4] rounded-2xl overflow-hidden bg-[#F5F5DA] shadow-md border border-[#E9E5C8]">
+            <img src={book.coverImage || book.coverUrl} alt={book.title} className="w-full h-full object-cover" />
           </div>
 
           <div className="space-y-2">
-            <span className="px-3 py-1 rounded-full bg-[#E8C8C2]/30 text-[#2B2B2B] text-[10px] font-mono uppercase tracking-wider inline-block">
+            <span className="px-3 py-1 rounded-full bg-[#F5F5DA] border border-[#E9E5C8] text-[#7B021D] text-[10px] font-mono uppercase tracking-wider inline-block font-bold">
               {book.genre}
             </span>
-            <h2 className="font-editorial-serif text-xl font-bold text-[#2B2B2B]">
+            <h2 className="font-editorial-serif text-xl font-bold text-[#211D1D]">
               {book.title}
             </h2>
-            <p className="text-xs text-[#6E6A67]">By {book.author}</p>
-            <p className="text-xs text-[#6E6A67] italic leading-relaxed pt-1 line-clamp-4">
+            <p className="text-xs text-[#6B5E5E] font-sans">By {book.author}</p>
+            <p className="text-xs text-[#6B5E5E] italic leading-relaxed pt-1 line-clamp-4 font-sans">
               "{book.synopsis}"
             </p>
           </div>
 
-          <div className="pt-4 border-t border-[#E7D9D3] space-y-2 text-xs font-mono text-[#6E6A67]">
+          <div className="pt-4 border-t border-[#E9E5C8] space-y-2 text-xs font-mono text-[#6B5E5E]">
             <div className="flex justify-between">
               <span>Status:</span>
-              <span className="font-bold text-[#2B2B2B]">{book.status}</span>
+              <span className="font-bold text-[#7B021D]">{book.status}</span>
             </div>
             <div className="flex justify-between">
               <span>Price:</span>
-              <span>₹{book.price}</span>
+              <span className="font-bold text-[#211D1D]">₹{book.price}</span>
             </div>
             <div className="flex justify-between">
               <span>Language:</span>
               <span>{book.language}</span>
             </div>
+            <div className="flex justify-between">
+              <span>ISBN:</span>
+              <span className="font-bold text-[#7B021D]">{book.isbn || 'BV-978-INTERNAL'}</span>
+            </div>
           </div>
         </div>
 
         {/* CENTER COLUMN: Integrated PDF Reader (5 Cols) */}
-        <div className="lg:col-span-5 space-y-4 bg-[#FFFFFF] rounded-3xl p-6 border border-[#E7D9D3] shadow-sm">
-          <div className="flex items-center justify-between border-b border-[#E7D9D3] pb-3">
-            <h3 className="font-editorial-serif text-lg font-bold text-[#2B2B2B] flex items-center gap-2">
-              <Eye className="w-4 h-4 text-[#D3968C]" />
+        <div className="lg:col-span-5 space-y-4 bg-[#FFFDF3] rounded-3xl p-6 border border-[#E9E5C8] shadow-2xs">
+          <div className="flex items-center justify-between border-b border-[#E9E5C8] pb-3">
+            <h3 className="font-editorial-serif text-lg font-bold text-[#211D1D] flex items-center gap-2">
+              <Eye className="w-4 h-4 text-[#7B021D]" />
               Integrated PDF Reader
             </h3>
             {pdfUrl && (
@@ -168,7 +172,7 @@ export default function BookReview() {
                 href={pdfUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="text-[10px] font-mono text-[#D3968C] uppercase tracking-wider font-semibold hover:underline"
+                className="text-[10px] font-mono text-[#7B021D] uppercase tracking-wider font-bold hover:underline"
               >
                 Open Fullscreen
               </a>
@@ -176,7 +180,7 @@ export default function BookReview() {
           </div>
 
           {pdfUrl ? (
-            <div className="w-full h-[520px] rounded-2xl overflow-hidden border border-[#E7D9D3] bg-[#F4EEEA]">
+            <div className="w-full h-[520px] rounded-2xl overflow-hidden border border-[#E9E5C8] bg-[#F5F5DA]">
               <iframe
                 src={pdfUrl}
                 title={`PDF Viewer - ${book.title}`}
@@ -184,12 +188,12 @@ export default function BookReview() {
               />
             </div>
           ) : (
-            <div className="w-full h-[320px] rounded-2xl border border-dashed border-[#E7D9D3] bg-[#F4EEEA]/50 flex flex-col items-center justify-center p-6 text-center space-y-2">
-              <FileText className="w-10 h-10 text-[#D3968C]" />
-              <p className="font-editorial-serif text-base font-semibold text-[#2B2B2B]">
+            <div className="w-full h-[320px] rounded-2xl border border-dashed border-[#E9E5C8] bg-[#F5F5DA]/50 flex flex-col items-center justify-center p-6 text-center space-y-2">
+              <FileText className="w-10 h-10 text-[#7B021D]" />
+              <p className="font-editorial-serif text-base font-bold text-[#211D1D]">
                 No PDF Manuscript Uploaded
               </p>
-              <p className="text-xs text-[#6E6A67]">
+              <p className="text-xs text-[#6B5E5E] font-sans">
                 This manuscript draft has no associated PDF file attached yet.
               </p>
             </div>
@@ -197,8 +201,8 @@ export default function BookReview() {
         </div>
 
         {/* RIGHT COLUMN: Reviewer Assessment & Decision (4 Cols) */}
-        <div className="lg:col-span-4 space-y-6 bg-[#FFFFFF] rounded-3xl p-6 border border-[#E7D9D3] shadow-sm">
-          <h3 className="font-editorial-serif text-lg font-bold text-[#2B2B2B]">
+        <div className="lg:col-span-4 space-y-6 bg-[#FFFDF3] rounded-3xl p-6 border border-[#E9E5C8] shadow-2xs">
+          <h3 className="font-editorial-serif text-lg font-bold text-[#211D1D]">
             Reviewer Assessment & Decision
           </h3>
 
@@ -214,10 +218,10 @@ export default function BookReview() {
                 key="decision"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="p-6 rounded-2xl bg-[#E8C8C2]/20 border border-[#D3968C] text-[#2B2B2B] space-y-3"
+                className="p-6 rounded-2xl bg-[#F5F5DA] border border-[#E9E5C8] text-[#211D1D] space-y-3"
               >
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-[#D3968C]" />
+                  <CheckCircle2 className="w-5 h-5 text-[#7B021D]" />
                   <span className="font-editorial-serif text-lg font-bold">
                     {decisionState === 'approved'
                       ? 'Manuscript Approved'
@@ -227,7 +231,7 @@ export default function BookReview() {
                   </span>
                 </div>
 
-                <p className="text-xs text-[#6E6A67] leading-relaxed">
+                <p className="text-xs text-[#6B5E5E] leading-relaxed font-sans">
                   {decisionState === 'approved'
                     ? `"${book.title}" has been authorized for publication. Status updated to Published.`
                     : decisionState === 'revision'
@@ -242,7 +246,7 @@ export default function BookReview() {
                       updateBookStatus(targetId, 'In Review');
                       setDecisionState(null);
                     }}
-                    className="text-xs font-mono text-[#D3968C] hover:underline"
+                    className="text-xs font-mono text-[#7B021D] hover:underline font-bold"
                   >
                     Reset Decision State
                   </button>
@@ -251,7 +255,7 @@ export default function BookReview() {
             ) : (
               <div className="space-y-6">
                 <div className="space-y-2">
-                  <label className="text-xs uppercase font-mono tracking-widest text-[#6E6A67] block">
+                  <label className="text-xs uppercase font-mono tracking-widest text-[#6B5E5E] block font-bold">
                     Editorial Notes / Reason
                   </label>
                   <textarea
@@ -259,7 +263,7 @@ export default function BookReview() {
                     value={editorialNotes}
                     onChange={(e) => setEditorialNotes(e.target.value)}
                     placeholder="Enter editorial evaluation notes, revision requirements, or rejection reason…"
-                    className="w-full bg-[#FAF8F6] rounded-xl border border-[#E7D9D3] p-4 text-xs text-[#2B2B2B] focus:border-[#D3968C] focus:outline-none transition-colors resize-none leading-relaxed font-mono"
+                    className="w-full bg-[#F5F5DA] rounded-xl border border-[#E9E5C8] p-4 text-xs text-[#211D1D] focus:border-[#7B021D] focus:outline-none transition-colors resize-none leading-relaxed font-mono"
                   />
                 </div>
 
@@ -267,7 +271,7 @@ export default function BookReview() {
                   <button
                     type="button"
                     onClick={handleApprove}
-                    className="w-full py-3 rounded-full bg-[#2B2B2B] text-[#FAF8F6] text-xs font-semibold uppercase tracking-wider hover:bg-[#D3968C] transition-colors shadow-sm"
+                    className="w-full py-3 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-bold uppercase tracking-wider hover:bg-[#520014] transition-colors shadow-sm"
                   >
                     Approve & Publish
                   </button>
@@ -275,7 +279,7 @@ export default function BookReview() {
                   <button
                     type="button"
                     onClick={handleRequestRevision}
-                    className="w-full py-3 rounded-full border border-[#E7D9D3] text-xs font-semibold uppercase tracking-wider text-[#2B2B2B] hover:border-[#2B2B2B] transition-colors"
+                    className="w-full py-3 rounded-full border border-[#E9E5C8] text-xs font-bold uppercase tracking-wider text-[#211D1D] hover:border-[#7B021D] hover:text-[#7B021D] transition-colors"
                   >
                     Needs Revision
                   </button>
@@ -283,7 +287,7 @@ export default function BookReview() {
                   <button
                     type="button"
                     onClick={handleReject}
-                    className="w-full py-3 rounded-full border border-[#E7D9D3] text-xs font-semibold uppercase tracking-wider text-[#6E6A67] hover:text-rose-600 hover:border-rose-600 transition-colors"
+                    className="w-full py-3 rounded-full border border-[#E9E5C8] text-xs font-bold uppercase tracking-wider text-[#6B5E5E] hover:text-rose-600 hover:border-rose-600 transition-colors"
                   >
                     Reject Submission
                   </button>
