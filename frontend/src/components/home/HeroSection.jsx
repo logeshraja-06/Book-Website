@@ -65,6 +65,34 @@ export default function HeroSection() {
 
   const bookSlug = heroBook.slug || heroBook.id;
   const sectionRef = useRef(null);
+  const videoRef = useRef(null);
+
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check mobile viewport (< 768px) to serve static poster image
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Programmatically trigger video playback to bypass browser autoplay restrictions
+  useEffect(() => {
+    if (videoRef.current && !isMobile) {
+      const p = videoRef.current.play();
+      if (p !== undefined) {
+        p.then(() => {
+          setIsVideoLoaded(true);
+        }).catch((err) => {
+          console.warn('Autoplay handled by browser policy:', err);
+        });
+      }
+    }
+  }, [isMobile]);
 
   // Check prefers-reduced-motion
   const prefersReducedMotion =
@@ -112,51 +140,45 @@ export default function HeroSection() {
       ref={sectionRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative overflow-hidden pt-10 pb-20 lg:pt-16 lg:pb-28 bg-[#F5F5DA]"
+      className="relative overflow-hidden pt-4 pb-20 lg:pt-6 lg:pb-28 bg-[#F5F5DA]"
     >
-      {/* ── 1. CINEMATIC BACKGROUND VIDEO LAYER WITH WARM GRADIENT ── */}
+      {/* ── 1. CINEMATIC BACKGROUND IMAGE LAYER WITH WARM GRADIENT ── */}
       <div className="absolute inset-0 -z-20 overflow-hidden pointer-events-none select-none">
         <motion.div
           style={{ x: bgX, y: bgY }}
-          animate={{ scale: [1, 1.03, 1] }}
+          animate={{ scale: [1, 1.04, 1] }}
           transition={{
             duration: 22,
             repeat: Infinity,
-            repeatType: 'loop',
+            repeatType: 'reverse',
             ease: 'easeInOut',
           }}
           className="absolute inset-0 w-full h-full"
         >
-          {/* Uploaded Bookshelf Background Video */}
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="auto"
-            poster="/hero-bg.jpg"
-            className="absolute inset-0 w-full h-full object-cover opacity-35 mix-blend-multiply"
+          {/* High-Resolution Book-Themed Background Image */}
+          <div
+            className="absolute inset-0 w-full h-full opacity-40"
             style={{
-              objectPosition: 'center 45%',
-              filter: 'contrast(1.15) saturate(1.1) brightness(0.95)',
+              backgroundImage: "url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=2000&q=80')",
+              backgroundSize: 'cover',
+              backgroundPosition: 'center 40%',
+              filter: 'contrast(1.05) saturate(1.05) brightness(1.02)',
             }}
-          >
-            <source src="/hero-bg.mp4" type="video/mp4" />
-            {/* Fallback image if video can't load / browser unsupported */}
-          </video>
+          />
         </motion.div>
 
-        {/* ── 2. OVERLAY LAYER (Warm Ivory Cream + Gradient Vignette) ── */}
+        {/* ── 2. EDITORIAL OVERLAY & RADIAL VIGNETTE LAYER ── */}
         <div
-          className="absolute inset-0 bg-gradient-to-b from-[#F5F5DA]/85 via-[#F5F5DA]/65 to-[#F5F5DA]"
+          className="absolute inset-0 pointer-events-none"
           style={{
-            maskImage:
-              'radial-gradient(ellipse 90% 75% at 50% 35%, black 35%, transparent 85%)',
-            WebkitMaskImage:
-              'radial-gradient(ellipse 90% 75% at 50% 35%, black 35%, transparent 85%)',
+            background:
+              'radial-gradient(circle at center, transparent 35%, rgba(33,29,29,0.15) 100%)',
           }}
         />
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#F5F5DA] via-[#F5F5DA]/90 to-transparent" />
+
+        <div className="absolute inset-0 bg-gradient-to-r from-[#F5F5DA] via-[#F5F5DA]/85 to-[#F5F5DA]/40" />
+
+        <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-[#F5F5DA] via-[#F5F5DA]/90 to-transparent" />
       </div>
 
       {/* ── 3. AMBIENT GLOW BLOBS ── */}
@@ -172,18 +194,7 @@ export default function HeroSection() {
           {/* ── LEFT COLUMN: EDITORIAL HEADLINE & STORYTELLING ── */}
           <div className="lg:col-span-7 space-y-8 text-left">
 
-            {/* 1. Small Eyebrow Label */}
-            <motion.div
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] text-[#7B021D] text-[11px] font-editorial-sans uppercase tracking-[0.18em] shadow-2xs font-bold"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-[#7B021D]" />
-              <span>The Digital Publishing Studio</span>
-            </motion.div>
-
-            {/* 2. Large Editorial Headline in Cormorant Garamond */}
+            {/* 1. Large Editorial Headline in Cormorant Garamond */}
             <div className="max-w-2xl">
               <h1 className="font-editorial-serif text-5xl sm:text-6xl lg:text-[5.25rem] xl:text-[5.75rem] tracking-[-0.025em] text-[#211D1D] leading-[1.04] font-normal">
                 <motion.span
