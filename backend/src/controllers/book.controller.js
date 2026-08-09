@@ -92,6 +92,9 @@ const getBooks = asyncHandler(async (req, res) => {
 
   const pages = Math.ceil(total / limitNum) || 1;
 
+  console.log('[READER CATALOG]');
+  console.log(`Published books count: ${books.length}`);
+
   return ApiResponse.success(res, 'Published books fetched successfully', books, 200, {
     total,
     page: pageNum,

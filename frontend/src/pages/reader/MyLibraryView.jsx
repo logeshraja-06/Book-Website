@@ -7,11 +7,15 @@ import { formatPrice } from '../../utils/format';
 import DigitalReaderModal from '../../components/book/DigitalReaderModal';
 
 export default function MyLibraryView() {
-  const { libraryBookState, wishlistBooks, isBookPurchased, isBookInWishlist, toggleWishlist, toggleLibrary, activeReaderBook, setActiveReaderBook } = useData();
+  const { libraryBookState, wishlistBooks, isBookPurchased, isBookInWishlist, toggleWishlist, toggleLibrary, activeReaderBook, setActiveReaderBook, fetchModuleData } = useData();
 
   const [activeTab, setActiveTab] = useState('currently_reading'); // 'currently_reading' | 'purchased' | 'completed' | 'wishlist'
 
-  const currentlyReading = libraryBookState.filter((b) => (b.progress || 0) < 100 && (b.status === 'Currently Reading' || !b.status));
+  const currentlyReading = libraryBookState
+    .filter((b) => (b.progress || 0) < 100 && (b.status === 'Currently Reading' || !b.status))
+    .slice()
+    .sort((a, b) => new Date(b.lastReadAt || 0) - new Date(a.lastReadAt || 0));
+
   const completed = libraryBookState.filter((b) => (b.progress || 0) >= 100 || b.status === 'Completed');
   const purchased = libraryBookState.filter((b) => isBookPurchased(b));
 
@@ -32,10 +36,29 @@ export default function MyLibraryView() {
 
   const currentList = getActiveList();
 
-  const handleDownloadPdf = (book) => {
+  const handleDownloadPdf = async (book) => {
     const bookId = book._id || book.id || book.slug;
-    const token = localStorage.getItem('token');
-    window.open(`http://localhost:5001/api/reader/books/${bookId}/pdf`, '_blank');
+    const token = localStorage.getItem('token') || '';
+    try {
+      const res = await fetch(`http://localhost:5001/api/files/books/${bookId}/download`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {}
+      });
+      if (!res.ok) {
+        throw new Error('Download not available');
+      }
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      const safeTitle = (book.title || 'book').replace(/[^a-zA-Z0-9_-]/g, '_');
+      link.download = `BookVerse-${safeTitle}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      window.open(`http://localhost:5001/api/reader/books/${bookId}/pdf`, '_blank');
+    }
   };
 
   return (
@@ -89,6 +112,8 @@ export default function MyLibraryView() {
               const isWishlisted = isBookInWishlist(book);
               const rating = book.rating || 4.8;
               const price = book.price || 499;
+              const isCompleted = (book.progress || 0) >= 100 || book.status === 'Completed';
+              const hasBookmarks = (book.bookmarksCount || 0) > 0;
 
               return (
                 <motion.div
@@ -99,7 +124,8 @@ export default function MyLibraryView() {
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.45, delay: idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  <div className="flex flex-col sm:flex-row gap-6 items-start group bg-[#FFFDF3] border border-[#D8CFAE] p-6 rounded-3xl shadow-md hover:shadow-xl hover:border-[#7B021D] transition-all duration-300">
+                  <div className="flex flex-col sm:flex-row gap-6 items-start group bg-[#FFFDF3] border border-[#D8CFAE] p-6 rounded-3xl shadow-md hover:shadow-xl hover:border-[#7B021D] transition-all duration-300 relative overflow-hidden">
+                    
                     {/* Book Cover */}
                     <div className="w-full sm:w-36 aspect-[3/4] rounded-2xl overflow-hidden bg-[#F8F6E5] shrink-0 shadow-md border border-[#D8CFAE] relative">
                       <img
@@ -117,20 +143,36 @@ export default function MyLibraryView() {
                       >
                         <Bookmark className={`w-3.5 h-3.5 ${isWishlisted ? 'fill-[#7B021D] text-[#7B021D]' : ''}`} />
                       </motion.button>
+
+                      {/* Bookmark Indicator Count Badge */}
+                      {hasBookmarks && (
+                        <div className="absolute bottom-2 left-2 right-2 bg-[#181616]/90 backdrop-blur-xs px-2 py-1 rounded-lg border border-[#E9E5C8]/30 flex items-center justify-center gap-1 text-[10px] font-mono text-[#F5F5DA] font-bold shadow-xs">
+                          <Bookmark className="w-3 h-3 text-[#7B021D] fill-[#7B021D]" />
+                          <span>{book.bookmarksCount} Bookmark{book.bookmarksCount > 1 ? 's' : ''}</span>
+                        </div>
+                      )}
                     </div>
 
                     {/* Book Info & Reading Progress */}
                     <div className="flex-1 space-y-4 w-full flex flex-col justify-between h-full">
                       <div>
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center justify-between gap-2 flex-wrap mb-1">
                           <span className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] font-bold block">
                             {book.genre || 'Literature'}
                           </span>
-                          <div className="flex items-center gap-1 text-[11px] font-mono text-[#7B021D] font-bold">
-                            <Star className="w-3 h-3 text-[#7B021D] fill-[#7B021D]" />
-                            <span>{rating}</span>
-                          </div>
+
+                          {/* Status Badge: COMPLETED or CONTINUE FROM PAGE X */}
+                          {isCompleted ? (
+                            <span className="px-2 py-0.5 rounded-full bg-[#7B021D] text-[#F5F5DA] text-[9px] font-mono font-bold uppercase tracking-wider">
+                              COMPLETED
+                            </span>
+                          ) : (book.currentPage || 1) > 1 ? (
+                            <span className="px-2 py-0.5 rounded-full bg-[#F1EED2] border border-[#D8CFAE] text-[#7B021D] text-[9px] font-mono font-bold uppercase tracking-wider">
+                              Continue from p. {book.currentPage}
+                            </span>
+                          ) : null}
                         </div>
+
                         <h3 className="font-editorial-serif text-xl font-bold text-[#181616] mt-1 leading-snug group-hover:text-[#7B021D] transition-colors">
                           {book.title}
                         </h3>
@@ -141,10 +183,10 @@ export default function MyLibraryView() {
                       <div className="space-y-2 pt-2 border-t border-[#DED7BD]">
                         <div className="flex items-center justify-between text-xs font-mono">
                           <span className="text-[#5F594F]">
-                            Page {book.currentPage || 1} of {book.totalPages || 350}
+                            Page {book.currentPage || 1} of {book.totalPages || 20}
                           </span>
                           <span className="font-bold text-[#7B021D]">
-                            {book.progress || 0}%
+                            {book.progress || 0}% read
                           </span>
                         </div>
 
@@ -171,7 +213,7 @@ export default function MyLibraryView() {
                             whileTap={{ scale: 0.95 }}
                             onClick={() => handleDownloadPdf(book)}
                             className="p-2.5 rounded-full border border-[#D8CFAE] bg-[#F8F6E5] text-[#181616] hover:text-[#7B021D] hover:border-[#7B021D] transition-colors shadow-2xs"
-                            title="Download PDF"
+                            title="Download PDF Edition"
                           >
                             <Download className="w-4 h-4" />
                           </motion.button>
@@ -184,7 +226,9 @@ export default function MyLibraryView() {
                             className="px-4 py-2.5 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#520014] transition-colors shadow-md flex items-center gap-1.5"
                           >
                             <BookOpen className="w-3.5 h-3.5" />
-                            <span>{(book.progress || 0) >= 100 ? 'Re-read' : 'Read Now'}</span>
+                            <span>
+                              {isCompleted ? 'Re-read' : (book.progress || 0) > 0 ? 'Continue Reading' : 'Read Now'}
+                            </span>
                           </motion.button>
                         </div>
                       </div>
@@ -232,7 +276,10 @@ export default function MyLibraryView() {
       {activeReaderBook && (
         <DigitalReaderModal
           isOpen={Boolean(activeReaderBook)}
-          onClose={() => setActiveReaderBook(null)}
+          onClose={() => {
+            setActiveReaderBook(null);
+            if (fetchModuleData) fetchModuleData();
+          }}
           book={activeReaderBook}
           initialPage={activeReaderBook.currentPage || 1}
         />

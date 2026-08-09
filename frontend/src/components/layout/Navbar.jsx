@@ -42,9 +42,6 @@ export default function Navbar() {
   const isAuthor = currentUser?.role === 'author';
   const isPublisher = currentUser?.role === 'publisher';
 
-  const isReadingView = location.pathname.startsWith('/reader-full') || activeReaderBook;
-  if (isReadingView) return null;
-
   // ── 1. INTELLIGENT SCROLL BEHAVIOR (Hide on scroll down, reveal on scroll up) ──
   useEffect(() => {
     const handleScroll = () => {
@@ -103,6 +100,9 @@ export default function Navbar() {
     setMobileMenuOpen(false);
     setUserDropdownOpen(false);
   }, [location.pathname]);
+
+  const isReadingView = location.pathname.startsWith('/reader-full') || location.pathname.startsWith('/reader') || activeReaderBook;
+  if (isReadingView) return null;
 
   // ── 3. LIVE SEARCH FILTERING ──
   const filteredBooks = searchQuery.trim()

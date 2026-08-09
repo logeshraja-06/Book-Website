@@ -17,6 +17,7 @@ import {
   Download
 } from 'lucide-react';
 import { apiFetch } from '../../context/AuthContext';
+import { getSamplePagesForBook } from '../../data/sampleReadingContent';
 
 const FONT_OPTIONS = [
   { name: 'Cormorant Garamond', fontClass: 'font-editorial-serif' },
@@ -42,22 +43,58 @@ const THEMES = {
 
 export default function DigitalReaderModal({ isOpen, onClose, book, initialPage = 1 }) {
   const [currentPage, setCurrentPage] = useState(initialPage);
-  const [totalPages, setTotalPages] = useState(book?.pages || 350);
   const [fontSize, setFontSize] = useState(18); // Isolated text font size
   const [fontFamily, setFontFamily] = useState(FONT_OPTIONS[0]);
   const [zoomMode, setZoomMode] = useState(ZOOM_MODES[0]);
   const [activeTheme, setActiveTheme] = useState('cream');
   const [tocOpen, setTocOpen] = useState(false);
+  const [activeDrawerTab, setActiveDrawerTab] = useState('toc'); // 'toc' | 'bookmarks'
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [bookmarkedList, setBookmarkedList] = useState([]);
   const [bookmarkSavedToast, setBookmarkSavedToast] = useState('');
 
+  const sampleBookData = getSamplePagesForBook(book || {});
+  const totalPages = sampleBookData.totalPages || 20;
+  const samplePageObj = sampleBookData.pages.find((p) => p.pageNumber === currentPage) || sampleBookData.pages[0];
+  const chapters = sampleBookData.chapters;
+
+  const isBookmarked = bookmarkedList.some((bm) => Number(bm.pageNumber) === Number(currentPage));
+
   useEffect(() => {
-    if (book) {
-      setTotalPages(book.pages || 350);
-      setCurrentPage(initialPage || 1);
+    if (!book || !isOpen) return;
+
+    let isMounted = true;
+    const targetBookId = book._id || book.id;
+
+    async function loadInitialData() {
+      try {
+        const [progRes, bmRes] = await Promise.allSettled([
+          apiFetch(`/reader/progress/${targetBookId}`),
+          apiFetch(`/reader/books/${targetBookId}/bookmarks`)
+        ]);
+
+        if (isMounted && progRes.status === 'fulfilled' && progRes.value?.success && progRes.value.data?.currentPage) {
+          setCurrentPage(progRes.value.data.currentPage);
+        } else if (isMounted && initialPage) {
+          setCurrentPage(initialPage);
+        }
+
+        if (isMounted && bmRes.status === 'fulfilled' && bmRes.value?.success && Array.isArray(bmRes.value.data)) {
+          setBookmarkedList(bmRes.value.data);
+        }
+      } catch (err) {
+        if (isMounted && initialPage) {
+          setCurrentPage(initialPage);
+        }
+      }
     }
-  }, [book, initialPage]);
+
+    loadInitialData();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [book, isOpen, initialPage]);
 
   // Persist reading position to backend MongoDB on page change
   useEffect(() => {
@@ -86,35 +123,77 @@ export default function DigitalReaderModal({ isOpen, onClose, book, initialPage 
   const theme = THEMES[activeTheme] || THEMES.cream;
   const progressPercent = Math.min(100, Math.round((currentPage / totalPages) * 100));
 
-  const chapters = [
-    { title: 'Chapter 1: Foundations & Beginnings', page: 1 },
-    { title: 'Chapter 2: The Architecture of Mindset', page: 24 },
-    { title: 'Chapter 3: Strategic Execution', page: 58 },
-    { title: 'Chapter 4: Principles of Endurance', page: 92 },
-    { title: 'Chapter 5: Epilogue & Final Reflections', page: 140 }
-  ];
-
   const handleBookmarkToggle = async () => {
+    if (!book) return;
+    const targetBookId = book._id || book.id;
+
     try {
-      if (!isBookmarked) {
-        await apiFetch('/reader/bookmarks', {
+      if (isBookmarked) {
+        await apiFetch(`/reader/books/${targetBookId}/bookmarks/${currentPage}`, {
+          method: 'DELETE'
+        });
+        setBookmarkedList((prev) => prev.filter((bm) => Number(bm.pageNumber) !== Number(currentPage)));
+        setBookmarkSavedToast(`Bookmark removed for Page ${currentPage}`);
+      } else {
+        const res = await apiFetch(`/reader/books/${targetBookId}/bookmarks`, {
           method: 'POST',
           body: JSON.stringify({
-            bookId: book._id || book.id,
-            pageRef: `Page ${currentPage}`,
-            quote: `Reading section from ${book.title}`,
-            note: 'Saved bookmark'
+            pageNumber: currentPage,
+            chapterTitle: samplePageObj?.chapterTitle || `Page ${currentPage}`,
+            pageRef: `Page ${currentPage}`
           })
         });
-        setIsBookmarked(true);
+        if (res?.success && res.data) {
+          setBookmarkedList((prev) => [...prev.filter((bm) => Number(bm.pageNumber) !== Number(currentPage)), res.data]);
+        } else {
+          setBookmarkedList((prev) => [...prev.filter((bm) => Number(bm.pageNumber) !== Number(currentPage)), { pageNumber: currentPage, chapterTitle: samplePageObj?.chapterTitle }]);
+        }
         setBookmarkSavedToast(`Bookmark saved for Page ${currentPage}`);
-      } else {
-        setIsBookmarked(false);
-        setBookmarkSavedToast(`Bookmark removed`);
       }
       setTimeout(() => setBookmarkSavedToast(''), 3000);
     } catch (err) {
       console.warn('Bookmark notice:', err.message);
+      setBookmarkSavedToast('Bookmark error: ' + err.message);
+      setTimeout(() => setBookmarkSavedToast(''), 3000);
+    }
+  };
+
+  const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
+
+  const handleDownloadPdf = async (targetBook) => {
+    if (!targetBook) return;
+    const bookId = targetBook._id || targetBook.id || targetBook.slug;
+    const token = localStorage.getItem('token') || '';
+    setIsDownloadingPdf(true);
+    setBookmarkSavedToast('Preparing PDF download...');
+
+    try {
+      const res = await fetch(`http://localhost:5001/api/files/books/${bookId}/download`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {}
+      });
+
+      if (!res.ok) {
+        let errJson;
+        try { errJson = await res.json(); } catch(e) {}
+        throw new Error(errJson?.message || 'PDF download failed or book not published.');
+      }
+
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      const safeTitle = (targetBook.title || 'book').replace(/[^a-zA-Z0-9_-]/g, '_');
+      link.download = `BookVerse-${safeTitle}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      setBookmarkSavedToast('PDF downloaded successfully.');
+    } catch (err) {
+      setBookmarkSavedToast(err.message || 'PDF download failed.');
+    } finally {
+      setIsDownloadingPdf(false);
+      setTimeout(() => setBookmarkSavedToast(''), 3500);
     }
   };
 
@@ -233,18 +312,16 @@ export default function DigitalReaderModal({ isOpen, onClose, book, initialPage 
                   <Bookmark className={`w-4 h-4 ${isBookmarked ? 'fill-current' : ''}`} />
                 </button>
 
-                {/* PDF Download Edition Button (If available) */}
-                <a
-                  href={book.pdfPath || book.manuscriptUrl || book.pdfFile || '/books/demo.pdf'}
-                  download
-                  target="_blank"
-                  rel="noreferrer"
+                {/* PDF Download Edition Button */}
+                <button
+                  onClick={() => handleDownloadPdf(book)}
+                  disabled={isDownloadingPdf}
                   style={{ borderColor: theme.border, color: theme.text }}
-                  className="p-2 rounded-full border hover:opacity-80 transition-opacity"
+                  className="p-2 rounded-full border hover:opacity-80 transition-opacity disabled:opacity-50"
                   title="Download PDF Edition"
                 >
                   <Download className="w-4 h-4 text-[#7B021D]" />
-                </a>
+                </button>
 
                 {/* Close Reader */}
                 <button
@@ -262,46 +339,107 @@ export default function DigitalReaderModal({ isOpen, onClose, book, initialPage 
             {/* Main Reading Surface Container */}
             <div className="flex-1 relative flex overflow-hidden">
               
-              {/* Table of Contents Drawer */}
+              {/* Drawer Panel: Contents & Bookmarks */}
               <AnimatePresence>
                 {tocOpen && (
                   <motion.div
-                    initial={{ x: -260, opacity: 0 }}
+                    initial={{ x: -280, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
-                    exit={{ x: -260, opacity: 0 }}
+                    exit={{ x: -280, opacity: 0 }}
                     transition={{ duration: 0.25 }}
                     style={{ backgroundColor: theme.container, borderColor: theme.border }}
-                    className="absolute left-0 top-0 bottom-0 w-72 z-30 border-r p-6 overflow-y-auto space-y-4 shadow-xl"
+                    className="absolute left-0 top-0 bottom-0 w-80 z-30 border-r p-6 overflow-y-auto space-y-4 shadow-xl flex flex-col"
                   >
+                    {/* Drawer Header & Tabs */}
                     <div className="flex items-center justify-between border-b pb-3" style={{ borderColor: theme.border }}>
-                      <h4 className="font-editorial-serif text-base font-bold" style={{ color: theme.text }}>
-                        Table of Contents
-                      </h4>
+                      <div className="flex items-center gap-2 text-xs font-mono">
+                        <button
+                          onClick={() => setActiveDrawerTab('toc')}
+                          className={`px-3 py-1.5 rounded-full border transition-all ${activeDrawerTab === 'toc' ? 'font-bold bg-[#7B021D] text-[#F5F5DA]' : 'opacity-70 hover:opacity-100'}`}
+                          style={{ borderColor: theme.border }}
+                        >
+                          Contents
+                        </button>
+                        <button
+                          onClick={() => setActiveDrawerTab('bookmarks')}
+                          className={`px-3 py-1.5 rounded-full border transition-all ${activeDrawerTab === 'bookmarks' ? 'font-bold bg-[#7B021D] text-[#F5F5DA]' : 'opacity-70 hover:opacity-100'}`}
+                          style={{ borderColor: theme.border }}
+                        >
+                          Bookmarks ({bookmarkedList.length})
+                        </button>
+                      </div>
                       <button onClick={() => setTocOpen(false)} style={{ color: theme.text }}>
                         <X className="w-4 h-4" />
                       </button>
                     </div>
 
-                    <div className="space-y-2 font-mono text-xs">
-                      {chapters.map((ch, idx) => (
-                        <button
-                          key={idx}
-                          onClick={() => {
-                            setCurrentPage(ch.page);
-                            setTocOpen(false);
-                          }}
-                          style={{
-                            backgroundColor: currentPage >= ch.page && (idx === chapters.length - 1 || currentPage < chapters[idx + 1].page) ? theme.bg : 'transparent',
-                            color: theme.text
-                          }}
-                          className="w-full text-left p-3 rounded-xl hover:opacity-80 transition-all flex items-center justify-between border"
-                          style={{ borderColor: theme.border }}
-                        >
-                          <span className="line-clamp-1">{ch.title}</span>
-                          <span className="opacity-60 text-[10px]">p. {ch.page}</span>
-                        </button>
-                      ))}
-                    </div>
+                    {/* Tab 1: Table of Contents */}
+                    {activeDrawerTab === 'toc' && (
+                      <div className="space-y-2 font-mono text-xs flex-1">
+                        {chapters.map((ch, idx) => (
+                          <button
+                            key={idx}
+                            onClick={() => {
+                              setCurrentPage(ch.startPage || ch.page);
+                              setTocOpen(false);
+                            }}
+                            style={{
+                              backgroundColor: currentPage >= (ch.startPage || ch.page) && (idx === chapters.length - 1 || currentPage < (chapters[idx + 1].startPage || chapters[idx + 1].page)) ? theme.bg : 'transparent',
+                              color: theme.text,
+                              borderColor: theme.border
+                            }}
+                            className="w-full text-left p-3 rounded-xl hover:opacity-80 transition-all flex items-center justify-between border"
+                          >
+                            <span className="line-clamp-1">{ch.title}</span>
+                            <span className="opacity-60 text-[10px]">p. {ch.startPage || ch.page}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Tab 2: Saved Bookmarks Panel */}
+                    {activeDrawerTab === 'bookmarks' && (
+                      <div className="space-y-2 font-mono text-xs flex-1">
+                        {bookmarkedList.length === 0 ? (
+                          <div className="text-center py-8 opacity-60 space-y-2">
+                            <Bookmark className="w-8 h-8 mx-auto opacity-40" />
+                            <p>No bookmarks saved yet.</p>
+                            <p className="text-[10px]">Click the bookmark icon in the top header to save the current page.</p>
+                          </div>
+                        ) : (
+                          bookmarkedList
+                            .slice()
+                            .sort((a, b) => (a.pageNumber || 1) - (b.pageNumber || 1))
+                            .map((bm, idx) => (
+                              <button
+                                key={idx}
+                                onClick={() => {
+                                  setCurrentPage(bm.pageNumber);
+                                  setTocOpen(false);
+                                }}
+                                style={{
+                                  backgroundColor: currentPage === bm.pageNumber ? theme.bg : 'transparent',
+                                  color: theme.text,
+                                  borderColor: theme.border
+                                }}
+                                className="w-full text-left p-3 rounded-xl hover:opacity-80 transition-all flex items-center justify-between border group"
+                              >
+                                <div className="min-w-0 pr-2">
+                                  <span className="font-bold block text-xs truncate" style={{ color: theme.accent }}>
+                                    Page {bm.pageNumber}
+                                  </span>
+                                  <span className="text-[10px] opacity-70 truncate block">
+                                    {bm.chapterTitle || `Page ${bm.pageNumber}`}
+                                  </span>
+                                </div>
+                                <span className="px-2 py-0.5 rounded bg-[#7B021D]/10 text-[#7B021D] font-bold text-[10px] shrink-0">
+                                  Jump
+                                </span>
+                              </button>
+                            ))
+                        )}
+                      </div>
+                    )}
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -337,21 +475,15 @@ export default function DigitalReaderModal({ isOpen, onClose, book, initialPage 
 
                     {/* Dynamic Reading Text Content */}
                     <div className={`${fontFamily.fontClass}`} style={{ fontSize: `${fontSize}px` }}>
-                      <h2 className="font-editorial-serif text-3xl font-bold mb-6" style={{ color: theme.accent }}>
-                        Chapter {Math.ceil(currentPage / 20)}: The Sanctuary of Craft
+                      <h2 className="font-editorial-serif text-2xl sm:text-3xl font-bold mb-6" style={{ color: theme.accent }}>
+                        {samplePageObj.chapterTitle}
                       </h2>
 
-                      <p className="mb-6">
-                        Literature exists not as a fleeting commodity of engagement, but as an enduring sanctuary for human contemplation. In the quiet sanctuary of the editorial realm, every sentence is weighed for its rhythmic integrity and emotional resonance.
-                      </p>
-
-                      <p className="mb-6">
-                        As the courier approached the citadel walls, the lamps along the ramparts burned bright against the deepening dusk. The parchment tucked into his leather tunic carried secrets that could alter the succession of the Chola throne.
-                      </p>
-
-                      <p className="mb-6">
-                        "Greatness is not inherited by decree," the old scholar had written in the colophon of the great codex. "It is forged in the quiet hours of disciplined study and unyielding commitment to the truth."
-                      </p>
+                      {samplePageObj.paragraphs.map((pText, pIdx) => (
+                        <p key={pIdx} className="mb-6 leading-relaxed">
+                          {pText}
+                        </p>
+                      ))}
                     </div>
 
                     {/* Footer Page Number inside Book Surface */}

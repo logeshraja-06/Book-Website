@@ -31,6 +31,7 @@ import WishlistView from './pages/reader/WishlistView';
 import BookmarksView from './pages/reader/BookmarksView';
 import ReviewsView from './pages/reader/ReviewsView';
 import ProfileView from './pages/reader/ProfileView';
+import ReaderStandaloneView from './pages/reader/ReaderStandaloneView';
 
 // Author Module Imports (Simplified 6-Page Suite)
 import AuthorLayout from './components/layout/AuthorLayout';
@@ -108,6 +109,16 @@ export default function App() {
               <Route path="reviews" element={<ReviewsView />} />
               <Route path="profile" element={<ProfileView />} />
             </Route>
+
+            {/* Standalone Reader Route */}
+            <Route
+              path="/reader/:id"
+              element={
+                <ProtectedRoute allowedRoles={['reader', 'author', 'publisher']}>
+                  <ReaderStandaloneView />
+                </ProtectedRoute>
+              }
+            />
 
             {/* Legacy Library & Profile Route Redirects */}
             <Route path="/library/*" element={<Navigate to="/my-shelf" replace />} />

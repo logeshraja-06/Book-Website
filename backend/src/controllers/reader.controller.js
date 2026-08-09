@@ -20,12 +20,46 @@ const resolveBookId = async (bookIdStr) => {
   return book ? book._id : null;
 };
 
-// @desc    Get user library
-// @route   GET /api/reader/library
+// @desc    Get user library with aggregated ReadingProgress and Bookmark counts
+// @route   GET /api/reader/library or GET /api/reader/my-shelf
 // @access  Private (Reader/Author/Publisher)
 const getLibrary = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id).populate('library.bookId');
-  return ApiResponse.success(res, 'User library fetched successfully', user.library || []);
+
+  const libraryWithProgress = await Promise.all(
+    (user.library || []).map(async (item) => {
+      const bObj = item.bookId;
+      if (!bObj) return item;
+
+      const targetBookId = bObj._id || bObj;
+
+      // Query real ReadingProgress from MongoDB
+      const progDoc = await ReadingProgress.findOne({ userId: req.user._id, bookId: targetBookId });
+
+      // Query real Bookmarks count from MongoDB
+      const bmCount = await Bookmark.countDocuments({ userId: req.user._id, bookId: targetBookId });
+
+      const curPage = progDoc?.currentPage || item.currentPage || 1;
+      const totPages = progDoc?.totalPages || item.totalPages || bObj.pages || 20;
+      const progPct = progDoc?.progressPercent !== undefined ? progDoc.progressPercent : Math.min(100, Math.round((curPage / totPages) * 100));
+      const statusStr = progPct >= 100 ? 'Completed' : (progDoc?.status || item.status || 'Currently Reading');
+      const lastReadDate = progDoc?.lastReadAt || item.updatedAt || item.createdAt;
+
+      return {
+        _id: item._id,
+        bookId: bObj,
+        currentPage: curPage,
+        totalPages: totPages,
+        progress: progPct,
+        progressPercent: progPct,
+        status: statusStr,
+        lastReadAt: lastReadDate,
+        bookmarksCount: bmCount
+      };
+    })
+  );
+
+  return ApiResponse.success(res, 'User library fetched successfully', libraryWithProgress);
 });
 
 // @desc    Toggle add/remove book in library (Idempotent)
@@ -128,16 +162,18 @@ const purchaseBook = asyncHandler(async (req, res) => {
 });
 
 // @desc    Save reading progress and current page
-// @route   POST /api/reader/progress
+// @route   POST /api/reader/progress or PUT /api/reader/books/:bookId/progress
 // @access  Private
 const saveReadingProgress = asyncHandler(async (req, res) => {
-  const { bookId, currentPage, totalPages } = req.body;
+  const targetBookId = req.params.bookId || req.body.bookId;
+  const currentPage = Number(req.body.currentPage) || 1;
+  const totalPages = Number(req.body.totalPages) || 350;
 
-  if (!bookId || !currentPage) {
-    return ApiResponse.error(res, 'Book ID and current page are required', 400);
+  if (!targetBookId) {
+    return ApiResponse.error(res, 'Book ID is required', 400);
   }
 
-  const resolvedId = await resolveBookId(bookId);
+  const resolvedId = await resolveBookId(targetBookId);
   if (!resolvedId) {
     return ApiResponse.error(res, 'Book not found', 404);
   }
@@ -156,6 +192,12 @@ const saveReadingProgress = asyncHandler(async (req, res) => {
     },
     { new: true, upsert: true }
   );
+
+  console.log('[PROGRESS SAVE]');
+  console.log(`Reader ID: ${req.user._id}`);
+  console.log(`Book ID: ${resolvedId}`);
+  console.log(`Current page: ${currentPage}`);
+  console.log(`Percentage: ${progressPercent}`);
 
   // Sync to User library array
   const user = await User.findById(req.user._id);
@@ -185,11 +227,11 @@ const saveReadingProgress = asyncHandler(async (req, res) => {
 });
 
 // @desc    Get reading progress for a book
-// @route   GET /api/reader/progress/:bookId
+// @route   GET /api/reader/progress/:bookId or GET /api/reader/books/:bookId/progress
 // @access  Private
 const getReadingProgress = asyncHandler(async (req, res) => {
-  const { bookId } = req.params;
-  const resolvedId = await resolveBookId(bookId);
+  const targetBookId = req.params.bookId;
+  const resolvedId = await resolveBookId(targetBookId);
 
   if (!resolvedId) {
     return ApiResponse.error(res, 'Book not found', 404);
@@ -207,6 +249,11 @@ const getReadingProgress = asyncHandler(async (req, res) => {
       progressPercent: libItem ? libItem.progress : 0
     };
   }
+
+  console.log('[PROGRESS LOAD]');
+  console.log(`Reader ID: ${req.user._id}`);
+  console.log(`Book ID: ${resolvedId}`);
+  console.log(`Saved page: ${progress.currentPage || 1}`);
 
   return ApiResponse.success(res, 'Reading progress fetched successfully', progress);
 });
@@ -309,39 +356,76 @@ const getBookmarks = asyncHandler(async (req, res) => {
   return ApiResponse.success(res, 'Bookmarks fetched successfully', bookmarks);
 });
 
-// @desc    Add a bookmark
-// @route   POST /api/reader/bookmarks
+// @desc    Get bookmarks for a specific book
+// @route   GET /api/reader/books/:bookId/bookmarks or GET /api/reader/bookmarks/:bookId
 // @access  Private
-const addBookmark = asyncHandler(async (req, res) => {
-  const { bookId, pageRef, quote, note } = req.body;
+const getBookmarksForBook = asyncHandler(async (req, res) => {
+  const targetBookId = req.params.bookId;
+  const resolvedId = await resolveBookId(targetBookId);
 
-  const resolvedId = await resolveBookId(bookId);
   if (!resolvedId) {
     return ApiResponse.error(res, 'Book not found', 404);
   }
 
-  const newBookmark = await Bookmark.create({
-    userId: req.user._id,
-    bookId: resolvedId,
-    pageRef: pageRef || 'Page 1',
-    quote: quote || '',
-    note: note || '',
-    dateSaved: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-  });
-
-  const populated = await Bookmark.findById(newBookmark._id).populate('bookId');
-  return ApiResponse.success(res, 'Bookmark saved successfully', populated, 201);
+  const bookmarks = await Bookmark.find({ userId: req.user._id, bookId: resolvedId }).sort({ pageNumber: 1 });
+  return ApiResponse.success(res, 'Book bookmarks fetched successfully', bookmarks);
 });
 
-// @desc    Delete a bookmark
-// @route   DELETE /api/reader/bookmarks/:id
+// @desc    Add a bookmark (upsert by user, book, pageNumber)
+// @route   POST /api/reader/bookmarks or POST /api/reader/books/:bookId/bookmarks
+// @access  Private
+const addBookmark = asyncHandler(async (req, res) => {
+  const targetBookId = req.params.bookId || req.body.bookId;
+  const pageNum = Number(req.body.pageNumber) || 1;
+  const { pageRef, chapterTitle, quote, note } = req.body;
+
+  if (!targetBookId) {
+    return ApiResponse.error(res, 'Book ID is required', 400);
+  }
+
+  const resolvedId = await resolveBookId(targetBookId);
+  if (!resolvedId) {
+    return ApiResponse.error(res, 'Book not found', 404);
+  }
+
+  const bookmark = await Bookmark.findOneAndUpdate(
+    { userId: req.user._id, bookId: resolvedId, pageNumber: pageNum },
+    {
+      pageNumber: pageNum,
+      pageRef: pageRef || `Page ${pageNum}`,
+      chapterTitle: chapterTitle || '',
+      quote: quote || '',
+      note: note || '',
+      dateSaved: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+    },
+    { new: true, upsert: true }
+  );
+
+  return ApiResponse.success(res, 'Bookmark saved successfully', bookmark, 201);
+});
+
+// @desc    Delete a bookmark (by id or by bookId + pageNumber)
+// @route   DELETE /api/reader/bookmarks/:id or DELETE /api/reader/books/:bookId/bookmarks/:pageNumber
 // @access  Private
 const deleteBookmark = asyncHandler(async (req, res) => {
-  const { id } = req.params;
+  const { id, bookId, pageNumber } = req.params;
 
-  await Bookmark.findOneAndDelete({ _id: id, userId: req.user._id });
+  if (bookId && pageNumber) {
+    const resolvedId = await resolveBookId(bookId);
+    await Bookmark.findOneAndDelete({
+      userId: req.user._id,
+      bookId: resolvedId,
+      pageNumber: Number(pageNumber)
+    });
+  } else if (id) {
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      await Bookmark.findOneAndDelete({ _id: id, userId: req.user._id });
+    } else {
+      await Bookmark.findOneAndDelete({ userId: req.user._id, pageNumber: Number(id) });
+    }
+  }
+
   const remaining = await Bookmark.find({ userId: req.user._id }).populate('bookId');
-
   return ApiResponse.success(res, 'Bookmark removed successfully', remaining);
 });
 
@@ -499,6 +583,7 @@ module.exports = {
   addToWishlist,
   removeFromWishlist,
   getBookmarks,
+  getBookmarksForBook,
   addBookmark,
   deleteBookmark,
   createReview,

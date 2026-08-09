@@ -52,14 +52,7 @@ export default function BookReview() {
     setErrorMessage('');
     setIsLoading(true);
     try {
-      await apiFetch(`/editorial/books/${targetId}/approve`, {
-        method: 'PUT',
-        body: JSON.stringify({ notes: editorialNotes })
-      }).catch(() => null);
-
       await updateBookStatus(targetId, 'Approved', editorialNotes);
-      if (fetchEditorialData) await fetchEditorialData();
-      if (fetchPublicData) await fetchPublicData();
       setDecisionState('approved');
     } catch (err) {
       setErrorMessage(err.message || 'Failed to approve manuscript.');
@@ -72,14 +65,7 @@ export default function BookReview() {
     setErrorMessage('');
     setIsLoading(true);
     try {
-      await apiFetch(`/editorial/books/${targetId}/publish`, {
-        method: 'PUT',
-        body: JSON.stringify({ notes: editorialNotes })
-      }).catch(() => null);
-
       await updateBookStatus(targetId, 'Published', editorialNotes);
-      if (fetchEditorialData) await fetchEditorialData();
-      if (fetchPublicData) await fetchPublicData();
       setDecisionState('published');
     } catch (err) {
       setErrorMessage(err.message || 'Failed to publish book.');
@@ -96,14 +82,7 @@ export default function BookReview() {
     }
     setIsLoading(true);
     try {
-      await apiFetch(`/editorial/books/${targetId}/revision`, {
-        method: 'PUT',
-        body: JSON.stringify({ notes: editorialNotes, revisionNotes: editorialNotes })
-      }).catch(() => null);
-
-      await updateBookStatus(targetId, 'Needs Revision', editorialNotes);
-      if (fetchEditorialData) await fetchEditorialData();
-      if (fetchPublicData) await fetchPublicData();
+      await updateBookStatus(targetId, 'In Review', editorialNotes);
       setDecisionState('revision');
     } catch (err) {
       setErrorMessage(err.message || 'Failed to request revisions.');
@@ -120,14 +99,7 @@ export default function BookReview() {
     }
     setIsLoading(true);
     try {
-      await apiFetch(`/editorial/books/${targetId}/reject`, {
-        method: 'PUT',
-        body: JSON.stringify({ notes: editorialNotes, rejectionReason: editorialNotes })
-      }).catch(() => null);
-
       await updateBookStatus(targetId, 'Rejected', editorialNotes);
-      if (fetchEditorialData) await fetchEditorialData();
-      if (fetchPublicData) await fetchPublicData();
       setDecisionState('rejected');
     } catch (err) {
       setErrorMessage(err.message || 'Failed to reject manuscript.');

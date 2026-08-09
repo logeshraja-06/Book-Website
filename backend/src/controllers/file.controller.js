@@ -133,8 +133,53 @@ const streamManuscript = asyncHandler(async (req, res) => {
   return fs.createReadStream(absPath).pipe(res);
 });
 
+// @desc    Download PDF for published book
+// @route   GET /api/files/books/:id/download or GET /api/books/:id/download
+// @access  Private (Authenticated Reader)
+const downloadBookPdf = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  if (!req.user) {
+    return ApiResponse.error(res, 'Authentication required to download PDF', 401);
+  }
+
+  let book;
+  if (mongoose.Types.ObjectId.isValid(id)) {
+    book = await Book.findById(id);
+  } else {
+    book = (await Book.findOne({ slug: id })) || (await Book.findOne({ legacyId: id }));
+  }
+
+  if (!book) {
+    return ApiResponse.error(res, 'Book not found', 404);
+  }
+
+  // Enforce status === Published for readers
+  if (book.status !== 'Published') {
+    if (req.user.role !== 'publisher' && req.user.role !== 'admin' && req.user.role !== 'author') {
+      return ApiResponse.error(res, 'Only published books can be downloaded', 403);
+    }
+  }
+
+  let pdfRel = book.pdfPath || book.manuscriptUrl;
+  if (!pdfRel || !pdfRel.startsWith('/uploads/')) {
+    pdfRel = '/uploads/pdfs/sample-manuscript.pdf';
+  }
+
+  const absPath = path.join(__dirname, '../../', pdfRel.startsWith('/') ? pdfRel : `/${pdfRel}`);
+  if (!fs.existsSync(absPath)) {
+    return ApiResponse.error(res, 'PDF file missing on server disk', 404);
+  }
+
+  const safeFilename = (book.title || 'book').replace(/[^a-zA-Z0-9_-]/g, '_');
+  res.set('Content-Type', 'application/pdf');
+  res.set('Content-Disposition', `attachment; filename="BookVerse-${safeFilename}.pdf"`);
+  return fs.createReadStream(absPath).pipe(res);
+});
+
 module.exports = {
   getDownloadToken,
   streamCover,
-  streamManuscript
+  streamManuscript,
+  downloadBookPdf
 };

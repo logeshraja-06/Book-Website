@@ -155,11 +155,23 @@ export function DataProvider({ children }) {
         ]);
 
         if (libRes.status === 'fulfilled' && libRes.value?.success && libRes.value.data) {
-          setLibraryBookState(libRes.value.data);
-          const purchasedIds = libRes.value.data.map((item) => {
-            const bId = item.bookId?._id || item.bookId?.id || item.bookId || item.id || item._id;
-            return bId;
+          const formattedLibrary = libRes.value.data.map((item) => {
+            if (item.bookId && typeof item.bookId === 'object') {
+              return {
+                ...item.bookId,
+                currentPage: item.currentPage || 1,
+                totalPages: item.totalPages || item.bookId.pages || 350,
+                progress: item.progress !== undefined ? item.progress : (item.progressPercent || 0),
+                progressPercent: item.progressPercent !== undefined ? item.progressPercent : (item.progress || 0),
+                status: item.status || 'Currently Reading',
+                lastReadAt: item.lastReadAt || item.lastRead || new Date().toISOString(),
+                bookmarksCount: item.bookmarksCount || 0
+              };
+            }
+            return item;
           });
+          setLibraryBookState(formattedLibrary);
+          const purchasedIds = formattedLibrary.map((b) => b._id || b.id);
           setPurchasedBookIds(purchasedIds);
         }
         if (wishRes.status === 'fulfilled' && wishRes.value?.success && wishRes.value.data) {
@@ -229,35 +241,12 @@ export function DataProvider({ children }) {
         fetchEditorialData();
         return createdBook;
       }
+      throw new Error(res.message || 'Failed to create book record in database.');
     } catch (err) {
-      console.warn('[addBook API Fallback]:', err.message);
+      console.error('[addBook Error]:', err.message);
+      throw err;
     }
-
-    const createdBook = {
-      id: newBook.id || newBook.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-      title: newBook.title,
-      subtitle: newBook.subtitle || '',
-      author: currentUser?.name || 'Kalki Krishnamurthy',
-      authorId: currentUser?.id || 'kalki-krishnamurthy',
-      genre: newBook.genre || 'Historical Fiction',
-      language: newBook.language || 'English',
-      price: Number(newBook.price) || 499,
-      isbn: newBook.isbn || `BV-978-${Math.floor(100000 + Math.random() * 900000)}`,
-      rating: 4.8,
-      reviewsCount: '0',
-      publishYear: Number(newBook.publishYear) || 2026,
-      pages: Number(newBook.pages) || 350,
-      publisher: newBook.publisher || 'BookVerse Studio Imprint',
-      synopsis: newBook.synopsis || '',
-      coverUrl: newBook.coverUrl || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80',
-      status: newBook.status || 'In Review'
-    };
-
-    setBooks((prev) => [createdBook, ...prev]);
-    setStudioBooks((prev) => [createdBook, ...prev]);
-    setEditorialQueue((prev) => [createdBook, ...prev]);
-    return createdBook;
-  }, [currentUser, fetchPublicData, fetchEditorialData]);
+  }, [fetchPublicData, fetchEditorialData]);
 
   /**
    * Edit/Update an existing book.
@@ -340,24 +329,24 @@ export function DataProvider({ children }) {
       if (endpoint) {
         const res = await apiFetch(endpoint, {
           method: 'PUT',
-          body: JSON.stringify({ notes: notes || 'Editorial review decision updated.' })
+          body: JSON.stringify({ notes: notes || 'Editorial review decision updated.', rejectionReason: notes })
         });
         if (res.success && res.data) {
           const updated = { ...res.data, id: res.data.id || res.data._id };
           setBooks((prev) => prev.map((b) => (b.id === bookId || b._id === bookId) ? updated : b));
           setEditorialBooks((prev) => prev.map((b) => (b.id === bookId || b._id === bookId) ? updated : b));
           setEditorialQueue((prev) => prev.map((b) => (b.id === bookId || b._id === bookId) ? updated : b));
+          setStudioBooks((prev) => prev.map((b) => (b.id === bookId || b._id === bookId) ? updated : b));
           fetchPublicData();
           fetchEditorialData();
-          return;
+          return updated;
         }
+        throw new Error(res.message || `Failed to update status to ${newStatus}`);
       }
     } catch (err) {
-      console.warn('[updateBookStatus API Fallback]:', err.message);
+      console.error('[updateBookStatus Error]:', err.message);
+      throw err;
     }
-
-    setBooks((prev) => prev.map((b) => (b.id === bookId || b._id === bookId) ? { ...b, status: newStatus } : b));
-    setEditorialBooks((prev) => prev.map((b) => (b.id === bookId || b._id === bookId) ? { ...b, status: newStatus } : b));
   }, [fetchPublicData, fetchEditorialData]);
 
   /**

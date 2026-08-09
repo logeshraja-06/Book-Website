@@ -44,6 +44,8 @@ const getEditorialBookById = asyncHandler(async (req, res) => {
     return ApiResponse.error(res, 'Book not found', 404);
   }
 
+  const prevStatus = book.status;
+
   // Automatic transition: SUBMITTED -> IN REVIEW when Publisher opens manuscript
   if (book.status === 'Submitted' || book.status === 'submitted') {
     book.status = 'In Review';
@@ -51,6 +53,11 @@ const getEditorialBookById = asyncHandler(async (req, res) => {
     book.reviewedAt = new Date();
     await book.save();
   }
+
+  console.log('[EDITORIAL REVIEW]');
+  console.log(`Book ID: ${book._id}`);
+  console.log(`Previous status: ${prevStatus}`);
+  console.log(`Current status: ${book.status}`);
 
   return ApiResponse.success(res, 'Editorial book details fetched successfully', book);
 });
@@ -67,6 +74,8 @@ const approveBook = asyncHandler(async (req, res) => {
     return ApiResponse.error(res, 'Book not found', 404);
   }
 
+  const prevStatus = book.status;
+
   book.status = 'Approved';
   book.editorialNotes = notes || book.editorialNotes || 'Approved by editorial team.';
   book.lastEdited = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
@@ -74,6 +83,11 @@ const approveBook = asyncHandler(async (req, res) => {
   if (req.user) book.reviewedBy = req.user._id;
 
   await book.save();
+
+  console.log('[EDITORIAL APPROVE]');
+  console.log(`Book ID: ${book._id}`);
+  console.log(`Previous status: ${prevStatus}`);
+  console.log(`New status: ${book.status}`);
 
   return ApiResponse.success(res, 'Book manuscript approved for publication', book);
 });
@@ -93,12 +107,19 @@ const publishBook = asyncHandler(async (req, res) => {
     return ApiResponse.error(res, 'Only approved manuscripts can be published', 400);
   }
 
+  const prevStatus = book.status;
+
   book.status = 'Published';
   book.lastEdited = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   book.reviewedAt = new Date();
   if (req.user) book.reviewedBy = req.user._id;
 
   await book.save();
+
+  console.log('[PUBLISH]');
+  console.log(`Book ID: ${book._id}`);
+  console.log(`Previous status: ${prevStatus}`);
+  console.log(`New status: ${book.status}`);
 
   // Synchronize Author publications count
   if (book.authorId) {
