@@ -14,7 +14,7 @@ export default function SampleReaderModal({ isOpen, onClose, book, onPurchaseCli
       sectionTitle: 'Chapter I: The Solitary Courier',
       content: (
         <div className="space-y-6">
-          <p className="font-mono text-xs uppercase tracking-widest text-[#7B021D] font-bold">
+          <p className="font-mono text-xs uppercase tracking-widest text-[#212842] font-bold">
             Chapter Excerpt · Page 1 of 2
           </p>
           <h2 className="font-editorial-serif text-3xl font-normal leading-tight text-[#211D1D]">
@@ -34,7 +34,7 @@ export default function SampleReaderModal({ isOpen, onClose, book, onPurchaseCli
       sectionTitle: 'Chapter I: The Solitary Courier (Continued)',
       content: (
         <div className="space-y-6">
-          <p className="font-mono text-xs uppercase tracking-widest text-[#7B021D] font-bold">
+          <p className="font-mono text-xs uppercase tracking-widest text-[#212842] font-bold">
             Chapter Excerpt · Page 2 of 2
           </p>
           <h2 className="font-editorial-serif text-3xl font-normal leading-tight text-[#211D1D]">
@@ -62,7 +62,7 @@ export default function SampleReaderModal({ isOpen, onClose, book, onPurchaseCli
                   onClose();
                   if (onPurchaseClick) onPurchaseClick();
                 }}
-                className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-bold uppercase tracking-wider hover:bg-[#520014] transition-colors flex items-center justify-center gap-2 shadow-md"
+                className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors flex items-center justify-center gap-2 shadow-md"
               >
                 <ShoppingBag className="w-4 h-4 text-[#F5F5DA]" />
                 <span>Purchase Full Book (₹{book.price.toLocaleString()})</span>
@@ -70,7 +70,7 @@ export default function SampleReaderModal({ isOpen, onClose, book, onPurchaseCli
               <button
                 type="button"
                 onClick={onClose}
-                className="w-full sm:w-auto px-5 py-3 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-xs font-semibold uppercase tracking-wider text-[#211D1D] hover:border-[#7B021D] transition-colors"
+                className="w-full sm:w-auto px-5 py-3 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-xs font-semibold uppercase tracking-wider text-[#211D1D] hover:border-[#212842] transition-colors"
               >
                 Close Preview
               </button>
@@ -141,7 +141,7 @@ export default function SampleReaderModal({ isOpen, onClose, book, onPurchaseCli
                 type="button"
                 onClick={() => setCurrentPage(0)}
                 disabled={currentPage === 0}
-                className="inline-flex items-center gap-1.5 text-[#211D1D] disabled:opacity-30 disabled:cursor-not-allowed hover:text-[#7B021D] transition-colors font-bold"
+                className="inline-flex items-center gap-1.5 text-[#211D1D] disabled:opacity-30 disabled:cursor-not-allowed hover:text-[#212842] transition-colors font-bold"
               >
                 <ChevronLeft className="w-4 h-4" />
                 <span>Page 1</span>
@@ -155,7 +155,7 @@ export default function SampleReaderModal({ isOpen, onClose, book, onPurchaseCli
                 type="button"
                 onClick={() => setCurrentPage(1)}
                 disabled={currentPage === 1}
-                className="inline-flex items-center gap-1.5 text-[#211D1D] disabled:opacity-30 disabled:cursor-not-allowed hover:text-[#7B021D] transition-colors font-bold"
+                className="inline-flex items-center gap-1.5 text-[#211D1D] disabled:opacity-30 disabled:cursor-not-allowed hover:text-[#212842] transition-colors font-bold"
               >
                 <span>Page 2</span>
                 <ChevronRight className="w-4 h-4" />

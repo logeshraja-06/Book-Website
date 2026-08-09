@@ -17,8 +17,8 @@ export default function WishlistView() {
       {/* ── 1. HEADER ── */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#D8CFAE] pb-6">
         <div>
-          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#7B021D] font-bold block flex items-center gap-1.5 mb-1">
-            <Bookmark className="w-3.5 h-3.5 text-[#7B021D] fill-[#7B021D]" />
+          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#212842] font-bold block flex items-center gap-1.5 mb-1">
+            <Bookmark className="w-3.5 h-3.5 text-[#212842] fill-[#212842]" />
             Personal Reader Sanctuary
           </span>
           <h2 className="font-editorial-serif text-3xl sm:text-4xl text-[#181616] font-bold">
@@ -28,7 +28,7 @@ export default function WishlistView() {
             Curated manuscripts saved for future reading, contemplation, and library addition
           </p>
         </div>
-        <span className="text-xs font-mono text-[#7B021D] font-bold bg-[#FFFDF3] px-3.5 py-1.5 rounded-full border border-[#D8CFAE] shadow-2xs">
+        <span className="text-xs font-mono text-[#212842] font-bold bg-[#FFFDF3] px-3.5 py-1.5 rounded-full border border-[#D8CFAE] shadow-2xs">
           {wishlistBooks.length} Earmarked Title(s)
         </span>
       </div>
@@ -52,7 +52,7 @@ export default function WishlistView() {
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.35, delay: idx * 0.05, ease: [0.16, 1, 0.3, 1] }}
-                  className="bg-[#FFFDF3] rounded-3xl p-6 border border-[#D8CFAE] hover:border-[#7B021D] shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between h-full group"
+                  className="bg-[#FFFDF3] rounded-3xl p-6 border border-[#D8CFAE] hover:border-[#212842] shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between h-full group"
                 >
                   <div>
                     {/* Cover & Rating Badge */}
@@ -61,18 +61,18 @@ export default function WishlistView() {
                         <BookCover book={book} imageClassName="group-hover:scale-105 transition-transform duration-500" />
                       </Link>
 
-                      <div className="absolute top-3.5 left-3.5 px-2.5 py-1 rounded-full bg-[#F5F5DA]/95 text-[10px] uppercase tracking-[0.14em] font-editorial-sans text-[#7B021D] font-bold border border-[#D8CFAE] flex items-center gap-1">
-                        <Star className="w-3 h-3 text-[#7B021D] fill-[#7B021D]" />
+                      <div className="absolute top-3.5 left-3.5 px-2.5 py-1 rounded-full bg-[#F5F5DA]/95 text-[10px] uppercase tracking-[0.14em] font-editorial-sans text-[#212842] font-bold border border-[#D8CFAE] flex items-center gap-1">
+                        <Star className="w-3 h-3 text-[#212842] fill-[#212842]" />
                         <span>{rating}</span>
                       </div>
                     </div>
 
-                    <span className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] font-bold">
+                    <span className="text-[10px] uppercase font-mono tracking-widest text-[#212842] font-bold">
                       {categoryName}
                     </span>
                     
                     <Link to={`/books/${bookSlug}`}>
-                      <h3 className="font-editorial-serif text-xl font-bold text-[#181616] mt-1 line-clamp-1 group-hover:text-[#7B021D] transition-colors leading-snug">
+                      <h3 className="font-editorial-serif text-xl font-bold text-[#181616] mt-1 line-clamp-1 group-hover:text-[#212842] transition-colors leading-snug">
                         {book.title}
                       </h3>
                     </Link>
@@ -85,7 +85,7 @@ export default function WishlistView() {
                       <span className="font-editorial-sans font-tabular text-[17px] font-bold tracking-tight text-[#181616]">
                         {formatPrice(price)}
                       </span>
-                      <span className="text-[10px] text-[#7B021D] block font-mono font-bold uppercase tracking-wider">
+                      <span className="text-[10px] text-[#212842] block font-mono font-bold uppercase tracking-wider">
                         {isOwned ? 'Owned in Library' : 'Available for Purchase'}
                       </span>
                     </div>
@@ -110,7 +110,7 @@ export default function WishlistView() {
                           whileHover={{ scale: 1.03 }}
                           whileTap={{ scale: 0.97 }}
                           onClick={() => setActiveReaderBook(book)}
-                          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#520014] transition-colors shadow-md"
+                          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-md"
                         >
                           <BookOpen className="w-3.5 h-3.5" />
                           <span>Read Now</span>
@@ -121,7 +121,7 @@ export default function WishlistView() {
                           whileHover={{ scale: 1.03 }}
                           whileTap={{ scale: 0.97 }}
                           onClick={() => purchaseBook(book, price)}
-                          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#520014] transition-colors shadow-md"
+                          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-md"
                         >
                           <ShoppingBag className="w-3.5 h-3.5" />
                           <span>Purchase</span>
@@ -141,8 +141,8 @@ export default function WishlistView() {
             transition={{ duration: 0.4 }}
             className="flex flex-col items-center justify-center py-20 text-center bg-[#FFFDF3] rounded-3xl border border-[#D8CFAE] p-8 space-y-4 shadow-sm"
           >
-            <div className="w-16 h-16 rounded-2xl bg-[#F8F6E5] border border-[#D8CFAE] flex items-center justify-center text-[#7B021D] shadow-xs">
-              <Bookmark className="w-7 h-7 text-[#7B021D]" />
+            <div className="w-16 h-16 rounded-2xl bg-[#F8F6E5] border border-[#D8CFAE] flex items-center justify-center text-[#212842] shadow-xs">
+              <Bookmark className="w-7 h-7 text-[#212842]" />
             </div>
 
             <div className="space-y-1 max-w-md">
@@ -157,7 +157,7 @@ export default function WishlistView() {
             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
               <Link
                 to="/books"
-                className="px-6 py-3 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#520014] transition-colors shadow-md inline-flex items-center gap-2"
+                className="px-6 py-3 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-md inline-flex items-center gap-2"
               >
                 <span>Explore Books</span>
                 <ArrowRight className="w-4 h-4" />

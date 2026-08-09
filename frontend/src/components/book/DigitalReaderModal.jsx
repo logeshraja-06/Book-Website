@@ -36,9 +36,9 @@ const ZOOM_MODES = [
 ];
 
 const THEMES = {
-  cream: { bg: '#F5F5DA', container: '#FFFDF3', text: '#211D1D', border: '#E9E5C8', accent: '#7B021D' },
-  sepia: { bg: '#F4EEEA', container: '#FAF8F6', text: '#2B2B2B', border: '#E7D9D3', accent: '#7B021D' },
-  dark: { bg: '#141212', container: '#1C1919', text: '#E5E0DC', border: '#332D2D', accent: '#A64A5B' }
+  cream: { bg: '#F5F5DA', container: '#FFFDF3', text: '#211D1D', border: '#E9E5C8', accent: '#212842' },
+  sepia: { bg: '#F4EEEA', container: '#FAF8F6', text: '#2B2B2B', border: '#E7D9D3', accent: '#212842' },
+  dark: { bg: '#141212', container: '#1C1919', text: '#E5E0DC', border: '#332D2D', accent: '#384266' }
 };
 
 export default function DigitalReaderModal({ isOpen, onClose, book, initialPage = 1 }) {
@@ -284,19 +284,19 @@ export default function DigitalReaderModal({ isOpen, onClose, book, initialPage 
                 <div className="flex items-center gap-1 border rounded-full p-1" style={{ borderColor: theme.border }}>
                   <button
                     onClick={() => setActiveTheme('cream')}
-                    className={`w-5 h-5 rounded-full border ${activeTheme === 'cream' ? 'ring-2 ring-[#7B021D]' : ''}`}
+                    className={`w-5 h-5 rounded-full border ${activeTheme === 'cream' ? 'ring-2 ring-[#212842]' : ''}`}
                     style={{ backgroundColor: '#F5F5DA', borderColor: '#E9E5C8' }}
                     title="Ivory Cream Theme"
                   />
                   <button
                     onClick={() => setActiveTheme('sepia')}
-                    className={`w-5 h-5 rounded-full border ${activeTheme === 'sepia' ? 'ring-2 ring-[#7B021D]' : ''}`}
+                    className={`w-5 h-5 rounded-full border ${activeTheme === 'sepia' ? 'ring-2 ring-[#212842]' : ''}`}
                     style={{ backgroundColor: '#F4EEEA', borderColor: '#E7D9D3' }}
                     title="Sepia Theme"
                   />
                   <button
                     onClick={() => setActiveTheme('dark')}
-                    className={`w-5 h-5 rounded-full border ${activeTheme === 'dark' ? 'ring-2 ring-[#A64A5B]' : ''}`}
+                    className={`w-5 h-5 rounded-full border ${activeTheme === 'dark' ? 'ring-2 ring-[#384266]' : ''}`}
                     style={{ backgroundColor: '#1A1717', borderColor: '#332D2D' }}
                     title="Night Dark Theme"
                   />
@@ -320,7 +320,7 @@ export default function DigitalReaderModal({ isOpen, onClose, book, initialPage 
                   className="p-2 rounded-full border hover:opacity-80 transition-opacity disabled:opacity-50"
                   title="Download PDF Edition"
                 >
-                  <Download className="w-4 h-4 text-[#7B021D]" />
+                  <Download className="w-4 h-4 text-[#212842]" />
                 </button>
 
                 {/* Close Reader */}
@@ -355,14 +355,14 @@ export default function DigitalReaderModal({ isOpen, onClose, book, initialPage 
                       <div className="flex items-center gap-2 text-xs font-mono">
                         <button
                           onClick={() => setActiveDrawerTab('toc')}
-                          className={`px-3 py-1.5 rounded-full border transition-all ${activeDrawerTab === 'toc' ? 'font-bold bg-[#7B021D] text-[#F5F5DA]' : 'opacity-70 hover:opacity-100'}`}
+                          className={`px-3 py-1.5 rounded-full border transition-all ${activeDrawerTab === 'toc' ? 'font-bold bg-[#212842] text-[#F5F5DA]' : 'opacity-70 hover:opacity-100'}`}
                           style={{ borderColor: theme.border }}
                         >
                           Contents
                         </button>
                         <button
                           onClick={() => setActiveDrawerTab('bookmarks')}
-                          className={`px-3 py-1.5 rounded-full border transition-all ${activeDrawerTab === 'bookmarks' ? 'font-bold bg-[#7B021D] text-[#F5F5DA]' : 'opacity-70 hover:opacity-100'}`}
+                          className={`px-3 py-1.5 rounded-full border transition-all ${activeDrawerTab === 'bookmarks' ? 'font-bold bg-[#212842] text-[#F5F5DA]' : 'opacity-70 hover:opacity-100'}`}
                           style={{ borderColor: theme.border }}
                         >
                           Bookmarks ({bookmarkedList.length})
@@ -432,7 +432,7 @@ export default function DigitalReaderModal({ isOpen, onClose, book, initialPage 
                                     {bm.chapterTitle || `Page ${bm.pageNumber}`}
                                   </span>
                                 </div>
-                                <span className="px-2 py-0.5 rounded bg-[#7B021D]/10 text-[#7B021D] font-bold text-[10px] shrink-0">
+                                <span className="px-2 py-0.5 rounded bg-[#212842]/10 text-[#212842] font-bold text-[10px] shrink-0">
                                   Jump
                                 </span>
                               </button>
@@ -521,7 +521,7 @@ export default function DigitalReaderModal({ isOpen, onClose, book, initialPage 
                   max={totalPages}
                   value={currentPage}
                   onChange={(e) => setCurrentPage(Number(e.target.value))}
-                  className="w-32 sm:w-48 accent-[#7B021D] cursor-pointer"
+                  className="w-32 sm:w-48 accent-[#212842] cursor-pointer"
                 />
                 <span style={{ color: theme.text }} className="font-bold">
                   {currentPage} / {totalPages}
@@ -546,7 +546,7 @@ export default function DigitalReaderModal({ isOpen, onClose, book, initialPage 
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
-                  className="absolute bottom-20 left-1/2 -translate-x-1/2 px-4 py-2.5 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-mono shadow-2xl flex items-center gap-2 border border-[#E9E5C8]/20 z-50"
+                  className="absolute bottom-20 left-1/2 -translate-x-1/2 px-4 py-2.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono shadow-2xl flex items-center gap-2 border border-[#E9E5C8]/20 z-50"
                 >
                   <Check className="w-4 h-4" />
                   <span>{bookmarkSavedToast}</span>

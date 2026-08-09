@@ -24,13 +24,13 @@ export default function Button({
 
   const variantStyles = {
     primary:
-      'bg-[#7B021D] text-[#F5F5DA] hover:bg-[#520014] shadow-sm',
+      'bg-[#212842] text-[#F5F5DA] hover:bg-[#181E33] shadow-sm',
     secondary:
-      'bg-[#FFFDF3] border border-[#E9E5C8] text-[#211D1D] hover:border-[#7B021D] hover:text-[#7B021D]',
+      'bg-[#FFFDF3] border border-[#E9E5C8] text-[#211D1D] hover:border-[#212842] hover:text-[#212842]',
     ghost:
-      'border border-[#E9E5C8] text-[#211D1D] hover:border-[#7B021D] hover:text-[#7B021D]',
+      'border border-[#E9E5C8] text-[#211D1D] hover:border-[#212842] hover:text-[#212842]',
     text:
-      'text-[#211D1D] hover:text-[#7B021D] py-1 px-0 min-h-0 normal-case tracking-normal font-medium hover:underline',
+      'text-[#211D1D] hover:text-[#212842] py-1 px-0 min-h-0 normal-case tracking-normal font-medium hover:underline',
   };
 
   const combinedClasses = `${baseStyles} ${sizeStyles[size] || sizeStyles.md} ${

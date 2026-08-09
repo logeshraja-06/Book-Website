@@ -34,7 +34,7 @@ export default function BookReview() {
     return (
       <div className="py-20 text-center space-y-4 bg-[#F5F5DA] rounded-3xl p-6">
         <h3 className="font-editorial-serif text-2xl text-[#181616]">Manuscript Record Not Found</h3>
-        <Link to="/publisher/queue" className="text-xs font-mono text-[#7B021D] hover:underline font-bold">
+        <Link to="/publisher/queue" className="text-xs font-mono text-[#212842] hover:underline font-bold">
           Return to Review Queue
         </Link>
       </div>
@@ -117,14 +117,14 @@ export default function BookReview() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-[#D8CFAE] pb-4 gap-2 sm:gap-0">
         <Link
           to="/publisher/queue"
-          className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-[#5F594F] hover:text-[#7B021D] transition-colors"
+          className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-[#5F594F] hover:text-[#212842] transition-colors"
         >
-          <ArrowLeft className="w-4 h-4 text-[#7B021D]" />
+          <ArrowLeft className="w-4 h-4 text-[#212842]" />
           <span>Back to Review Queue</span>
         </Link>
 
         <div className="flex items-center gap-2">
-          <span className="px-3 py-1 rounded-full bg-[#F1EED2] border border-[#D8CFAE] text-xs font-mono text-[#7B021D] uppercase tracking-wider font-bold">
+          <span className="px-3 py-1 rounded-full bg-[#F1EED2] border border-[#D8CFAE] text-xs font-mono text-[#212842] uppercase tracking-wider font-bold">
             Status: {book.status}
           </span>
           <span className="text-xs font-mono text-[#5F594F] uppercase tracking-wider font-bold">
@@ -143,7 +143,7 @@ export default function BookReview() {
           </div>
 
           <div className="space-y-2">
-            <span className="px-3 py-1 rounded-full bg-[#F1EED2] border border-[#D8CFAE] text-[#7B021D] text-[10px] font-mono uppercase tracking-wider inline-block font-bold">
+            <span className="px-3 py-1 rounded-full bg-[#F1EED2] border border-[#D8CFAE] text-[#212842] text-[10px] font-mono uppercase tracking-wider inline-block font-bold">
               {book.genre}
             </span>
             <h2 className="font-editorial-serif text-xl font-bold text-[#181616]">
@@ -158,7 +158,7 @@ export default function BookReview() {
           <div className="pt-4 border-t border-[#DED7BD] space-y-2.5 text-xs font-mono text-[#5F594F]">
             <div className="flex justify-between">
               <span>Status:</span>
-              <span className="font-bold text-[#7B021D]">{book.status}</span>
+              <span className="font-bold text-[#212842]">{book.status}</span>
             </div>
             <div className="flex justify-between">
               <span>Price:</span>
@@ -170,7 +170,7 @@ export default function BookReview() {
             </div>
             <div className="flex justify-between">
               <span>ISBN:</span>
-              <span className="font-bold text-[#7B021D]">{book.isbn || 'BV-978-INTERNAL'}</span>
+              <span className="font-bold text-[#212842]">{book.isbn || 'BV-978-INTERNAL'}</span>
             </div>
           </div>
         </div>
@@ -179,7 +179,7 @@ export default function BookReview() {
         <div className="lg:col-span-5 space-y-4 bg-[#FFFDF3] rounded-3xl p-6 border border-[#D8CFAE] shadow-md">
           <div className="flex items-center justify-between border-b border-[#DED7BD] pb-3">
             <h3 className="font-editorial-serif text-lg font-bold text-[#181616] flex items-center gap-2">
-              <Eye className="w-4 h-4 text-[#7B021D]" />
+              <Eye className="w-4 h-4 text-[#212842]" />
               Integrated PDF Reader
             </h3>
             {pdfUrl && (
@@ -187,7 +187,7 @@ export default function BookReview() {
                 href={pdfUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="text-[10px] font-mono text-[#7B021D] uppercase tracking-wider font-bold hover:underline"
+                className="text-[10px] font-mono text-[#212842] uppercase tracking-wider font-bold hover:underline"
               >
                 Open Fullscreen
               </a>
@@ -204,7 +204,7 @@ export default function BookReview() {
             </div>
           ) : (
             <div className="w-full h-[340px] rounded-2xl border border-dashed border-[#D8CFAE] bg-[#F8F6E5] flex flex-col items-center justify-center p-6 text-center space-y-2">
-              <FileText className="w-10 h-10 text-[#7B021D]" />
+              <FileText className="w-10 h-10 text-[#212842]" />
               <p className="font-editorial-serif text-base font-bold text-[#181616]">
                 No PDF Manuscript Uploaded
               </p>
@@ -238,7 +238,7 @@ export default function BookReview() {
           {/* Form and Action Controls */}
           <div className="space-y-6">
             <div className="space-y-2">
-              <label className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] block font-bold">
+              <label className="text-[10px] uppercase font-mono tracking-widest text-[#212842] block font-bold">
                 Editorial Review Notes / Rejection Reason *
               </label>
               <textarea
@@ -246,7 +246,7 @@ export default function BookReview() {
                 value={editorialNotes}
                 onChange={(e) => setEditorialNotes(e.target.value)}
                 placeholder="Enter editorial evaluation notes, revision requirements, or rejection reason…"
-                className="w-full bg-[#FFFDF3] rounded-2xl border border-[#D8CFAE] p-4 text-xs text-[#181616] focus:border-[#7B021D] focus:outline-none transition-colors resize-none leading-relaxed font-mono shadow-inner"
+                className="w-full bg-[#FFFDF3] rounded-2xl border border-[#D8CFAE] p-4 text-xs text-[#181616] focus:border-[#212842] focus:outline-none transition-colors resize-none leading-relaxed font-mono shadow-inner"
               />
             </div>
 
@@ -274,7 +274,7 @@ export default function BookReview() {
                   whileTap={{ scale: 0.98 }}
                   disabled={isLoading}
                   onClick={handleApprove}
-                  className="w-full py-3.5 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#520014] transition-colors shadow-md flex items-center justify-center gap-2"
+                  className="w-full py-3.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-md flex items-center justify-center gap-2"
                 >
                   <CheckCircle2 className="w-4 h-4 text-[#F5F5DA]" />
                   <span>{isLoading ? 'Approving...' : 'Approve Manuscript'}</span>
@@ -295,7 +295,7 @@ export default function BookReview() {
                 whileTap={{ scale: 0.98 }}
                 disabled={isLoading}
                 onClick={handleRequestRevision}
-                className="w-full py-3 rounded-full bg-[#F1EED2] border border-[#D8CFAE] text-xs font-mono font-bold uppercase tracking-wider text-[#181616] hover:border-[#7B021D] hover:text-[#7B021D] transition-colors shadow-2xs"
+                className="w-full py-3 rounded-full bg-[#F1EED2] border border-[#D8CFAE] text-xs font-mono font-bold uppercase tracking-wider text-[#181616] hover:border-[#212842] hover:text-[#212842] transition-colors shadow-2xs"
               >
                 Needs Revision
               </motion.button>

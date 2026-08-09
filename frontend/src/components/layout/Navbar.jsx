@@ -155,27 +155,27 @@ export default function Navbar() {
         initial={{ y: 0 }}
         animate={{
           y: hidden ? -100 : 0,
-          backgroundColor: scrolled ? 'rgba(245, 245, 218, 0.96)' : 'rgba(245, 245, 218, 0.88)',
-          backdropFilter: scrolled ? 'blur(16px)' : 'blur(8px)',
+          backgroundColor: scrolled ? 'rgba(245, 245, 218, 0.92)' : 'rgba(250, 248, 230, 0.35)',
+          backdropFilter: scrolled ? 'blur(16px)' : 'blur(10px)',
           boxShadow: scrolled ? '0 4px 24px -2px rgba(33, 29, 29, 0.06)' : 'none',
-          borderBottomColor: scrolled ? 'rgba(233, 229, 200, 0.9)' : 'rgba(233, 229, 200, 0.4)',
+          borderBottomColor: scrolled ? 'rgba(233, 229, 200, 0.6)' : 'rgba(255, 255, 255, 0.18)',
         }}
         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
         className="sticky top-0 z-50 border-b transition-colors duration-300"
       >
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 h-20 sm:h-22 lg:h-24 flex items-center justify-between">
+        <div className="w-full px-6 sm:px-8 lg:px-10 xl:px-12 h-20 sm:h-22 flex items-center justify-between gap-6">
           
           {/* ── LEFT: REFINED BOOKVERSE WORDMARK ── */}
           <Link to="/" className="flex items-center gap-3.5 group select-none shrink-0">
-            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-[#FFFDF3] border border-[#E9E5C8] flex items-center justify-center text-[#211D1D] group-hover:border-[#7B021D] transition-all duration-300 shadow-xs">
-              <BookOpen className="w-5 h-5 text-[#7B021D] transition-colors duration-300" />
+            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-[#FFFDF3] border border-[#E9E5C8] flex items-center justify-center text-[#211D1D] group-hover:border-[#212842] transition-all duration-300 shadow-xs">
+              <BookOpen className="w-5 h-5 text-[#212842] transition-colors duration-300" />
             </div>
             <div className="flex flex-col">
               <div className="flex items-baseline gap-1.5">
                 <span className="font-editorial-serif text-[23px] sm:text-[25px] font-semibold tracking-tight text-[#211D1D] leading-none">
                   BOOKVERSE
                 </span>
-                <span className="font-mono text-[10px] uppercase font-bold text-[#7B021D] tracking-[0.24em] leading-none">
+                <span className="font-mono text-[10px] uppercase font-bold text-[#212842] tracking-[0.24em] leading-none">
                   STUDIO
                 </span>
               </div>
@@ -186,7 +186,7 @@ export default function Navbar() {
           </Link>
 
           {/* ── CENTER: DESKTOP NAVIGATION LINKS WITH GENEROUS SPACING ── */}
-          <nav className="hidden lg:flex items-center gap-12 xl:gap-14 font-editorial-sans text-[15px] font-medium tracking-[-0.01em] text-[#6B5E5E]">
+          <nav className="hidden lg:flex items-center gap-8 lg:gap-10 xl:gap-12 font-editorial-sans text-[15px] font-medium tracking-[-0.01em] text-[#6B5E5E]">
             {navLinks.map((link) => {
               const isActive =
                 link.path === '/'
@@ -212,7 +212,7 @@ export default function Navbar() {
                   {isActive && (
                     <motion.div
                       layoutId="navbarActiveUnderline"
-                      className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#7B021D] rounded-full"
+                      className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#212842] rounded-full"
                       transition={{ type: 'spring', stiffness: 350, damping: 30 }}
                     />
                   )}
@@ -228,15 +228,15 @@ export default function Navbar() {
             <motion.button
               type="button"
               onClick={() => setSearchModalOpen(true)}
-              whileHover={{ y: -1, borderColor: '#7B021D' }}
+              whileHover={{ y: -1, borderColor: '#212842' }}
               whileTap={{ y: 0 }}
               transition={{ duration: 0.2 }}
               className="flex items-center gap-3 px-4 py-2.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-[#6B5E5E] hover:text-[#211D1D] transition-all text-xs font-editorial-sans font-medium shadow-xs"
               title="Search Catalogue (⌘K)"
             >
-              <Search className="w-3.5 h-3.5 text-[#7B021D]" />
+              <Search className="w-3.5 h-3.5 text-[#212842]" />
               <span className="hidden xl:inline text-[13px]">Search catalogue…</span>
-              <kbd className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-[#F5F5DA] border border-[#E9E5C8] text-[10px] font-mono text-[#7B021D]">
+              <kbd className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-[#F5F5DA] border border-[#E9E5C8] text-[10px] font-mono text-[#212842]">
                 <Command className="w-2.5 h-2.5" />K
               </kbd>
             </motion.button>
@@ -244,12 +244,12 @@ export default function Navbar() {
             {/* Bookmarks / Saved Shelf Shortcut */}
             <Link
               to={currentUser ? "/my-shelf/wishlist" : "/login"}
-              className="relative p-2.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-[#6B5E5E] hover:text-[#211D1D] hover:border-[#7B021D] transition-all duration-200"
+              className="relative p-2.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-[#6B5E5E] hover:text-[#211D1D] hover:border-[#212842] transition-all duration-200"
               title="My Saved Shelf / Bookmarks"
             >
-              <Bookmark className="w-4 h-4 text-[#7B021D]" />
+              <Bookmark className="w-4 h-4 text-[#212842]" />
               {wishlistBooks.length > 0 && (
-                <span className="absolute -top-1 -right-1 w-4.5 h-4.5 rounded-full bg-[#7B021D] text-[#F5F5DA] text-[9px] font-mono font-bold flex items-center justify-center shadow-xs">
+                <span className="absolute -top-1 -right-1 w-4.5 h-4.5 rounded-full bg-[#212842] text-[#F5F5DA] text-[9px] font-mono font-bold flex items-center justify-center shadow-xs">
                   {wishlistBooks.length}
                 </span>
               )}
@@ -259,10 +259,10 @@ export default function Navbar() {
             {!isPublisher && (
               <Link
                 to="/publisher/login"
-                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-[11px] font-mono uppercase tracking-[0.12em] font-bold text-[#6B5E5E] hover:text-[#211D1D] hover:border-[#7B021D] transition-all duration-200"
+                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-[11px] font-mono uppercase tracking-[0.12em] font-bold text-[#6B5E5E] hover:text-[#211D1D] hover:border-[#212842] transition-all duration-200"
                 title="Publisher & Editorial Registrar"
               >
-                <Lock className="w-3 h-3 text-[#7B021D]" />
+                <Lock className="w-3 h-3 text-[#212842]" />
                 <span>Publisher</span>
               </Link>
             )}
@@ -273,7 +273,7 @@ export default function Navbar() {
                 <button
                   type="button"
                   onClick={() => setUserDropdownOpen((prev) => !prev)}
-                  className="flex items-center gap-2 p-1.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] hover:border-[#7B021D] transition-all shadow-2xs"
+                  className="flex items-center gap-2 p-1.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] hover:border-[#212842] transition-all shadow-2xs"
                 >
                   <img
                     src={currentUser.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'}
@@ -295,7 +295,7 @@ export default function Navbar() {
                     >
                       <div className="px-3 py-2.5 border-b border-[#E9E5C8]/60 mb-1">
                         <p className="text-xs font-semibold text-[#211D1D] truncate">{currentUser.name}</p>
-                        <span className="text-[10px] uppercase font-mono text-[#7B021D] tracking-wider font-bold">
+                        <span className="text-[10px] uppercase font-mono text-[#212842] tracking-wider font-bold">
                           {currentUser.role} Account
                         </span>
                       </div>
@@ -305,7 +305,7 @@ export default function Navbar() {
                         onClick={() => setUserDropdownOpen(false)}
                         className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-[#211D1D] hover:bg-[#F5F5DA] transition-colors"
                       >
-                        <Library className="w-3.5 h-3.5 text-[#7B021D]" />
+                        <Library className="w-3.5 h-3.5 text-[#212842]" />
                         <span>{isPublisher ? 'Publisher Workspace' : isAuthor ? 'Author Dashboard' : 'My Reading Shelf'}</span>
                       </Link>
 
@@ -340,7 +340,7 @@ export default function Navbar() {
                 <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
                   <Link
                     to="/login"
-                    className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-[#211D1D] text-xs font-mono font-bold uppercase tracking-[0.1em] hover:border-[#7B021D] hover:bg-[#F5F5DA] transition-all duration-300 shadow-2xs"
+                    className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-[#211D1D] text-xs font-mono font-bold uppercase tracking-[0.1em] hover:border-[#212842] hover:bg-[#F5F5DA] transition-all duration-300 shadow-2xs"
                   >
                     <span>LOGIN</span>
                   </Link>
@@ -350,7 +350,7 @@ export default function Navbar() {
                   <button
                     type="button"
                     onClick={() => setRoleModalOpen(true)}
-                    className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-[0.1em] hover:bg-[#520014] transition-all duration-300 shadow-md whitespace-nowrap"
+                    className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-[0.1em] hover:bg-[#181E33] transition-all duration-300 shadow-md whitespace-nowrap"
                   >
                     <User className="w-3.5 h-3.5 text-[#F5F5DA]" />
                     <span>SIGN IN</span>
@@ -407,7 +407,7 @@ export default function Navbar() {
                     <h4 className="font-editorial-serif text-base font-semibold text-[#211D1D]">
                       {currentUser.name}
                     </h4>
-                    <span className="text-[10px] font-mono text-[#7B021D] uppercase tracking-wider font-bold">
+                    <span className="text-[10px] font-mono text-[#212842] uppercase tracking-wider font-bold">
                       Role: {currentUser.role}
                     </span>
                   </div>
@@ -441,8 +441,8 @@ export default function Navbar() {
                   <Link
                     to={link.path}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center justify-between py-3 font-editorial-serif text-2xl text-[#211D1D] hover:text-[#7B021D] transition-colors ${
-                      location.pathname === link.path ? 'text-[#7B021D] font-bold' : ''
+                    className={`flex items-center justify-between py-3 font-editorial-serif text-2xl text-[#211D1D] hover:text-[#212842] transition-colors ${
+                      location.pathname === link.path ? 'text-[#212842] font-bold' : ''
                     }`}
                   >
                     <span>{link.name}</span>
@@ -457,9 +457,9 @@ export default function Navbar() {
               <Link
                 to={shelfPath}
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full py-3.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-center text-xs font-editorial-sans font-bold uppercase tracking-[0.1em] text-[#211D1D] hover:border-[#7B021D] flex items-center justify-center gap-2 shadow-2xs"
+                className="w-full py-3.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-center text-xs font-editorial-sans font-bold uppercase tracking-[0.1em] text-[#211D1D] hover:border-[#212842] flex items-center justify-center gap-2 shadow-2xs"
               >
-                <Bookmark className="w-3.5 h-3.5 text-[#7B021D]" />
+                <Bookmark className="w-3.5 h-3.5 text-[#212842]" />
                 <span>My Saved Shelf ({wishlistBooks.length})</span>
               </Link>
 
@@ -469,7 +469,7 @@ export default function Navbar() {
                   onClick={() => setMobileMenuOpen(false)}
                   className="w-full py-3.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-center text-xs font-editorial-sans font-bold uppercase tracking-[0.1em] text-[#6B5E5E] hover:text-[#211D1D] flex items-center justify-center gap-2"
                 >
-                  <Lock className="w-3.5 h-3.5 text-[#7B021D]" />
+                  <Lock className="w-3.5 h-3.5 text-[#212842]" />
                   <span>Publisher Access Portal</span>
                 </Link>
               )}
@@ -478,7 +478,7 @@ export default function Navbar() {
                 <Link
                   to="/login"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="w-full py-4 rounded-full bg-[#7B021D] text-[#F5F5DA] text-center text-xs font-mono font-bold uppercase tracking-[0.1em] hover:bg-[#520014] transition-all shadow-md flex items-center justify-center gap-2"
+                  className="w-full py-4 rounded-full bg-[#212842] text-[#F5F5DA] text-center text-xs font-mono font-bold uppercase tracking-[0.1em] hover:bg-[#181E33] transition-all shadow-md flex items-center justify-center gap-2"
                 >
                   <User className="w-3.5 h-3.5 text-[#F5F5DA]" />
                   <span>Sign In to BookVerse</span>
@@ -514,7 +514,7 @@ export default function Navbar() {
             >
               {/* Search Header Input */}
               <div className="relative p-5 border-b border-[#E9E5C8] bg-[#F5F5DA] flex items-center gap-3.5">
-                <Search className="w-5 h-5 text-[#7B021D] shrink-0" />
+                <Search className="w-5 h-5 text-[#212842] shrink-0" />
                 <input
                   ref={searchInputRef}
                   type="text"
@@ -535,11 +535,11 @@ export default function Navbar() {
                 <button
                   type="button"
                   onClick={() => setSearchModalOpen(false)}
-                  className="px-3 py-1.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-[#211D1D] hover:text-[#7B021D] hover:border-[#7B021D] transition-colors flex items-center gap-1.5 text-xs font-mono font-bold shadow-2xs"
+                  className="px-3 py-1.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-[#211D1D] hover:text-[#212842] hover:border-[#212842] transition-colors flex items-center gap-1.5 text-xs font-mono font-bold shadow-2xs"
                   title="Close Search (ESC)"
                   aria-label="Close Search"
                 >
-                  <X className="w-3.5 h-3.5 text-[#7B021D]" />
+                  <X className="w-3.5 h-3.5 text-[#212842]" />
                   <span>CLOSE</span>
                 </button>
               </div>
@@ -559,7 +559,7 @@ export default function Navbar() {
                           key={term}
                           type="button"
                           onClick={() => setSearchQuery(term)}
-                          className="px-3 py-1.5 rounded-full bg-[#F5F5DA] border border-[#E9E5C8] text-xs font-editorial-sans text-[#211D1D] hover:border-[#7B021D] transition-colors"
+                          className="px-3 py-1.5 rounded-full bg-[#F5F5DA] border border-[#E9E5C8] text-xs font-editorial-sans text-[#211D1D] hover:border-[#212842] transition-colors"
                         >
                           {term}
                         </button>
@@ -571,7 +571,7 @@ export default function Navbar() {
                 {/* Books Results */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-mono uppercase tracking-[0.16em] text-[#7B021D] font-bold">
+                    <span className="text-[10px] font-mono uppercase tracking-[0.16em] text-[#212842] font-bold">
                       Matching Volumes
                     </span>
                     <span className="text-[11px] font-mono text-[#6B5E5E]">
@@ -587,7 +587,7 @@ export default function Navbar() {
                           key={book.id || book._id}
                           to={`/books/${bookSlug}`}
                           onClick={() => setSearchModalOpen(false)}
-                          className="flex items-center justify-between p-3 rounded-2xl bg-[#F5F5DA]/60 border border-[#E9E5C8] hover:border-[#7B021D] hover:bg-[#F5F5DA] transition-all group"
+                          className="flex items-center justify-between p-3 rounded-2xl bg-[#F5F5DA]/60 border border-[#E9E5C8] hover:border-[#212842] hover:bg-[#F5F5DA] transition-all group"
                         >
                           <div className="flex items-center gap-3">
                             <img
@@ -596,7 +596,7 @@ export default function Navbar() {
                               className="w-9 h-12 rounded-lg object-cover border border-[#E9E5C8] shrink-0"
                             />
                             <div>
-                              <h5 className="font-editorial-serif text-base font-bold text-[#211D1D] group-hover:text-[#7B021D] transition-colors">
+                              <h5 className="font-editorial-serif text-base font-bold text-[#211D1D] group-hover:text-[#212842] transition-colors">
                                 {book.title}
                               </h5>
                               <p className="text-xs text-[#6B5E5E] font-sans">
@@ -604,7 +604,7 @@ export default function Navbar() {
                               </p>
                             </div>
                           </div>
-                          <span className="font-mono text-xs font-bold text-[#7B021D]">
+                          <span className="font-mono text-xs font-bold text-[#212842]">
                             {formatPrice(book.price)}
                           </span>
                         </Link>
@@ -615,7 +615,7 @@ export default function Navbar() {
 
                 {/* Authors Results */}
                 <div className="space-y-3 pt-4 border-t border-[#E9E5C8]">
-                  <span className="text-[10px] font-mono uppercase tracking-[0.16em] text-[#7B021D] font-bold block">
+                  <span className="text-[10px] font-mono uppercase tracking-[0.16em] text-[#212842] font-bold block">
                     Featured Authors
                   </span>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -624,7 +624,7 @@ export default function Navbar() {
                         key={author.id || author._id}
                         to="/authors"
                         onClick={() => setSearchModalOpen(false)}
-                        className="p-3 rounded-2xl bg-[#F5F5DA]/60 border border-[#E9E5C8] hover:border-[#7B021D] transition-all flex items-center gap-3 group"
+                        className="p-3 rounded-2xl bg-[#F5F5DA]/60 border border-[#E9E5C8] hover:border-[#212842] transition-all flex items-center gap-3 group"
                       >
                         <img
                           src={author.avatarUrl || author.image}
@@ -632,7 +632,7 @@ export default function Navbar() {
                           className="w-8 h-8 rounded-full object-cover border border-[#E9E5C8]"
                         />
                         <div className="min-w-0">
-                          <h6 className="font-editorial-serif text-sm font-bold text-[#211D1D] truncate group-hover:text-[#7B021D] transition-colors">
+                          <h6 className="font-editorial-serif text-sm font-bold text-[#211D1D] truncate group-hover:text-[#212842] transition-colors">
                             {author.name}
                           </h6>
                           <p className="text-[10px] font-mono text-[#6B5E5E] truncate">
@@ -652,7 +652,7 @@ export default function Navbar() {
                 <Link
                   to="/books"
                   onClick={() => setSearchModalOpen(false)}
-                  className="text-[#7B021D] font-bold hover:underline flex items-center gap-1"
+                  className="text-[#212842] font-bold hover:underline flex items-center gap-1"
                 >
                   <span>View All Books</span>
                   <ArrowRight className="w-3 h-3" />
@@ -684,7 +684,7 @@ export default function Navbar() {
               </button>
 
               <div className="text-center space-y-2">
-                <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#7B021D] font-bold block">
+                <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#212842] font-bold block">
                   Membership Portal
                 </span>
                 <h2 className="font-editorial-serif text-3xl font-bold text-[#211D1D]">
@@ -698,7 +698,7 @@ export default function Navbar() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {/* Reader Card */}
                 <motion.div
-                  whileHover={{ y: -3, borderColor: '#7B021D' }}
+                  whileHover={{ y: -3, borderColor: '#212842' }}
                   className="p-6 rounded-2xl bg-gradient-to-br from-[#FFFDF3] via-[#FAF8F6] to-[#F4EEEA] border border-[#E9E5C8] shadow-sm space-y-4 flex flex-col justify-between group cursor-pointer"
                   onClick={() => {
                     setRoleModalOpen(false);
@@ -706,10 +706,10 @@ export default function Navbar() {
                   }}
                 >
                   <div className="space-y-3">
-                    <div className="w-12 h-12 rounded-2xl bg-[#FFFDF3] border border-[#E9E5C8] flex items-center justify-center text-[#7B021D] group-hover:bg-[#7B021D] group-hover:text-[#F5F5DA] transition-colors">
+                    <div className="w-12 h-12 rounded-2xl bg-[#FFFDF3] border border-[#E9E5C8] flex items-center justify-center text-[#212842] group-hover:bg-[#212842] group-hover:text-[#F5F5DA] transition-colors">
                       <BookOpen className="w-6 h-6" />
                     </div>
-                    <h3 className="font-editorial-serif text-xl font-bold text-[#211D1D] group-hover:text-[#7B021D] transition-colors">
+                    <h3 className="font-editorial-serif text-xl font-bold text-[#211D1D] group-hover:text-[#212842] transition-colors">
                       Reader
                     </h3>
                     <p className="text-xs text-[#6B5E5E] leading-relaxed">
@@ -718,7 +718,7 @@ export default function Navbar() {
                   </div>
                   <button
                     type="button"
-                    className="w-full py-2.5 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider group-hover:bg-[#520014] transition-colors"
+                    className="w-full py-2.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider group-hover:bg-[#181E33] transition-colors"
                   >
                     Create Reader Account →
                   </button>
@@ -726,7 +726,7 @@ export default function Navbar() {
 
                 {/* Author Card */}
                 <motion.div
-                  whileHover={{ y: -3, borderColor: '#7B021D' }}
+                  whileHover={{ y: -3, borderColor: '#212842' }}
                   className="p-6 rounded-2xl bg-gradient-to-br from-[#FFFDF3] via-[#FAF8F6] to-[#F4EEEA] border border-[#E9E5C8] shadow-sm space-y-4 flex flex-col justify-between group cursor-pointer"
                   onClick={() => {
                     setRoleModalOpen(false);
@@ -734,10 +734,10 @@ export default function Navbar() {
                   }}
                 >
                   <div className="space-y-3">
-                    <div className="w-12 h-12 rounded-2xl bg-[#FFFDF3] border border-[#E9E5C8] flex items-center justify-center text-[#7B021D] group-hover:bg-[#7B021D] group-hover:text-[#F5F5DA] transition-colors">
+                    <div className="w-12 h-12 rounded-2xl bg-[#FFFDF3] border border-[#E9E5C8] flex items-center justify-center text-[#212842] group-hover:bg-[#212842] group-hover:text-[#F5F5DA] transition-colors">
                       <Feather className="w-6 h-6" />
                     </div>
-                    <h3 className="font-editorial-serif text-xl font-bold text-[#211D1D] group-hover:text-[#7B021D] transition-colors">
+                    <h3 className="font-editorial-serif text-xl font-bold text-[#211D1D] group-hover:text-[#212842] transition-colors">
                       Author
                     </h3>
                     <p className="text-xs text-[#6B5E5E] leading-relaxed">
@@ -746,7 +746,7 @@ export default function Navbar() {
                   </div>
                   <button
                     type="button"
-                    className="w-full py-2.5 rounded-full bg-[#211D1D] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider group-hover:bg-[#7B021D] transition-colors"
+                    className="w-full py-2.5 rounded-full bg-[#211D1D] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider group-hover:bg-[#212842] transition-colors"
                   >
                     Become an Author →
                   </button>

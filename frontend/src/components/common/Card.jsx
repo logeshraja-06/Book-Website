@@ -7,7 +7,7 @@ export default function Card({
 }) {
   const base =
     'bg-[#FFFDF3] rounded-2xl p-6 border border-[#E9E5C8] shadow-2xs transition-all duration-300';
-  const hover = hoverable ? 'hover:border-[#7B021D]' : '';
+  const hover = hoverable ? 'hover:border-[#212842]' : '';
   const clickable = onClick ? 'cursor-pointer' : '';
 
   return (

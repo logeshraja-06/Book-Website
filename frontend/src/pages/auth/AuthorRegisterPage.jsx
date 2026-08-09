@@ -188,9 +188,9 @@ export default function AuthorRegisterPage() {
         {/* Header Branding */}
         <div className="text-center space-y-3">
           <div className="w-12 h-12 rounded-2xl bg-[#FFFDF3] border border-[#E9E5C8] flex items-center justify-center text-[#211D1D] mx-auto shadow-2xs">
-            <Feather className="w-6 h-6 text-[#7B021D]" />
+            <Feather className="w-6 h-6 text-[#212842]" />
           </div>
-          <span className="text-xs uppercase tracking-widest font-mono text-[#7B021D] font-bold block">
+          <span className="text-xs uppercase tracking-widest font-mono text-[#212842] font-bold block">
             Author Application
           </span>
           <h1 className="font-editorial-serif text-4xl text-[#211D1D] font-normal">
@@ -310,14 +310,14 @@ export default function AuthorRegisterPage() {
                   type="checkbox"
                   checked={formData.acceptTerms}
                   onChange={(e) => handleChange('acceptTerms', e.target.checked)}
-                  className="mt-0.5 rounded border-[#E9E5C8] text-[#7B021D] focus:ring-[#7B021D]"
+                  className="mt-0.5 rounded border-[#E9E5C8] text-[#212842] focus:ring-[#212842]"
                 />
                 <span>
                   I agree to the BookVerse Studio Author Agreement and Copyright Policy.
                 </span>
               </label>
               {touched.acceptTerms && errors.acceptTerms && (
-                <p className="text-[11px] font-mono text-[#7B021D] font-medium">
+                <p className="text-[11px] font-mono text-[#212842] font-medium">
                   {errors.acceptTerms}
                 </p>
               )}
@@ -327,7 +327,7 @@ export default function AuthorRegisterPage() {
               type="submit"
               size="lg"
               disabled={isLoading}
-              className="w-full justify-center mt-2 bg-[#7B021D] text-[#F5F5DA] hover:bg-[#520014]"
+              className="w-full justify-center mt-2 bg-[#212842] text-[#F5F5DA] hover:bg-[#181E33]"
               icon={ArrowRight}
             >
               {isLoading ? 'Submitting Application…' : 'Complete Author Registration'}
@@ -337,7 +337,7 @@ export default function AuthorRegisterPage() {
           <div className="pt-4 border-t border-[#E9E5C8] text-center text-xs font-mono text-[#6B5E5E]">
             <p>
               Already registered as an author?{' '}
-              <Link to="/login" className="text-[#211D1D] font-bold hover:text-[#7B021D] underline">
+              <Link to="/login" className="text-[#211D1D] font-bold hover:text-[#212842] underline">
                 Sign In
               </Link>
             </p>

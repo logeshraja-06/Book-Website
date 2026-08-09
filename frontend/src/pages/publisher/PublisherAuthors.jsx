@@ -14,8 +14,8 @@ export default function PublisherAuthors() {
       {/* ── 1. HEADER ── */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#E9E5C8] pb-6">
         <div>
-          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#7B021D] font-bold block flex items-center gap-1.5 mb-1">
-            <Users className="w-3.5 h-3.5 text-[#7B021D]" />
+          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#212842] font-bold block flex items-center gap-1.5 mb-1">
+            <Users className="w-3.5 h-3.5 text-[#212842]" />
             Author Guild Directory
           </span>
           <h2 className="font-editorial-serif text-3xl text-[#211D1D] font-bold">
@@ -49,10 +49,10 @@ export default function PublisherAuthors() {
                 <img
                   src={author.avatarUrl || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&q=80'}
                   alt={author.name}
-                  className="w-12 h-12 rounded-full object-cover border-2 border-[#E9E5C8] shadow-2xs group-hover:border-[#7B021D] transition-colors"
+                  className="w-12 h-12 rounded-full object-cover border-2 border-[#E9E5C8] shadow-2xs group-hover:border-[#212842] transition-colors"
                 />
                 <div>
-                  <h4 className="font-editorial-serif text-base font-bold text-[#211D1D] group-hover:text-[#7B021D] transition-colors">
+                  <h4 className="font-editorial-serif text-base font-bold text-[#211D1D] group-hover:text-[#212842] transition-colors">
                     {author.name}
                   </h4>
                   <p className="text-xs text-[#6B5E5E] font-sans">
@@ -72,14 +72,14 @@ export default function PublisherAuthors() {
                 <div className="flex items-center gap-4 text-xs font-mono">
                   <Link
                     to={`/authors/${author.id || author.slug}`}
-                    className="font-bold uppercase tracking-wider text-[#7B021D] hover:underline inline-flex items-center gap-1"
+                    className="font-bold uppercase tracking-wider text-[#212842] hover:underline inline-flex items-center gap-1"
                   >
                     <span>Profile</span>
                     <ExternalLink className="w-3 h-3" />
                   </Link>
                   <Link
                     to={`/publisher/books?author=${author.id}`}
-                    className="font-bold uppercase tracking-wider text-[#211D1D] hover:text-[#7B021D] transition-colors"
+                    className="font-bold uppercase tracking-wider text-[#211D1D] hover:text-[#212842] transition-colors"
                   >
                     Catalog Books
                   </Link>

@@ -15,7 +15,7 @@ export default function ReaderShowcase() {
         
         {/* Section Header */}
         <div className="text-center space-y-4 max-w-3xl mx-auto">
-          <span className="text-xs uppercase font-mono tracking-widest text-[#7B021D] font-bold block">
+          <span className="text-xs uppercase font-mono tracking-widest text-[#212842] font-bold block">
             Digital Craftsmanship
           </span>
           <h2 className="font-editorial-serif text-4xl sm:text-5xl lg:text-[3.5rem] text-[#211D1D] font-normal tracking-tight">
@@ -34,7 +34,7 @@ export default function ReaderShowcase() {
             <div className="lg:col-span-5 space-y-6">
               <div className="space-y-4">
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] flex items-center justify-center text-[#7B021D] shrink-0 font-bold">
+                  <div className="w-10 h-10 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] flex items-center justify-center text-[#212842] shrink-0 font-bold">
                     <ZoomIn className="w-5 h-5" />
                   </div>
                   <div>
@@ -46,7 +46,7 @@ export default function ReaderShowcase() {
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] flex items-center justify-center text-[#7B021D] shrink-0 font-bold">
+                  <div className="w-10 h-10 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] flex items-center justify-center text-[#212842] shrink-0 font-bold">
                     <Type className="w-5 h-5" />
                   </div>
                   <div>
@@ -58,7 +58,7 @@ export default function ReaderShowcase() {
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] flex items-center justify-center text-[#7B021D] shrink-0 font-bold">
+                  <div className="w-10 h-10 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] flex items-center justify-center text-[#212842] shrink-0 font-bold">
                     <Bookmark className="w-5 h-5" />
                   </div>
                   <div>
@@ -74,7 +74,7 @@ export default function ReaderShowcase() {
                 <button
                   type="button"
                   onClick={() => setDemoReaderOpen(true)}
-                  className="inline-flex items-center gap-2.5 px-8 py-4 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-editorial-sans font-bold uppercase tracking-wider hover:bg-[#520014] transition-colors shadow-md group"
+                  className="inline-flex items-center gap-2.5 px-8 py-4 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-editorial-sans font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-md group"
                 >
                   <BookOpen className="w-4 h-4" />
                   <span>Launch Reader Showcase</span>
@@ -92,18 +92,18 @@ export default function ReaderShowcase() {
                 </div>
 
                 <div className="space-y-4 font-editorial-serif text-base text-[#211D1D] leading-relaxed">
-                  <h4 className="text-2xl font-bold text-[#7B021D]">Chapter III: The Rhythm of Craft</h4>
+                  <h4 className="text-2xl font-bold text-[#212842]">Chapter III: The Rhythm of Craft</h4>
                   <p>
                     "To read a book carefully is to invite its author into the quiet chambers of one's own mind. In an age of relentless digital chatter, literature offers a tranquil sanctuary for sustained contemplation."
                   </p>
-                  <p className="text-xs text-[#6B5E5E] font-sans italic border-l-2 border-[#7B021D] pl-4 py-1">
+                  <p className="text-xs text-[#6B5E5E] font-sans italic border-l-2 border-[#212842] pl-4 py-1">
                     BookVerse Studio digital edition · DRM-free perpetual reading right.
                   </p>
                 </div>
 
                 <div className="pt-4 border-t border-[#E9E5C8] flex items-center justify-between text-xs font-mono text-[#6B5E5E]">
                   <span>100% Responsive Engine</span>
-                  <span className="text-[#7B021D] font-bold">15% Completed</span>
+                  <span className="text-[#212842] font-bold">15% Completed</span>
                 </div>
               </div>
             </div>

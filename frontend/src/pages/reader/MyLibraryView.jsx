@@ -67,8 +67,8 @@ export default function MyLibraryView() {
       {/* ── 1. SECTION HEADER ── */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#D8CFAE] pb-6">
         <div>
-          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#7B021D] font-bold block flex items-center gap-1.5 mb-1">
-            <BookmarkCheck className="w-3.5 h-3.5 text-[#7B021D]" />
+          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#212842] font-bold block flex items-center gap-1.5 mb-1">
+            <BookmarkCheck className="w-3.5 h-3.5 text-[#212842]" />
             Personal Reader Sanctuary & Digital Shelf
           </span>
           <h2 className="font-editorial-serif text-3xl sm:text-4xl text-[#181616] font-bold">
@@ -93,7 +93,7 @@ export default function MyLibraryView() {
               onClick={() => setActiveTab(tab.id)}
               className={`px-3.5 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all whitespace-nowrap ${
                 activeTab === tab.id
-                  ? 'bg-[#7B021D] text-[#F5F5DA] shadow-xs'
+                  ? 'bg-[#212842] text-[#F5F5DA] shadow-xs'
                   : 'text-[#5F594F] hover:text-[#181616] hover:bg-[#F8F6E5]'
               }`}
             >
@@ -124,7 +124,7 @@ export default function MyLibraryView() {
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.45, delay: idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  <div className="flex flex-col sm:flex-row gap-6 items-start group bg-[#FFFDF3] border border-[#D8CFAE] p-6 rounded-3xl shadow-md hover:shadow-xl hover:border-[#7B021D] transition-all duration-300 relative overflow-hidden">
+                  <div className="flex flex-col sm:flex-row gap-6 items-start group bg-[#FFFDF3] border border-[#D8CFAE] p-6 rounded-3xl shadow-md hover:shadow-xl hover:border-[#212842] transition-all duration-300 relative overflow-hidden">
                     
                     {/* Book Cover */}
                     <div className="w-full sm:w-36 aspect-[3/4] rounded-2xl overflow-hidden bg-[#F8F6E5] shrink-0 shadow-md border border-[#D8CFAE] relative">
@@ -141,13 +141,13 @@ export default function MyLibraryView() {
                         className="absolute top-2 right-2 p-1.5 rounded-full bg-[#F5F5DA]/95 border border-[#D8CFAE] text-[#5F594F]"
                         title={isWishlisted ? 'Saved in Wishlist' : 'Add to Wishlist'}
                       >
-                        <Bookmark className={`w-3.5 h-3.5 ${isWishlisted ? 'fill-[#7B021D] text-[#7B021D]' : ''}`} />
+                        <Bookmark className={`w-3.5 h-3.5 ${isWishlisted ? 'fill-[#212842] text-[#212842]' : ''}`} />
                       </motion.button>
 
                       {/* Bookmark Indicator Count Badge */}
                       {hasBookmarks && (
                         <div className="absolute bottom-2 left-2 right-2 bg-[#181616]/90 backdrop-blur-xs px-2 py-1 rounded-lg border border-[#E9E5C8]/30 flex items-center justify-center gap-1 text-[10px] font-mono text-[#F5F5DA] font-bold shadow-xs">
-                          <Bookmark className="w-3 h-3 text-[#7B021D] fill-[#7B021D]" />
+                          <Bookmark className="w-3 h-3 text-[#212842] fill-[#212842]" />
                           <span>{book.bookmarksCount} Bookmark{book.bookmarksCount > 1 ? 's' : ''}</span>
                         </div>
                       )}
@@ -157,23 +157,23 @@ export default function MyLibraryView() {
                     <div className="flex-1 space-y-4 w-full flex flex-col justify-between h-full">
                       <div>
                         <div className="flex items-center justify-between gap-2 flex-wrap mb-1">
-                          <span className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] font-bold block">
+                          <span className="text-[10px] uppercase font-mono tracking-widest text-[#212842] font-bold block">
                             {book.genre || 'Literature'}
                           </span>
 
                           {/* Status Badge: COMPLETED or CONTINUE FROM PAGE X */}
                           {isCompleted ? (
-                            <span className="px-2 py-0.5 rounded-full bg-[#7B021D] text-[#F5F5DA] text-[9px] font-mono font-bold uppercase tracking-wider">
+                            <span className="px-2 py-0.5 rounded-full bg-[#212842] text-[#F5F5DA] text-[9px] font-mono font-bold uppercase tracking-wider">
                               COMPLETED
                             </span>
                           ) : (book.currentPage || 1) > 1 ? (
-                            <span className="px-2 py-0.5 rounded-full bg-[#F1EED2] border border-[#D8CFAE] text-[#7B021D] text-[9px] font-mono font-bold uppercase tracking-wider">
+                            <span className="px-2 py-0.5 rounded-full bg-[#F1EED2] border border-[#D8CFAE] text-[#212842] text-[9px] font-mono font-bold uppercase tracking-wider">
                               Continue from p. {book.currentPage}
                             </span>
                           ) : null}
                         </div>
 
-                        <h3 className="font-editorial-serif text-xl font-bold text-[#181616] mt-1 leading-snug group-hover:text-[#7B021D] transition-colors">
+                        <h3 className="font-editorial-serif text-xl font-bold text-[#181616] mt-1 leading-snug group-hover:text-[#212842] transition-colors">
                           {book.title}
                         </h3>
                         <p className="text-xs text-[#5F594F] mt-1 font-sans">By {book.author}</p>
@@ -185,7 +185,7 @@ export default function MyLibraryView() {
                           <span className="text-[#5F594F]">
                             Page {book.currentPage || 1} of {book.totalPages || 20}
                           </span>
-                          <span className="font-bold text-[#7B021D]">
+                          <span className="font-bold text-[#212842]">
                             {book.progress || 0}% read
                           </span>
                         </div>
@@ -195,7 +195,7 @@ export default function MyLibraryView() {
                             initial={{ width: 0 }}
                             animate={{ width: `${book.progress || 0}%` }}
                             transition={{ duration: 0.8, delay: 0.2 + idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                            className="h-full bg-[#7B021D] rounded-full shadow-2xs"
+                            className="h-full bg-[#212842] rounded-full shadow-2xs"
                           />
                         </div>
                       </div>
@@ -212,7 +212,7 @@ export default function MyLibraryView() {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={() => handleDownloadPdf(book)}
-                            className="p-2.5 rounded-full border border-[#D8CFAE] bg-[#F8F6E5] text-[#181616] hover:text-[#7B021D] hover:border-[#7B021D] transition-colors shadow-2xs"
+                            className="p-2.5 rounded-full border border-[#D8CFAE] bg-[#F8F6E5] text-[#181616] hover:text-[#212842] hover:border-[#212842] transition-colors shadow-2xs"
                             title="Download PDF Edition"
                           >
                             <Download className="w-4 h-4" />
@@ -223,7 +223,7 @@ export default function MyLibraryView() {
                             whileHover={{ scale: 1.03 }}
                             whileTap={{ scale: 0.97 }}
                             onClick={() => setActiveReaderBook(book)}
-                            className="px-4 py-2.5 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#520014] transition-colors shadow-md flex items-center gap-1.5"
+                            className="px-4 py-2.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-md flex items-center gap-1.5"
                           >
                             <BookOpen className="w-3.5 h-3.5" />
                             <span>
@@ -246,8 +246,8 @@ export default function MyLibraryView() {
             transition={{ duration: 0.4 }}
             className="flex flex-col items-center justify-center py-20 text-center bg-[#FFFDF3] rounded-3xl border border-[#D8CFAE] p-8 space-y-4 shadow-sm"
           >
-            <div className="w-16 h-16 rounded-2xl bg-[#F8F6E5] border border-[#D8CFAE] flex items-center justify-center text-[#7B021D] shadow-xs">
-              <BookOpen className="w-7 h-7 text-[#7B021D]" />
+            <div className="w-16 h-16 rounded-2xl bg-[#F8F6E5] border border-[#D8CFAE] flex items-center justify-center text-[#212842] shadow-xs">
+              <BookOpen className="w-7 h-7 text-[#212842]" />
             </div>
 
             <div className="space-y-1 max-w-md">
@@ -262,7 +262,7 @@ export default function MyLibraryView() {
             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
               <Link
                 to="/books"
-                className="px-6 py-3 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#520014] transition-colors shadow-md inline-flex items-center gap-2"
+                className="px-6 py-3 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-md inline-flex items-center gap-2"
               >
                 <span>Explore Books</span>
                 <ArrowRight className="w-4 h-4" />

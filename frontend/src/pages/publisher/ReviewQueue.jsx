@@ -32,8 +32,8 @@ export default function ReviewQueue() {
       {/* ── 1. HEADER ── */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#D8CFAE] pb-6">
         <div>
-          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#7B021D] font-bold block flex items-center gap-1.5 mb-1">
-            <Clock className="w-3.5 h-3.5 text-[#7B021D]" />
+          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#212842] font-bold block flex items-center gap-1.5 mb-1">
+            <Clock className="w-3.5 h-3.5 text-[#212842]" />
             Editorial Evaluation Control Desk
           </span>
           <h2 className="font-editorial-serif text-3xl text-[#181616] font-bold">
@@ -62,7 +62,7 @@ export default function ReviewQueue() {
               {isActive && (
                 <motion.div
                   layoutId="queueTabUnderline"
-                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#7B021D]"
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#212842]"
                   transition={{ type: 'spring', stiffness: 350, damping: 30 }}
                 />
               )}
@@ -85,7 +85,7 @@ export default function ReviewQueue() {
               >
                 <Link
                   to={`/publisher/review/${bookId}`}
-                  className="bg-[#FFFDF3] rounded-2xl p-5 border border-[#D8CFAE] flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-[#7B021D] transition-all duration-300 shadow-2xs hover:shadow-lg group block"
+                  className="bg-[#FFFDF3] rounded-2xl p-5 border border-[#D8CFAE] flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-[#212842] transition-all duration-300 shadow-2xs hover:shadow-lg group block"
                 >
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-16 aspect-[2/3] rounded-lg overflow-hidden bg-[#F8F6E5] shrink-0 border border-[#D8CFAE] shadow-2xs">
@@ -98,7 +98,7 @@ export default function ReviewQueue() {
 
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-mono uppercase tracking-widest text-[#7B021D] font-bold">
+                        <span className="text-[10px] font-mono uppercase tracking-widest text-[#212842] font-bold">
                           {book.genre}
                         </span>
                         <span className="text-[#D8CFAE]">·</span>
@@ -107,7 +107,7 @@ export default function ReviewQueue() {
                         </span>
                       </div>
 
-                      <h3 className="font-editorial-serif text-lg font-bold text-[#181616] group-hover:text-[#7B021D] transition-colors">
+                      <h3 className="font-editorial-serif text-lg font-bold text-[#181616] group-hover:text-[#212842] transition-colors">
                         {book.title}
                       </h3>
 
@@ -130,7 +130,7 @@ export default function ReviewQueue() {
                       {book.status}
                     </span>
 
-                    <span className="inline-flex items-center gap-1 text-xs font-mono font-bold uppercase tracking-wider text-[#181616] group-hover:text-[#7B021D] transition-colors">
+                    <span className="inline-flex items-center gap-1 text-xs font-mono font-bold uppercase tracking-wider text-[#181616] group-hover:text-[#212842] transition-colors">
                       <span>Review</span> <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                     </span>
                   </div>
@@ -140,7 +140,7 @@ export default function ReviewQueue() {
           })
         ) : (
           <div className="text-center py-20 bg-[#FFFDF3] rounded-3xl border border-[#D8CFAE] space-y-3">
-            <FileText className="w-8 h-8 text-[#7B021D] mx-auto opacity-60" />
+            <FileText className="w-8 h-8 text-[#212842] mx-auto opacity-60" />
             <h3 className="font-editorial-serif text-xl font-bold text-[#181616]">
               No Manuscripts Found
             </h3>

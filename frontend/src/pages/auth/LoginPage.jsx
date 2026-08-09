@@ -94,7 +94,7 @@ export default function LoginPage() {
           exit={{ opacity: 0, y: -20 }}
           className="fixed top-6 right-6 z-50 px-4 py-3 rounded-2xl bg-[#211D1D] text-[#F5F5DA] shadow-xl border border-[#E9E5C8]/20 flex items-center gap-3 text-xs font-mono"
         >
-          <CheckCircle2 className="w-4 h-4 text-[#7B021D]" />
+          <CheckCircle2 className="w-4 h-4 text-[#212842]" />
           <span>{toastMessage}</span>
         </motion.div>
       )}
@@ -103,9 +103,9 @@ export default function LoginPage() {
         {/* Header Branding */}
         <div className="text-center space-y-3">
           <div className="w-12 h-12 rounded-2xl bg-[#FFFDF3] border border-[#E9E5C8] flex items-center justify-center text-[#211D1D] mx-auto shadow-2xs">
-            <BookOpen className="w-6 h-6 text-[#7B021D]" />
+            <BookOpen className="w-6 h-6 text-[#212842]" />
           </div>
-          <span className="text-xs uppercase tracking-widest font-mono text-[#7B021D] font-bold block">
+          <span className="text-xs uppercase tracking-widest font-mono text-[#212842] font-bold block">
             BookVerse Sign In
           </span>
           <h1 className="font-editorial-serif text-4xl text-[#211D1D] font-normal">
@@ -172,7 +172,7 @@ export default function LoginPage() {
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="rounded border-[#E9E5C8] text-[#7B021D] focus:ring-[#7B021D] w-3.5 h-3.5"
+                  className="rounded border-[#E9E5C8] text-[#212842] focus:ring-[#212842] w-3.5 h-3.5"
                 />
                 <span>Remember me</span>
               </label>
@@ -180,7 +180,7 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={handleForgotPassword}
-                className="text-[#6B5E5E] hover:text-[#7B021D] underline"
+                className="text-[#6B5E5E] hover:text-[#212842] underline"
               >
                 Forgot Password?
               </button>
@@ -190,7 +190,7 @@ export default function LoginPage() {
               type="submit"
               size="lg"
               disabled={isLoading}
-              className="w-full justify-center bg-[#7B021D] text-[#F5F5DA] hover:bg-[#520014]"
+              className="w-full justify-center bg-[#212842] text-[#F5F5DA] hover:bg-[#181E33]"
               icon={ArrowRight}
             >
               {isLoading ? 'Signing In…' : 'Sign In'}
@@ -203,7 +203,7 @@ export default function LoginPage() {
               New reader?{' '}
               <Link
                 to="/register/reader"
-                className="text-[#211D1D] font-bold hover:text-[#7B021D] underline"
+                className="text-[#211D1D] font-bold hover:text-[#212842] underline"
               >
                 Create a Reader Account
               </Link>
@@ -212,7 +212,7 @@ export default function LoginPage() {
               Want to publish?{' '}
               <Link
                 to="/register/author"
-                className="text-[#211D1D] font-bold hover:text-[#7B021D] underline"
+                className="text-[#211D1D] font-bold hover:text-[#212842] underline"
               >
                 Become an Author
               </Link>

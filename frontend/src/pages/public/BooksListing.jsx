@@ -106,7 +106,7 @@ export default function BooksListing() {
       <section className="border-b border-[#E9E5C8] bg-[#F5F5DA] pt-16 pb-12">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <div className="max-w-3xl space-y-4">
-            <span className="text-xs uppercase tracking-widest font-mono text-[#7B021D] font-bold block">
+            <span className="text-xs uppercase tracking-widest font-mono text-[#212842] font-bold block">
               The Complete Archive
             </span>
             <h1 className="font-editorial-serif text-5xl sm:text-6xl text-[#211D1D] font-normal tracking-tight">
@@ -136,7 +136,7 @@ export default function BooksListing() {
               {hasActiveFilters && (
                 <button
                   onClick={clearFilters}
-                  className="text-xs text-[#7B021D] hover:text-[#520014] font-bold flex items-center gap-1 transition-colors"
+                  className="text-xs text-[#212842] hover:text-[#181E33] font-bold flex items-center gap-1 transition-colors"
                 >
                   <X className="w-3 h-3" />
                   Clear filters
@@ -167,7 +167,7 @@ export default function BooksListing() {
                     <select
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value)}
-                      className="bg-transparent border-b border-[#E9E5C8] text-[#211D1D] text-sm py-1 pr-6 appearance-none cursor-pointer focus:outline-none focus:border-[#7B021D] transition-colors font-medium"
+                      className="bg-transparent border-b border-[#E9E5C8] text-[#211D1D] text-sm py-1 pr-6 appearance-none cursor-pointer focus:outline-none focus:border-[#212842] transition-colors font-medium"
                     >
                       {SORT_OPTIONS.map((opt) => (
                         <option key={opt.value} value={opt.value}>
@@ -187,7 +187,7 @@ export default function BooksListing() {
                   onClick={() => setViewMode('grid')}
                   className={`p-1.5 rounded-lg transition-colors ${
                     viewMode === 'grid'
-                      ? 'bg-[#F5F5DA] text-[#7B021D] font-bold'
+                      ? 'bg-[#F5F5DA] text-[#212842] font-bold'
                       : 'text-[#6B5E5E] hover:text-[#211D1D]'
                   }`}
                   title="Grid Layout"
@@ -199,7 +199,7 @@ export default function BooksListing() {
                   onClick={() => setViewMode('rows')}
                   className={`p-1.5 rounded-lg transition-colors ${
                     viewMode === 'rows'
-                      ? 'bg-[#F5F5DA] text-[#7B021D] font-bold'
+                      ? 'bg-[#F5F5DA] text-[#212842] font-bold'
                       : 'text-[#6B5E5E] hover:text-[#211D1D]'
                   }`}
                   title="Catalogue Row View"
@@ -213,7 +213,7 @@ export default function BooksListing() {
                 onClick={() => setFilterPanelOpen(!filterPanelOpen)}
                 className="md:hidden p-2 rounded-xl border border-[#E9E5C8] text-[#211D1D] flex items-center gap-1.5 text-xs font-medium"
               >
-                <SlidersHorizontal className="w-3.5 h-3.5 text-[#7B021D]" />
+                <SlidersHorizontal className="w-3.5 h-3.5 text-[#212842]" />
                 <span>Filters</span>
               </button>
             </div>
@@ -292,7 +292,7 @@ export default function BooksListing() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-7 gap-y-12"
+                className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 sm:gap-x-8 gap-y-10 sm:gap-y-12"
               >
                 {filteredBooks.map((book, idx) => (
                   <BookTiltCard
@@ -322,7 +322,7 @@ function FilterSelect({ label, value, onChange, options, fullWidth }) {
         <select
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="bg-transparent border-b border-[#E9E5C8] text-[#211D1D] text-sm py-1 pr-6 appearance-none cursor-pointer focus:outline-none focus:border-[#7B021D] transition-colors font-medium w-full"
+          className="bg-transparent border-b border-[#E9E5C8] text-[#211D1D] text-sm py-1 pr-6 appearance-none cursor-pointer focus:outline-none focus:border-[#212842] transition-colors font-medium w-full"
         >
           {options.map((opt) => (
             <option key={opt} value={opt}>
@@ -346,7 +346,7 @@ function EmptyState({ onClear }) {
       className="flex flex-col items-center justify-center py-24 text-center"
     >
       <div className="w-20 h-20 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] flex items-center justify-center mb-6">
-        <BookOpen className="w-8 h-8 text-[#7B021D]" />
+        <BookOpen className="w-8 h-8 text-[#212842]" />
       </div>
       <h3 className="font-editorial-serif text-2xl text-[#211D1D] mb-2">
         No titles match your criteria
@@ -356,7 +356,7 @@ function EmptyState({ onClear }) {
       </p>
       <button
         onClick={onClear}
-        className="px-6 py-2.5 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-editorial-sans uppercase tracking-wider font-semibold hover:bg-[#520014] transition-colors"
+        className="px-6 py-2.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-editorial-sans uppercase tracking-wider font-semibold hover:bg-[#181E33] transition-colors"
       >
         Clear All Filters
       </button>

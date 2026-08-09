@@ -24,7 +24,7 @@ export default function IndianBookshelf() {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-[#E9E5C8] pb-6">
           <div>
-            <span className="text-xs uppercase tracking-widest font-mono text-[#7B021D] font-bold block mb-1 flex items-center gap-1.5">
+            <span className="text-xs uppercase tracking-widest font-mono text-[#212842] font-bold block mb-1 flex items-center gap-1.5">
               <Feather className="w-3.5 h-3.5" />
               Heritage & Literary Treasures
             </span>
@@ -48,7 +48,7 @@ export default function IndianBookshelf() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
-                className="bg-[#FFFDF3] rounded-3xl p-5 border border-[#E9E5C8] hover:border-[#7B021D] shadow-2xs hover:shadow-lg transition-all group flex flex-col justify-between"
+                className="bg-[#FFFDF3] rounded-3xl p-5 border border-[#E9E5C8] hover:border-[#212842] shadow-2xs hover:shadow-lg transition-all group flex flex-col justify-between"
               >
                 <div>
                   <Link to={`/books/${bookSlug}`} className="block relative aspect-[3/4] rounded-2xl overflow-hidden mb-4 shadow-md bg-[#F5F5DA]">
@@ -57,17 +57,17 @@ export default function IndianBookshelf() {
                       alt={book.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
-                    <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-[#FFFDF3]/90 backdrop-blur-sm text-[10px] font-mono uppercase tracking-wider text-[#7B021D] font-bold border border-[#E9E5C8]">
+                    <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-[#FFFDF3]/90 backdrop-blur-sm text-[10px] font-mono uppercase tracking-wider text-[#212842] font-bold border border-[#E9E5C8]">
                       {book.language || 'Tamil'} Edition
                     </div>
                   </Link>
 
-                  <span className="text-[10px] uppercase font-mono tracking-wider text-[#7B021D] font-bold block mb-1">
+                  <span className="text-[10px] uppercase font-mono tracking-wider text-[#212842] font-bold block mb-1">
                     {book.genre}
                   </span>
 
                   <Link to={`/books/${bookSlug}`}>
-                    <h3 className="font-editorial-serif text-xl font-bold text-[#211D1D] leading-snug group-hover:text-[#7B021D] transition-colors">
+                    <h3 className="font-editorial-serif text-xl font-bold text-[#211D1D] leading-snug group-hover:text-[#212842] transition-colors">
                       {book.title}
                     </h3>
                   </Link>
@@ -82,7 +82,7 @@ export default function IndianBookshelf() {
                   </span>
                   <Link
                     to={`/books/${bookSlug}`}
-                    className="inline-flex items-center gap-1 text-[#7B021D] font-bold hover:underline"
+                    className="inline-flex items-center gap-1 text-[#212842] font-bold hover:underline"
                   >
                     <span>Read Details</span>
                     <ArrowUpRight className="w-3.5 h-3.5" />

@@ -111,13 +111,13 @@ export default function BookDetails() {
       <div className="min-h-screen bg-[#F5F5DA] flex items-center justify-center">
         <div className="text-center space-y-4">
           <div className="w-16 h-16 rounded-full bg-[#FFFDF3] border border-[#D8CFAE] flex items-center justify-center mx-auto">
-            <BookOpen className="w-7 h-7 text-[#7B021D]" />
+            <BookOpen className="w-7 h-7 text-[#212842]" />
           </div>
           <h2 className="font-editorial-serif text-2xl text-[#181616]">Book not found</h2>
           <p className="text-sm text-[#5F594F]">The title you're looking for doesn't exist in our catalog.</p>
           <Link
             to="/books"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-bold uppercase tracking-wider hover:bg-[#520014] transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Catalog
@@ -154,7 +154,7 @@ export default function BookDetails() {
       stars.push(
         <Star
           key={i}
-          className={`w-4 h-4 ${i < full ? 'text-[#7B021D] fill-[#7B021D]' : 'text-[#D8CFAE]'}`}
+          className={`w-4 h-4 ${i < full ? 'text-[#212842] fill-[#212842]' : 'text-[#D8CFAE]'}`}
         />
       );
     }
@@ -203,13 +203,13 @@ export default function BookDetails() {
 
               <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                 <span className="px-4 py-2 rounded-full bg-[#FFFDF3]/90 backdrop-blur-sm text-xs font-mono font-bold uppercase tracking-wider text-[#181616] flex items-center gap-1.5 shadow-lg">
-                  <Maximize2 className="w-3.5 h-3.5 text-[#7B021D]" />
+                  <Maximize2 className="w-3.5 h-3.5 text-[#212842]" />
                   View Cover
                 </span>
               </div>
 
               {book.badge && (
-                <span className="absolute top-5 left-5 px-3 py-1.5 rounded-full bg-[#FFFDF3]/90 backdrop-blur-sm text-[10px] uppercase tracking-widest font-mono text-[#7B021D] font-bold border border-[#D8CFAE]">
+                <span className="absolute top-5 left-5 px-3 py-1.5 rounded-full bg-[#FFFDF3]/90 backdrop-blur-sm text-[10px] uppercase tracking-widest font-mono text-[#212842] font-bold border border-[#D8CFAE]">
                   {book.badge}
                 </span>
               )}
@@ -232,7 +232,7 @@ export default function BookDetails() {
                   <button
                     type="button"
                     onClick={handleDownloadPdf}
-                    className="w-full px-5 py-3.5 rounded-full border-2 border-[#7B021D] bg-[#F8F6E5] text-[#7B021D] hover:bg-[#7B021D] hover:text-[#F5F5DA] transition-all font-mono text-xs uppercase tracking-wider font-bold flex items-center justify-center gap-2 shadow-2xs"
+                    className="w-full px-5 py-3.5 rounded-full border-2 border-[#212842] bg-[#F8F6E5] text-[#212842] hover:bg-[#212842] hover:text-[#F5F5DA] transition-all font-mono text-xs uppercase tracking-wider font-bold flex items-center justify-center gap-2 shadow-2xs"
                   >
                     <Download className="w-4 h-4" />
                     <span>Download PDF</span>
@@ -253,9 +253,9 @@ export default function BookDetails() {
                   <button
                     type="button"
                     onClick={() => setPurchaseModalOpen(true)}
-                    className="w-full px-5 py-3.5 rounded-full border-2 border-[#D8CFAE] bg-[#F8F6E5] text-[#181616] hover:border-[#7B021D] hover:text-[#7B021D] transition-all font-mono text-xs uppercase tracking-wider font-bold flex items-center justify-center gap-2 shadow-2xs"
+                    className="w-full px-5 py-3.5 rounded-full border-2 border-[#D8CFAE] bg-[#F8F6E5] text-[#181616] hover:border-[#212842] hover:text-[#212842] transition-all font-mono text-xs uppercase tracking-wider font-bold flex items-center justify-center gap-2 shadow-2xs"
                   >
-                    <Download className="w-4 h-4 text-[#7B021D]" />
+                    <Download className="w-4 h-4 text-[#212842]" />
                     <span>PDF Edition</span>
                   </button>
                 </>
@@ -273,7 +273,7 @@ export default function BookDetails() {
             <div className="flex items-center gap-3 flex-wrap">
               <Link
                 to={`/categories/${categorySlug}`}
-                className="px-3.5 py-1 rounded-full bg-[#FFFDF3] border border-[#D8CFAE] text-[#7B021D] text-xs font-mono uppercase tracking-wider font-bold hover:border-[#7B021D] transition-colors"
+                className="px-3.5 py-1 rounded-full bg-[#FFFDF3] border border-[#D8CFAE] text-[#212842] text-xs font-mono uppercase tracking-wider font-bold hover:border-[#212842] transition-colors"
               >
                 {book.genre}
               </Link>
@@ -299,7 +299,7 @@ export default function BookDetails() {
               <div>
                 <Link
                   to={`/authors/${authorSlug}`}
-                  className="text-base font-bold text-[#181616] hover:text-[#7B021D] transition-colors"
+                  className="text-base font-bold text-[#181616] hover:text-[#212842] transition-colors"
                 >
                   {book.author}
                 </Link>
@@ -322,7 +322,7 @@ export default function BookDetails() {
             )}
 
             <div className="space-y-3">
-              <h3 className="text-xs uppercase tracking-widest font-mono text-[#7B021D] font-bold">
+              <h3 className="text-xs uppercase tracking-widest font-mono text-[#212842] font-bold">
                 About This Book
               </h3>
               <p className="text-base text-[#181616] leading-[1.8]">
@@ -362,11 +362,11 @@ export default function BookDetails() {
                   onClick={() => toggleWishlist(book)}
                   className={`px-5 py-2.5 rounded-full border text-xs font-mono uppercase tracking-wider transition-all flex items-center gap-2 ${
                     wishlisted
-                      ? 'bg-[#7B021D] border-[#7B021D] text-[#F5F5DA] font-bold shadow-sm'
-                      : 'border-[#D8CFAE] text-[#181616] hover:border-[#7B021D] bg-[#FFFDF3]'
+                      ? 'bg-[#212842] border-[#212842] text-[#F5F5DA] font-bold shadow-sm'
+                      : 'border-[#D8CFAE] text-[#181616] hover:border-[#212842] bg-[#FFFDF3]'
                   }`}
                 >
-                  <Bookmark className={`w-4 h-4 ${wishlisted ? 'fill-[#F5F5DA] text-[#F5F5DA]' : 'text-[#7B021D]'}`} />
+                  <Bookmark className={`w-4 h-4 ${wishlisted ? 'fill-[#F5F5DA] text-[#F5F5DA]' : 'text-[#212842]'}`} />
                   <span>{wishlisted ? 'Wishlisted' : 'Add to Wishlist'}</span>
                 </motion.button>
 
@@ -379,7 +379,7 @@ export default function BookDetails() {
                   className={`px-4 py-2.5 rounded-full border text-xs font-mono uppercase tracking-wider transition-colors flex items-center gap-1.5 ${
                     bookmarked
                       ? 'bg-[#181616] text-[#F5F5DA] font-bold border-[#181616]'
-                      : 'border-[#D8CFAE] text-[#181616] hover:border-[#7B021D] bg-[#FFFDF3]'
+                      : 'border-[#D8CFAE] text-[#181616] hover:border-[#212842] bg-[#FFFDF3]'
                   }`}
                 >
                   <Bookmark className={`w-4 h-4 ${bookmarked ? 'fill-[#F5F5DA] text-[#F5F5DA]' : ''}`} />
@@ -404,11 +404,11 @@ export default function BookDetails() {
                 />
               </Link>
               <div className="space-y-3">
-                <span className="text-xs uppercase tracking-widest font-mono text-[#7B021D] font-bold">
+                <span className="text-xs uppercase tracking-widest font-mono text-[#212842] font-bold">
                   About the Author
                 </span>
                 <Link to={`/authors/${authorSlug}`}>
-                  <h3 className="font-editorial-serif text-2xl text-[#181616] font-normal hover:text-[#7B021D] transition-colors">
+                  <h3 className="font-editorial-serif text-2xl text-[#181616] font-normal hover:text-[#212842] transition-colors">
                     {author.name}
                   </h3>
                 </Link>
@@ -420,7 +420,7 @@ export default function BookDetails() {
                 </p>
                 <Link
                   to={`/authors/${authorSlug}`}
-                  className="inline-flex items-center gap-1 text-xs font-mono text-[#7B021D] hover:underline font-bold"
+                  className="inline-flex items-center gap-1 text-xs font-mono text-[#212842] hover:underline font-bold"
                 >
                   <span>Explore Author's Catalogue</span>
                   <ArrowUpRight className="w-3.5 h-3.5" />
@@ -440,7 +440,7 @@ export default function BookDetails() {
             </h2>
             <Link
               to="/books"
-              className="text-xs uppercase tracking-wider font-mono text-[#7B021D] hover:underline"
+              className="text-xs uppercase tracking-wider font-mono text-[#212842] hover:underline"
             >
               Browse All →
             </Link>
@@ -505,12 +505,12 @@ export default function BookDetails() {
                 <X className="w-5 h-5" />
               </button>
 
-              <div className="w-16 h-16 rounded-full bg-[#F8F6E5] border border-[#D8CFAE] flex items-center justify-center mx-auto text-[#7B021D]">
+              <div className="w-16 h-16 rounded-full bg-[#F8F6E5] border border-[#D8CFAE] flex items-center justify-center mx-auto text-[#212842]">
                 <ShoppingBag className="w-8 h-8" />
               </div>
 
               <div className="space-y-2">
-                <span className="text-[11px] font-mono uppercase tracking-widest text-[#7B021D] font-bold">
+                <span className="text-[11px] font-mono uppercase tracking-widest text-[#212842] font-bold">
                   Order Summary
                 </span>
                 <h3 className="font-editorial-serif text-2xl font-bold">
@@ -527,7 +527,7 @@ export default function BookDetails() {
                   </div>
                   <div className="flex justify-between border-t border-[#DED7BD] pt-1.5 font-bold">
                     <span>Total Amount:</span>
-                    <span className="text-[#7B021D]">{formatPrice(book.price)}</span>
+                    <span className="text-[#212842]">{formatPrice(book.price)}</span>
                   </div>
                 </div>
               </div>
@@ -537,7 +537,7 @@ export default function BookDetails() {
                   type="button"
                   disabled={isPurchasing}
                   onClick={handleConfirmPurchase}
-                  className="w-full py-3.5 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#520014] transition-colors shadow-md flex items-center justify-center gap-2"
+                  className="w-full py-3.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-md flex items-center justify-center gap-2"
                 >
                   <ShoppingBag className="w-4 h-4 text-[#F5F5DA]" />
                   <span>{isPurchasing ? 'Processing...' : `Confirm Purchase (${formatPrice(book.price)})`}</span>
@@ -572,7 +572,7 @@ export default function BookDetails() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className="fixed bottom-6 right-6 z-[130] px-5 py-3.5 rounded-2xl bg-[#7B021D] text-[#F5F5DA] text-xs font-mono shadow-2xl flex items-center gap-3 border border-[#D8CFAE]/20"
+            className="fixed bottom-6 right-6 z-[130] px-5 py-3.5 rounded-2xl bg-[#212842] text-[#F5F5DA] text-xs font-mono shadow-2xl flex items-center gap-3 border border-[#D8CFAE]/20"
           >
             <CheckCircle2 className="w-4 h-4 text-[#F5F5DA]" />
             <span>{toastMessage}</span>

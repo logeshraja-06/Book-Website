@@ -52,8 +52,8 @@ export default function PublisherHome() {
       {/* ── 1. HEADER & ACCENT BADGE ── */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 border-b border-[#E9E5C8] pb-6">
         <div>
-          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#7B021D] font-bold block flex items-center gap-1.5 mb-1">
-            <Sparkles className="w-3.5 h-3.5 text-[#7B021D]" />
+          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#212842] font-bold block flex items-center gap-1.5 mb-1">
+            <Sparkles className="w-3.5 h-3.5 text-[#212842]" />
             Control Desk Overview
           </span>
           <h2 className="font-editorial-serif text-3xl sm:text-4xl text-[#211D1D] font-bold">
@@ -69,7 +69,7 @@ export default function PublisherHome() {
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Link
               to="/publisher/categories"
-              className="px-5 py-2.5 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] text-[#211D1D] text-xs font-bold uppercase tracking-wider hover:border-[#7B021D] transition-colors shadow-2xs block"
+              className="px-5 py-2.5 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] text-[#211D1D] text-xs font-bold uppercase tracking-wider hover:border-[#212842] transition-colors shadow-2xs block"
             >
               Taxonomy & Categories
             </Link>
@@ -78,7 +78,7 @@ export default function PublisherHome() {
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Link
               to="/publisher/queue"
-              className="px-6 py-2.5 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-bold uppercase tracking-wider hover:bg-[#520014] transition-colors shadow-md block"
+              className="px-6 py-2.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-md block"
             >
               Review Queue ({pendingCount})
             </Link>
@@ -91,13 +91,13 @@ export default function PublisherHome() {
         <motion.div
           whileHover={{ y: -3 }}
           transition={{ duration: 0.2 }}
-          className="bg-gradient-to-br from-[#FFFDF3] to-[#F5F5DA] rounded-3xl p-6 border border-[#E9E5C8] shadow-md hover:shadow-lg hover:shadow-[#7B021D]/10 transition-all space-y-2 relative overflow-hidden"
+          className="bg-gradient-to-br from-[#FFFDF3] to-[#F5F5DA] rounded-3xl p-6 border border-[#E9E5C8] shadow-md hover:shadow-lg hover:shadow-[#212842]/10 transition-all space-y-2 relative overflow-hidden"
         >
           <div className="flex items-center justify-between">
-            <span className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] font-bold">
+            <span className="text-[10px] uppercase font-mono tracking-widest text-[#212842] font-bold">
               Pending Reviews
             </span>
-            <Clock className="w-4 h-4 text-[#7B021D]" />
+            <Clock className="w-4 h-4 text-[#212842]" />
           </div>
           <StatCounter target={pendingCount} />
           <span className="text-[11px] text-[#6B5E5E] font-sans block">Awaiting evaluation</span>
@@ -106,13 +106,13 @@ export default function PublisherHome() {
         <motion.div
           whileHover={{ y: -3 }}
           transition={{ duration: 0.2 }}
-          className="bg-gradient-to-br from-[#FFFDF3] to-[#F5F5DA] rounded-3xl p-6 border border-[#E9E5C8] shadow-md hover:shadow-lg hover:shadow-[#7B021D]/10 transition-all space-y-2 relative overflow-hidden"
+          className="bg-gradient-to-br from-[#FFFDF3] to-[#F5F5DA] rounded-3xl p-6 border border-[#E9E5C8] shadow-md hover:shadow-lg hover:shadow-[#212842]/10 transition-all space-y-2 relative overflow-hidden"
         >
           <div className="flex items-center justify-between">
-            <span className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] font-bold">
+            <span className="text-[10px] uppercase font-mono tracking-widest text-[#212842] font-bold">
               Published Works
             </span>
-            <BookCheck className="w-4 h-4 text-[#7B021D]" />
+            <BookCheck className="w-4 h-4 text-[#212842]" />
           </div>
           <StatCounter target={approvedCount} />
           <span className="text-[11px] text-[#6B5E5E] font-sans block">Authorized titles</span>
@@ -121,13 +121,13 @@ export default function PublisherHome() {
         <motion.div
           whileHover={{ y: -3 }}
           transition={{ duration: 0.2 }}
-          className="bg-gradient-to-br from-[#FFFDF3] to-[#F5F5DA] rounded-3xl p-6 border border-[#E9E5C8] shadow-md hover:shadow-lg hover:shadow-[#7B021D]/10 transition-all space-y-2 relative overflow-hidden"
+          className="bg-gradient-to-br from-[#FFFDF3] to-[#F5F5DA] rounded-3xl p-6 border border-[#E9E5C8] shadow-md hover:shadow-lg hover:shadow-[#212842]/10 transition-all space-y-2 relative overflow-hidden"
         >
           <div className="flex items-center justify-between">
-            <span className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] font-bold">
+            <span className="text-[10px] uppercase font-mono tracking-widest text-[#212842] font-bold">
               Active Categories
             </span>
-            <Tag className="w-4 h-4 text-[#7B021D]" />
+            <Tag className="w-4 h-4 text-[#212842]" />
           </div>
           <StatCounter target={totalCategories} />
           <span className="text-[11px] text-[#6B5E5E] font-sans block">Genre taxonomy</span>
@@ -136,13 +136,13 @@ export default function PublisherHome() {
         <motion.div
           whileHover={{ y: -3 }}
           transition={{ duration: 0.2 }}
-          className="bg-gradient-to-br from-[#FFFDF3] to-[#F5F5DA] rounded-3xl p-6 border border-[#E9E5C8] shadow-md hover:shadow-lg hover:shadow-[#7B021D]/10 transition-all space-y-2 relative overflow-hidden"
+          className="bg-gradient-to-br from-[#FFFDF3] to-[#F5F5DA] rounded-3xl p-6 border border-[#E9E5C8] shadow-md hover:shadow-lg hover:shadow-[#212842]/10 transition-all space-y-2 relative overflow-hidden"
         >
           <div className="flex items-center justify-between">
-            <span className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] font-bold">
+            <span className="text-[10px] uppercase font-mono tracking-widest text-[#212842] font-bold">
               Author Guild
             </span>
-            <Users className="w-4 h-4 text-[#7B021D]" />
+            <Users className="w-4 h-4 text-[#212842]" />
           </div>
           <StatCounter target={totalAuthorsCount} />
           <span className="text-[11px] text-[#6B5E5E] font-sans block">Registered writers</span>
@@ -160,7 +160,7 @@ export default function PublisherHome() {
             </h3>
             <Link
               to="/publisher/queue"
-              className="text-xs font-mono text-[#7B021D] hover:underline inline-flex items-center gap-1 font-bold"
+              className="text-xs font-mono text-[#212842] hover:underline inline-flex items-center gap-1 font-bold"
             >
               <span>View Full Queue</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -174,14 +174,14 @@ export default function PublisherHome() {
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, delay: idx * 0.06 }}
-                className="bg-gradient-to-r from-[#FFFDF3] to-[#F5F5DA] rounded-2xl p-4 border border-[#E9E5C8] flex items-center justify-between gap-4 hover:border-[#7B021D] shadow-2xs hover:shadow-md transition-all group"
+                className="bg-gradient-to-r from-[#FFFDF3] to-[#F5F5DA] rounded-2xl p-4 border border-[#E9E5C8] flex items-center justify-between gap-4 hover:border-[#212842] shadow-2xs hover:shadow-md transition-all group"
               >
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-14 rounded overflow-hidden bg-[#F5F5DA] shrink-0 border border-[#E9E5C8] shadow-2xs">
                     <img src={book.coverImage || book.coverUrl} alt={book.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
                   </div>
                   <div>
-                    <h4 className="font-editorial-serif text-base font-bold text-[#211D1D] group-hover:text-[#7B021D] transition-colors">
+                    <h4 className="font-editorial-serif text-base font-bold text-[#211D1D] group-hover:text-[#212842] transition-colors">
                       {book.title}
                     </h4>
                     <p className="text-xs text-[#6B5E5E] font-sans">By {book.author} · {book.genre}</p>
@@ -189,12 +189,12 @@ export default function PublisherHome() {
                 </div>
 
                 <div className="flex items-center gap-4">
-                  <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-[#7B021D] px-2.5 py-1 rounded-full bg-[#FFFDF3] border border-[#E9E5C8]">
+                  <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-[#212842] px-2.5 py-1 rounded-full bg-[#FFFDF3] border border-[#E9E5C8]">
                     {book.status}
                   </span>
                   <Link
                     to={`/publisher/review/${book.id || book._id}`}
-                    className="text-xs font-bold uppercase font-mono text-[#211D1D] hover:text-[#7B021D] transition-colors"
+                    className="text-xs font-bold uppercase font-mono text-[#211D1D] hover:text-[#212842] transition-colors"
                   >
                     Review
                   </Link>
@@ -208,7 +208,7 @@ export default function PublisherHome() {
         <div className="lg:col-span-5 space-y-6">
           <div className="bg-gradient-to-br from-[#FFFDF3] to-[#F5F5DA] rounded-3xl p-6 border border-[#E9E5C8] shadow-md space-y-4">
             <h3 className="font-editorial-serif text-xl font-bold text-[#211D1D] flex items-center gap-2">
-              <ShieldCheck className="w-5 h-5 text-[#7B021D]" />
+              <ShieldCheck className="w-5 h-5 text-[#212842]" />
               Publisher Protocol
             </h3>
             <p className="text-xs text-[#6B5E5E] leading-relaxed font-sans">
@@ -221,14 +221,14 @@ export default function PublisherHome() {
                 className="w-full flex items-center justify-between p-3.5 rounded-xl bg-[#FFFDF3] hover:bg-[#F5F5DA] border border-[#E9E5C8] text-xs font-mono text-[#211D1D] font-bold transition-colors group"
               >
                 <span>Manuscript Review Desk</span>
-                <ArrowRight className="w-4 h-4 text-[#7B021D] group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-4 h-4 text-[#212842] group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
                 to="/publisher/reports"
                 className="w-full flex items-center justify-between p-3.5 rounded-xl bg-[#FFFDF3] hover:bg-[#F5F5DA] border border-[#E9E5C8] text-xs font-mono text-[#211D1D] font-bold transition-colors group"
               >
                 <span>Analytics & Reports</span>
-                <ArrowRight className="w-4 h-4 text-[#7B021D] group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-4 h-4 text-[#212842] group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
           </div>

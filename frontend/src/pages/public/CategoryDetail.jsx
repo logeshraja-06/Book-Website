@@ -57,7 +57,7 @@ export default function CategoryDetail() {
           transition={{ duration: 0.5 }}
           className="space-y-4 border-b border-[#E9E5C8] pb-8"
         >
-          <span className="text-xs uppercase font-mono tracking-widest text-[#7B021D] font-bold block">
+          <span className="text-xs uppercase font-mono tracking-widest text-[#212842] font-bold block">
             Genre Classification
           </span>
           <h1 className="font-editorial-serif text-4xl sm:text-5xl lg:text-6xl text-[#211D1D] font-normal capitalize">
@@ -86,7 +86,7 @@ export default function CategoryDetail() {
             actionLink="/books"
           />
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {books.map((book, idx) => (
               <MinimalBookCard
                 key={book.slug || book.id || book._id || idx}

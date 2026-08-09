@@ -52,7 +52,7 @@ export default function BlogPage() {
 
         {/* Header */}
         <div className="space-y-3 border-b border-[#E9E5C8] pb-8">
-          <span className="text-xs uppercase tracking-widest font-mono text-[#7B021D] font-bold">
+          <span className="text-xs uppercase tracking-widest font-mono text-[#212842] font-bold">
             BookVerse Gazette & Journal
           </span>
           <h1 className="font-editorial-serif text-4xl sm:text-5xl text-[#211D1D] font-normal">

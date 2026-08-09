@@ -38,7 +38,7 @@ export default function ReaderStandaloneView() {
     return (
       <div className="min-h-screen bg-[#F5F5DA] flex items-center justify-center p-6 text-xs font-mono">
         <div className="text-center space-y-3">
-          <div className="w-8 h-8 border-2 border-[#7B021D] border-t-transparent rounded-full animate-spin mx-auto" />
+          <div className="w-8 h-8 border-2 border-[#212842] border-t-transparent rounded-full animate-spin mx-auto" />
           <p className="text-[#5F594F]">Opening sanctuary reader...</p>
         </div>
       </div>
@@ -53,7 +53,7 @@ export default function ReaderStandaloneView() {
           <p className="text-xs text-[#5F594F] font-sans">{error || 'Only published books can be accessed in the reader.'}</p>
           <button
             onClick={() => navigate('/my-shelf')}
-            className="px-5 py-2.5 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider"
+            className="px-5 py-2.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider"
           >
             Return to My Shelf
           </button>

@@ -36,7 +36,7 @@ export default function AuthorsListing() {
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div className="space-y-3">
-              <span className="text-xs uppercase tracking-widest font-mono text-[#7B021D] font-bold block">
+              <span className="text-xs uppercase tracking-widest font-mono text-[#212842] font-bold block">
                 The Contributor Index
               </span>
               <h1 className="font-editorial-serif text-4xl sm:text-5xl lg:text-6xl text-[#211D1D] font-normal tracking-tight">
@@ -54,7 +54,7 @@ export default function AuthorsListing() {
                 placeholder="Search by author or discipline…"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-11 pr-4 py-3 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] text-sm text-[#211D1D] placeholder-[#6B5E5E]/60 focus:outline-none focus:border-[#7B021D] transition-colors"
+                className="w-full pl-11 pr-4 py-3 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] text-sm text-[#211D1D] placeholder-[#6B5E5E]/60 focus:outline-none focus:border-[#212842] transition-colors"
               />
             </div>
           </div>
@@ -65,7 +65,7 @@ export default function AuthorsListing() {
                 key={role}
                 onClick={() => setSelectedRole(role)}
                 className={`py-1 uppercase tracking-wider transition-colors whitespace-nowrap ${
-                  selectedRole === role ? 'text-[#211D1D] font-bold border-b-2 border-[#7B021D]' : 'text-[#6B5E5E] hover:text-[#211D1D]'
+                  selectedRole === role ? 'text-[#211D1D] font-bold border-b-2 border-[#212842]' : 'text-[#6B5E5E] hover:text-[#211D1D]'
                 }`}
               >
                 {role === 'All' ? 'All Disciplines' : role}
@@ -99,7 +99,7 @@ export default function AuthorsListing() {
           </div>
         ) : (
           <div className="text-center py-24 space-y-3">
-            <BookOpen className="w-8 h-8 text-[#7B021D] mx-auto" />
+            <BookOpen className="w-8 h-8 text-[#212842] mx-auto" />
             <h3 className="font-editorial-serif text-2xl text-[#211D1D]">No Authors Found</h3>
             <p className="text-xs text-[#6B5E5E]">Try clearing search parameters to browse the full guild.</p>
           </div>

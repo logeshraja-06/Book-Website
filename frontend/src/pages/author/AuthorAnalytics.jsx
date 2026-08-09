@@ -99,8 +99,8 @@ export default function AuthorAnalytics() {
     >
       {/* ── 1. HEADER ── */}
       <motion.div variants={itemVariants} className="border-b border-[#E7D9D3] pb-6 space-y-1">
-        <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#7B021D] font-bold block flex items-center gap-1.5 mb-1">
-          <Feather className="w-3.5 h-3.5 text-[#7B021D]" />
+        <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#212842] font-bold block flex items-center gap-1.5 mb-1">
+          <Feather className="w-3.5 h-3.5 text-[#212842]" />
           Imprint Performance & Metrics
         </span>
         <h1 className="font-editorial-serif text-3xl sm:text-4xl text-[#2B2B2B] font-bold">
@@ -121,11 +121,11 @@ export default function AuthorAnalytics() {
               key={st.label}
               whileHover={{ y: -3 }}
               transition={{ duration: 0.2 }}
-              className="p-6 rounded-3xl bg-gradient-to-br from-[#FFFDF3] via-[#FAF8F6] to-[#F4EEEA] border border-[#E7D9D3] space-y-3 shadow-md hover:shadow-lg hover:shadow-[#7B021D]/10 hover:border-[#7B021D] transition-all"
+              className="p-6 rounded-3xl bg-gradient-to-br from-[#FFFDF3] via-[#FAF8F6] to-[#F4EEEA] border border-[#E7D9D3] space-y-3 shadow-md hover:shadow-lg hover:shadow-[#212842]/10 hover:border-[#212842] transition-all"
             >
               <div className="flex items-center justify-between text-[#6B5E5E]">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-[#7B021D] font-bold">{st.label}</span>
-                <Icon className="w-4 h-4 text-[#7B021D]" />
+                <span className="text-[10px] font-mono uppercase tracking-widest text-[#212842] font-bold">{st.label}</span>
+                <Icon className="w-4 h-4 text-[#212842]" />
               </div>
 
               {st.isNum ? (
@@ -150,12 +150,12 @@ export default function AuthorAnalytics() {
         <div className="flex items-center justify-between border-b border-[#E7D9D3] pb-4">
           <div>
             <h3 className="font-editorial-serif text-xl font-bold text-[#2B2B2B] flex items-center gap-2">
-              <BarChart2 className="w-5 h-5 text-[#7B021D]" />
+              <BarChart2 className="w-5 h-5 text-[#212842]" />
               Monthly Readership Trend
             </h3>
             <p className="text-xs font-sans text-[#6B5E5E]">Total unique reader sessions over 2026</p>
           </div>
-          <span className="text-xs font-mono text-[#7B021D] font-bold bg-[#FFFDF3] px-3.5 py-1.5 rounded-full border border-[#E7D9D3]">
+          <span className="text-xs font-mono text-[#212842] font-bold bg-[#FFFDF3] px-3.5 py-1.5 rounded-full border border-[#E7D9D3]">
             +32% Growth
           </span>
         </div>
@@ -168,7 +168,7 @@ export default function AuthorAnalytics() {
 
               return (
                 <div key={m.month} className="flex-1 flex flex-col items-center gap-3 h-full justify-end group">
-                  <div className="text-[10px] font-mono text-[#7B021D] font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="text-[10px] font-mono text-[#212842] font-bold opacity-0 group-hover:opacity-100 transition-opacity">
                     {(m.reads / 1000).toFixed(1)}k
                   </div>
 
@@ -177,7 +177,7 @@ export default function AuthorAnalytics() {
                       initial={{ height: 0 }}
                       animate={{ height: `${heightPercent}%` }}
                       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                      className="w-full bg-[#7B021D] group-hover:bg-[#520014] transition-colors rounded-t-xl shadow-xs"
+                      className="w-full bg-[#212842] group-hover:bg-[#181E33] transition-colors rounded-t-xl shadow-xs"
                     />
                   </div>
 

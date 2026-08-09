@@ -2,12 +2,15 @@
 
 @theme {
   --color-ivory: #F5F5DA;
-  --color-crimson: #7B021D;
-  --color-burgundy: #520014;
+  --color-crimson: #212842;
+  --color-midnight: #212842;
+  --color-burgundy: #181E33;
   --color-soft-ivory: #FFFDF3;
+  --color-[#212842]: #212842;
+  --color-vanilla: #F0E7D5;
   --color-charcoal: #211D1D;
-  --color-muted-wine: #A64A5B;
-  --color-champagne: #E9E5C8;
+  --color-muted-wine: #384266;
+  --color-champagne: #F0E7D5;
 
   --font-serif: 'Cormorant Garamond', Garamond, Georgia, serif;
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
@@ -21,9 +24,10 @@
     --background: #F5F5DA;
     --secondary: #FFFDF3;
     --card: #FFFDF3;
-    --accent: #7B021D;
-    --accent-hover: #520014;
-    --accent-light: #A64A5B;
+    --accent: #212842;
+    --accent-hover: #181E33;
+    --accent-light: #384266;
+    --vanilla: #F0E7D5;
     --text-primary: #211D1D;
     --text-secondary: #6B5E5E;
     --border: #E9E5C8;
@@ -114,7 +118,7 @@
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .card-editorial:hover {
-  border-color: #7B021D;
+  border-color: #212842;
   box-shadow: 0 16px 32px -8px rgba(33, 29, 29, 0.08);
 }
 
@@ -126,7 +130,7 @@
 }
 .card-paper:hover {
   background-color: #FFFDF3;
-  border-color: #7B021D;
+  border-color: #212842;
   box-shadow: 0 12px 24px -6px rgba(33, 29, 29, 0.06);
 }
 
@@ -142,7 +146,7 @@
   left: 0;
   width: 0%;
   height: 2px;
-  background-color: #7B021D;
+  background-color: #212842;
   transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -166,7 +170,7 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #A64A5B;
+  background: #384266;
 }
 
 /* Hide scrollbar for horizontal scroll strips */

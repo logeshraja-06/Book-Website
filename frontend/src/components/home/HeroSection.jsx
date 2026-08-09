@@ -198,7 +198,7 @@ export default function HeroSection() {
       ref={sectionRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative overflow-hidden pt-2 pb-16 lg:pt-3 lg:pb-24 bg-[#F5F5DA]"
+      className="relative overflow-hidden min-h-[calc(100vh-5rem)] pt-2 pb-16 lg:pt-3 lg:pb-24 bg-[#F5F5DA] flex flex-col justify-center"
     >
       {/* ── 1. CINEMATIC FULL HERO BACKGROUND VIDEO LAYER ── */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none">
@@ -223,9 +223,9 @@ export default function HeroSection() {
             preload="metadata"
             disablePictureInPicture
             controlsList="nodownload nofullscreen noremoteplayback"
-            className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none transition-opacity duration-700 ease-in-out opacity-90 sm:opacity-95 object-[center_80%] lg:object-[right_80%]"
+            className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none transition-opacity duration-700 ease-in-out opacity-90 sm:opacity-95"
             style={{
-              objectPosition: 'center 80%',
+              objectPosition: 'center center',
               filter: 'contrast(1.05) saturate(1.05) brightness(1.02)',
             }}
           >
@@ -244,17 +244,17 @@ export default function HeroSection() {
         />
 
         {/* Text Readability Gradient Overlay (Translucent Ivory protecting text on left while keeping background book crisp) */}
-        <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#F5F5DA]/80 via-[#F5F5DA]/40 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#F5F5DA]/85 via-[#F5F5DA]/40 to-transparent pointer-events-none" />
 
         {/* Subtle Crimson Ambient Accent Overlay */}
-        <div className="absolute inset-0 z-10 bg-gradient-to-tr from-[#7B021D]/[0.03] via-transparent to-transparent pointer-events-none" />
+        <div className="absolute inset-0 z-10 bg-gradient-to-tr from-[#212842]/[0.03] via-transparent to-transparent pointer-events-none" />
 
         {/* Subtle Bottom Darkening Gradient */}
         <div className="absolute inset-x-0 bottom-0 h-36 z-10 bg-gradient-to-t from-[#F5F5DA] via-[#F5F5DA]/60 to-transparent pointer-events-none" />
       </div>
 
       {/* ── 3. AMBIENT GLOW BLOBS ── */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[760px] h-[440px] bg-gradient-to-tr from-[#7B021D]/[0.04] via-[#E9E5C8]/25 to-transparent blur-3xl rounded-full pointer-events-none z-10" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[760px] h-[440px] bg-gradient-to-tr from-[#212842]/[0.04] via-[#E9E5C8]/25 to-transparent blur-3xl rounded-full pointer-events-none z-10" />
 
       {/* ── 4. HERO CONTENT LAYER (z-20) ── */}
       <motion.div
@@ -289,7 +289,7 @@ export default function HeroSection() {
                   initial={{ opacity: 0, filter: 'blur(8px)', y: 20 }}
                   animate={{ opacity: 1, filter: 'blur(0px)', y: 0 }}
                   transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                  className="italic font-light text-[#7B021D] block pt-1"
+                  className="italic font-light text-[#212842] block pt-1"
                 >
                   Books worth remembering.
                 </motion.span>
@@ -316,7 +316,7 @@ export default function HeroSection() {
               <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }} transition={{ duration: 0.2 }}>
                 <Link
                   to="/books"
-                  className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-[#7B021D] text-[#F5F5DA] text-[14px] font-editorial-sans font-bold tracking-[0.04em] hover:bg-[#520014] transition-colors duration-300 shadow-md hover:shadow-lg group min-h-[48px] w-full sm:w-auto"
+                  className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-[#212842] text-[#F5F5DA] text-[14px] font-editorial-sans font-bold tracking-[0.04em] hover:bg-[#181E33] transition-colors duration-300 shadow-md hover:shadow-lg group min-h-[48px] w-full sm:w-auto"
                 >
                   <span>Explore Books</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -326,7 +326,7 @@ export default function HeroSection() {
               <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }} transition={{ duration: 0.2 }}>
                 <a
                   href="#authors"
-                  className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] text-[#211D1D] text-[14px] font-editorial-sans font-bold hover:border-[#7B021D] hover:bg-[#F5F5DA] transition-all duration-300 min-h-[48px] w-full sm:w-auto shadow-2xs"
+                  className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] text-[#211D1D] text-[14px] font-editorial-sans font-bold hover:border-[#212842] hover:bg-[#F5F5DA] transition-all duration-300 min-h-[48px] w-full sm:w-auto shadow-2xs"
                 >
                   <Compass className="w-4 h-4 text-[#6B5E5E]" />
                   <span>Meet the Authors</span>
@@ -386,19 +386,19 @@ export default function HeroSection() {
                   ]
                 }}
                 transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
-                className="absolute -top-3 -right-3 z-30 px-3.5 py-1.5 rounded-full bg-[#FFFDF3]/95 backdrop-blur-md border border-[#E9E5C8] text-[10px] font-editorial-sans uppercase tracking-[0.16em] text-[#7B021D] font-bold shadow-lg flex items-center gap-1.5"
+                className="absolute -top-3 -right-3 z-30 px-3.5 py-1.5 rounded-full bg-[#FFFDF3]/90 backdrop-blur-md border border-[#E9E5C8] text-[10px] font-editorial-sans uppercase tracking-[0.16em] text-[#212842] font-bold shadow-md flex items-center gap-1.5"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#7B021D] animate-pulse" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#212842] animate-pulse" />
                 <span>Featured Hardcover</span>
               </motion.div>
 
-              {/* Physical 3D Book Showcase Card */}
-              <Link
-                to={`/books/${bookSlug}`}
-                className="book-card-3d relative rounded-2xl overflow-hidden bg-[#FFFDF3] border border-[#E9E5C8] p-5 shadow-2xl block group cursor-pointer"
-              >
-                <div className="book-spine-depth" />
-                <div className="relative aspect-[3/4] rounded-xl overflow-hidden shadow-inner bg-[#F5F5DA] mb-4">
+              {/* Physical 3D Hardcover Book Object */}
+              <div className="space-y-4">
+                <Link
+                  to={`/books/${bookSlug}`}
+                  className="book-card-3d relative block aspect-[3/4] rounded-r-2xl rounded-l-sm overflow-hidden bg-[#F5F5DA] border border-[#E9E5C8]/80 shadow-2xl group cursor-pointer"
+                >
+                  <div className="book-spine-depth" />
                   <img
                     src={heroBook.coverImage || heroBook.coverUrl}
                     alt={heroBook.title}
@@ -406,32 +406,32 @@ export default function HeroSection() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#211D1D]/75 via-transparent to-transparent opacity-85 pointer-events-none" />
 
-                  <div className="absolute bottom-4 left-4 right-4 text-[#F5F5DA] pointer-events-none">
+                  <div className="absolute bottom-5 left-5 right-5 text-[#F5F5DA] pointer-events-none">
                     <span className="text-[11px] font-mono uppercase tracking-[0.16em] text-[#E9E5C8] block mb-1 font-semibold">
                       {heroBook.genre}
                     </span>
-                    <h3 className="font-editorial-serif text-2xl font-bold leading-tight tracking-tight">
+                    <h3 className="font-editorial-serif text-2xl sm:text-3xl font-bold leading-tight tracking-tight">
                       {heroBook.title}
                     </h3>
                   </div>
-                </div>
+                </Link>
 
-                {/* Meta details */}
-                <div className="flex items-center justify-between pt-1">
+                {/* Floating Glass Metadata Badge */}
+                <div className="bg-[#FFFDF3]/90 backdrop-blur-md border border-[#E9E5C8] rounded-2xl p-4 shadow-lg flex items-center justify-between">
                   <div>
-                    <p className="text-[13px] font-sans text-[#6B5E5E]">By {heroBook.author}</p>
-                    <p className="font-editorial-sans font-tabular text-[17px] font-bold tracking-tight text-[#211D1D] mt-0.5">
+                    <p className="text-xs font-sans text-[#6B5E5E]">By <span className="font-semibold text-[#211D1D]">{heroBook.author}</span></p>
+                    <p className="font-editorial-sans font-tabular text-lg font-bold tracking-tight text-[#211D1D] mt-0.5">
                       {formatPrice(heroBook.price)}
                     </p>
                   </div>
                   <div className="text-right">
-                    <span className="inline-block px-2.5 py-1 rounded-full bg-[#F5F5DA] border border-[#E9E5C8] text-[#7B021D] text-xs font-editorial-sans font-bold font-tabular">
-                      {heroBook.rating} ★ ({heroBook.reviewsCount})
+                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#F5F5DA] border border-[#E9E5C8] text-[#212842] text-xs font-editorial-sans font-bold font-tabular">
+                      <Star className="w-3.5 h-3.5 fill-[#212842]" />
+                      <span>{heroBook.rating} ({heroBook.reviewsCount})</span>
                     </span>
                   </div>
                 </div>
-
-              </Link>
+              </div>
             </motion.div>
           </motion.div>
 

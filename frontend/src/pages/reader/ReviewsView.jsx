@@ -38,7 +38,7 @@ export default function ReviewsView() {
     return Array.from({ length: 5 }).map((_, i) => (
       <Star
         key={i}
-        className={`w-4 h-4 ${i < rating ? 'text-[#7B021D] fill-[#7B021D]' : 'text-[#E7D9D3]'}`}
+        className={`w-4 h-4 ${i < rating ? 'text-[#212842] fill-[#212842]' : 'text-[#E7D9D3]'}`}
       />
     ));
   };
@@ -57,8 +57,8 @@ export default function ReviewsView() {
       {/* ── 1. HEADER ── */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#E7D9D3] pb-6">
         <div>
-          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#7B021D] font-bold block flex items-center gap-1.5 mb-1">
-            <MessageSquareText className="w-3.5 h-3.5 text-[#7B021D]" />
+          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#212842] font-bold block flex items-center gap-1.5 mb-1">
+            <MessageSquareText className="w-3.5 h-3.5 text-[#212842]" />
             Reader Critiques & Reviews
           </span>
           <h2 className="font-editorial-serif text-3xl sm:text-4xl text-[#2B2B2B] font-bold">
@@ -68,7 +68,7 @@ export default function ReviewsView() {
             Your published contributions and literary evaluations across the platform
           </p>
         </div>
-        <span className="text-xs font-mono text-[#7B021D] font-bold bg-[#FFFDF3] px-3.5 py-1.5 rounded-full border border-[#E7D9D3]">
+        <span className="text-xs font-mono text-[#212842] font-bold bg-[#FFFDF3] px-3.5 py-1.5 rounded-full border border-[#E7D9D3]">
           {reviews.length} Review(s) Published
         </span>
       </div>
@@ -80,7 +80,7 @@ export default function ReviewsView() {
           animate={{ opacity: 1, y: 0 }}
           className="p-12 text-center bg-gradient-to-br from-[#FFFDF3] to-[#FAF8F6] rounded-3xl border border-[#E7D9D3] text-xs font-mono text-[#6B5E5E] shadow-sm space-y-3"
         >
-          <BookOpen className="w-8 h-8 text-[#7B021D] mx-auto opacity-60" />
+          <BookOpen className="w-8 h-8 text-[#212842] mx-auto opacity-60" />
           <h3 className="font-editorial-serif text-xl font-bold text-[#2B2B2B]">
             No Book Reviews Written Yet
           </h3>
@@ -107,7 +107,7 @@ export default function ReviewsView() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.35, delay: idx * 0.05, ease: [0.16, 1, 0.3, 1] }}
-                  className="bg-gradient-to-br from-[#FFFDF3] via-[#FAF8F6] to-[#F4EEEA] rounded-3xl p-8 border border-[#E7D9D3] shadow-md space-y-5 hover:border-[#7B021D] hover:shadow-xl hover:shadow-[#7B021D]/10 transition-all duration-300 group"
+                  className="bg-gradient-to-br from-[#FFFDF3] via-[#FAF8F6] to-[#F4EEEA] rounded-3xl p-8 border border-[#E7D9D3] shadow-md space-y-5 hover:border-[#212842] hover:shadow-xl hover:shadow-[#212842]/10 transition-all duration-300 group"
                 >
                   <div className="flex items-start justify-between gap-4 border-b border-[#E7D9D3]/80 pb-4">
                     <div className="flex items-center gap-4">
@@ -121,10 +121,10 @@ export default function ReviewsView() {
                       <div>
                         <Link
                           to={`/books/${bookId}`}
-                          className="font-editorial-serif text-xl font-bold text-[#2B2B2B] hover:text-[#7B021D] transition-colors inline-flex items-center gap-1.5"
+                          className="font-editorial-serif text-xl font-bold text-[#2B2B2B] hover:text-[#212842] transition-colors inline-flex items-center gap-1.5"
                         >
                           <span>{bookTitle}</span>
-                          <ArrowUpRight className="w-4 h-4 text-[#7B021D]" />
+                          <ArrowUpRight className="w-4 h-4 text-[#212842]" />
                         </Link>
                         <p className="text-xs text-[#6B5E5E] font-sans">
                           By {author} · Published {rev.date || rev.dateWritten || 'Recently'}
@@ -148,7 +148,7 @@ export default function ReviewsView() {
                     {renderStars(rev.rating)}
                   </div>
 
-                  <p className="text-base text-[#2B2B2B] leading-[1.8] font-sans italic pl-3 border-l-2 border-[#7B021D]">
+                  <p className="text-base text-[#2B2B2B] leading-[1.8] font-sans italic pl-3 border-l-2 border-[#212842]">
                     "{rev.text || rev.reviewText}"
                   </p>
                 </motion.div>

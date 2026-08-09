@@ -37,9 +37,9 @@ export default function PublisherLoginPage() {
         {/* Header Branding */}
         <div className="text-center space-y-3">
           <div className="w-12 h-12 rounded-2xl bg-[#FFFDF3] border border-[#E9E5C8] text-[#211D1D] flex items-center justify-center mx-auto shadow-2xs">
-            <ShieldCheck className="w-6 h-6 text-[#7B021D]" />
+            <ShieldCheck className="w-6 h-6 text-[#212842]" />
           </div>
-          <span className="text-xs uppercase tracking-widest font-mono text-[#7B021D] font-bold block">
+          <span className="text-xs uppercase tracking-widest font-mono text-[#212842] font-bold block">
             Internal Editorial Desk
           </span>
           <h1 className="font-editorial-serif text-3xl text-[#211D1D] font-bold">
@@ -58,7 +58,7 @@ export default function PublisherLoginPage() {
           className="bg-[#FFFDF3] rounded-3xl p-8 sm:p-10 border border-[#E9E5C8] shadow-sm space-y-6"
         >
           <div className="p-3.5 rounded-2xl bg-[#F5F5DA] border border-[#E9E5C8] text-xs font-mono text-[#6B5E5E] flex items-center gap-2">
-            <Lock className="w-4 h-4 text-[#7B021D] shrink-0" />
+            <Lock className="w-4 h-4 text-[#212842] shrink-0" />
             <span>Authorized credentials preloaded for quick evaluation.</span>
           </div>
 
@@ -91,7 +91,7 @@ export default function PublisherLoginPage() {
               type="submit"
               size="lg"
               disabled={isLoading}
-              className="w-full justify-center bg-[#7B021D] text-[#F5F5DA] hover:bg-[#520014]"
+              className="w-full justify-center bg-[#212842] text-[#F5F5DA] hover:bg-[#181E33]"
               icon={ArrowRight}
             >
               {isLoading ? 'Verifying Desk…' : 'Enter Workspace'}

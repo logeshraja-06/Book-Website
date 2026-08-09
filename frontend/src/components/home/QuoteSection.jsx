@@ -12,7 +12,7 @@ export default function QuoteSection() {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="w-12 h-12 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] mx-auto flex items-center justify-center text-[#7B021D] shadow-2xs"
+          className="w-12 h-12 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] mx-auto flex items-center justify-center text-[#212842] shadow-2xs"
         >
           <Quote className="w-5 h-5" />
         </motion.div>
@@ -36,7 +36,7 @@ export default function QuoteSection() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="pt-2"
         >
-          <p className="text-xs uppercase tracking-widest font-mono text-[#7B021D] font-bold">
+          <p className="text-xs uppercase tracking-widest font-mono text-[#212842] font-bold">
             Franz Kafka — Editorial Colophon
           </p>
         </motion.div>

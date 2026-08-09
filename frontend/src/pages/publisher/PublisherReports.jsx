@@ -104,8 +104,8 @@ export default function PublisherReports() {
       {/* ── 1. HEADER ── */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#E9E5C8] pb-6">
         <div>
-          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#7B021D] font-bold block flex items-center gap-1.5 mb-1">
-            <BarChart3 className="w-3.5 h-3.5 text-[#7B021D]" />
+          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#212842] font-bold block flex items-center gap-1.5 mb-1">
+            <BarChart3 className="w-3.5 h-3.5 text-[#212842]" />
             Editorial Analytics Console
           </span>
           <h2 className="font-editorial-serif text-3xl text-[#211D1D] font-bold">
@@ -122,13 +122,13 @@ export default function PublisherReports() {
         <motion.div
           whileHover={{ y: -3 }}
           transition={{ duration: 0.2 }}
-          className="bg-gradient-to-br from-[#FFFDF3] to-[#F5F5DA] rounded-3xl p-6 border border-[#E9E5C8] shadow-md hover:shadow-lg hover:shadow-[#7B021D]/10 transition-all space-y-2 relative overflow-hidden"
+          className="bg-gradient-to-br from-[#FFFDF3] to-[#F5F5DA] rounded-3xl p-6 border border-[#E9E5C8] shadow-md hover:shadow-lg hover:shadow-[#212842]/10 transition-all space-y-2 relative overflow-hidden"
         >
           <div className="flex items-center justify-between">
-            <span className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] font-bold">
+            <span className="text-[10px] uppercase font-mono tracking-widest text-[#212842] font-bold">
               Books Submitted
             </span>
-            <FileText className="w-4 h-4 text-[#7B021D]" />
+            <FileText className="w-4 h-4 text-[#212842]" />
           </div>
           <StatCounter target={totalSubmitted} />
           <span className="text-[11px] text-[#6B5E5E] font-sans block">Total platform index</span>
@@ -137,13 +137,13 @@ export default function PublisherReports() {
         <motion.div
           whileHover={{ y: -3 }}
           transition={{ duration: 0.2 }}
-          className="bg-gradient-to-br from-[#FFFDF3] to-[#F5F5DA] rounded-3xl p-6 border border-[#E9E5C8] shadow-md hover:shadow-lg hover:shadow-[#7B021D]/10 transition-all space-y-2 relative overflow-hidden"
+          className="bg-gradient-to-br from-[#FFFDF3] to-[#F5F5DA] rounded-3xl p-6 border border-[#E9E5C8] shadow-md hover:shadow-lg hover:shadow-[#212842]/10 transition-all space-y-2 relative overflow-hidden"
         >
           <div className="flex items-center justify-between">
-            <span className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] font-bold">
+            <span className="text-[10px] uppercase font-mono tracking-widest text-[#212842] font-bold">
               Books Published
             </span>
-            <BookCheck className="w-4 h-4 text-[#7B021D]" />
+            <BookCheck className="w-4 h-4 text-[#212842]" />
           </div>
           <StatCounter target={totalPublished} />
           <span className="text-[11px] text-[#6B5E5E] font-sans block">Authorized catalog works</span>
@@ -152,13 +152,13 @@ export default function PublisherReports() {
         <motion.div
           whileHover={{ y: -3 }}
           transition={{ duration: 0.2 }}
-          className="bg-gradient-to-br from-[#FFFDF3] to-[#F5F5DA] rounded-3xl p-6 border border-[#E9E5C8] shadow-md hover:shadow-lg hover:shadow-[#7B021D]/10 transition-all space-y-2 relative overflow-hidden"
+          className="bg-gradient-to-br from-[#FFFDF3] to-[#F5F5DA] rounded-3xl p-6 border border-[#E9E5C8] shadow-md hover:shadow-lg hover:shadow-[#212842]/10 transition-all space-y-2 relative overflow-hidden"
         >
           <div className="flex items-center justify-between">
-            <span className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] font-bold">
+            <span className="text-[10px] uppercase font-mono tracking-widest text-[#212842] font-bold">
               Active Authors
             </span>
-            <Users className="w-4 h-4 text-[#7B021D]" />
+            <Users className="w-4 h-4 text-[#212842]" />
           </div>
           <StatCounter target={totalAuthorsCount} />
           <span className="text-[11px] text-[#6B5E5E] font-sans block">Platform writers</span>
@@ -167,13 +167,13 @@ export default function PublisherReports() {
         <motion.div
           whileHover={{ y: -3 }}
           transition={{ duration: 0.2 }}
-          className="bg-gradient-to-br from-[#FFFDF3] to-[#F5F5DA] rounded-3xl p-6 border border-[#E9E5C8] shadow-md hover:shadow-lg hover:shadow-[#7B021D]/10 transition-all space-y-2 relative overflow-hidden"
+          className="bg-gradient-to-br from-[#FFFDF3] to-[#F5F5DA] rounded-3xl p-6 border border-[#E9E5C8] shadow-md hover:shadow-lg hover:shadow-[#212842]/10 transition-all space-y-2 relative overflow-hidden"
         >
           <div className="flex items-center justify-between">
-            <span className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] font-bold">
+            <span className="text-[10px] uppercase font-mono tracking-widest text-[#212842] font-bold">
               Reader Reviews
             </span>
-            <Sparkles className="w-4 h-4 text-[#7B021D]" />
+            <Sparkles className="w-4 h-4 text-[#212842]" />
           </div>
           <StatCounter target={totalReviewsCount} />
           <span className="text-[11px] text-[#6B5E5E] font-sans block">Verified reader feedback</span>
@@ -191,7 +191,7 @@ export default function PublisherReports() {
               Live percentage share of published and reviewed manuscripts in MongoDB
             </p>
           </div>
-          <span className="text-xs font-mono text-[#7B021D] uppercase font-bold px-3 py-1 rounded-full bg-[#FFFDF3] border border-[#E9E5C8]">
+          <span className="text-xs font-mono text-[#212842] uppercase font-bold px-3 py-1 rounded-full bg-[#FFFDF3] border border-[#E9E5C8]">
             {computedGenres.length} Categories
           </span>
         </div>
@@ -208,7 +208,7 @@ export default function PublisherReports() {
                   initial={{ width: 0 }}
                   animate={{ width: `${Math.max(item.percentage, 4)}%` }}
                   transition={{ duration: 0.8, delay: idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
-                  className="h-full bg-[#7B021D] rounded-full shadow-2xs"
+                  className="h-full bg-[#212842] rounded-full shadow-2xs"
                 />
               </div>
             </div>

@@ -26,7 +26,7 @@ export default function WhyBookVerse() {
         
         {/* Section Header */}
         <div className="text-center space-y-4 max-w-2xl mx-auto">
-          <span className="text-xs uppercase font-mono tracking-widest text-[#7B021D] font-bold block">
+          <span className="text-xs uppercase font-mono tracking-widest text-[#212842] font-bold block">
             Our Publishing Ethos
           </span>
           <h2 className="font-editorial-serif text-3xl sm:text-5xl text-[#211D1D] font-normal">
@@ -48,9 +48,9 @@ export default function WhyBookVerse() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
-                className="bg-[#FFFDF3] rounded-3xl p-8 border border-[#E9E5C8] space-y-4 shadow-2xs hover:border-[#7B021D] transition-colors"
+                className="bg-[#FFFDF3] rounded-3xl p-8 border border-[#E9E5C8] space-y-4 shadow-2xs hover:border-[#212842] transition-colors"
               >
-                <div className="w-12 h-12 rounded-2xl bg-[#F5F5DA] border border-[#E9E5C8] flex items-center justify-center text-[#7B021D]">
+                <div className="w-12 h-12 rounded-2xl bg-[#F5F5DA] border border-[#E9E5C8] flex items-center justify-center text-[#212842]">
                   <Icon className="w-6 h-6" />
                 </div>
                 <h3 className="font-editorial-serif text-2xl font-bold text-[#211D1D]">

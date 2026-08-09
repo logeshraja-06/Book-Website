@@ -55,8 +55,8 @@ export default function BookmarksView() {
       {/* ── 1. HEADER ── */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#D8CFAE] pb-6">
         <div>
-          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#7B021D] font-bold block flex items-center gap-1.5 mb-1">
-            <BookmarkIcon className="w-3.5 h-3.5 text-[#7B021D] fill-[#7B021D]" />
+          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#212842] font-bold block flex items-center gap-1.5 mb-1">
+            <BookmarkIcon className="w-3.5 h-3.5 text-[#212842] fill-[#212842]" />
             Personal Reader Bookmarks
           </span>
           <h2 className="font-editorial-serif text-3xl sm:text-4xl text-[#181616] font-bold">
@@ -66,7 +66,7 @@ export default function BookmarksView() {
             Quick-access saved volumes and quick references in your library
           </p>
         </div>
-        <span className="text-xs font-mono text-[#7B021D] font-bold bg-[#FFFDF3] px-3.5 py-1.5 rounded-full border border-[#D8CFAE] shadow-2xs">
+        <span className="text-xs font-mono text-[#212842] font-bold bg-[#FFFDF3] px-3.5 py-1.5 rounded-full border border-[#D8CFAE] shadow-2xs">
           {bookmarks.length} Bookmarked Volume(s)
         </span>
       </div>
@@ -94,7 +94,7 @@ export default function BookmarksView() {
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.35, delay: idx * 0.05, ease: [0.16, 1, 0.3, 1] }}
-                  className="bg-[#FFFDF3] rounded-3xl p-6 border border-[#D8CFAE] hover:border-[#7B021D] shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between group"
+                  className="bg-[#FFFDF3] rounded-3xl p-6 border border-[#D8CFAE] hover:border-[#212842] shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between group"
                 >
                   <div>
                     {/* Cover Artwork */}
@@ -103,18 +103,18 @@ export default function BookmarksView() {
                         <BookCover book={book} imageClassName="group-hover:scale-105 transition-transform duration-500" />
                       </Link>
 
-                      <div className="absolute top-3.5 left-3.5 px-2.5 py-1 rounded-full bg-[#F5F5DA]/95 text-[10px] uppercase tracking-[0.14em] font-mono text-[#7B021D] font-bold border border-[#D8CFAE]">
+                      <div className="absolute top-3.5 left-3.5 px-2.5 py-1 rounded-full bg-[#F5F5DA]/95 text-[10px] uppercase tracking-[0.14em] font-mono text-[#212842] font-bold border border-[#D8CFAE]">
                         Bookmarked
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between text-[10px] font-mono text-[#7B021D] font-bold mb-1">
+                    <div className="flex items-center justify-between text-[10px] font-mono text-[#212842] font-bold mb-1">
                       <span className="uppercase tracking-widest">{category}</span>
                       <span className="text-[#5F594F]">{dateSaved}</span>
                     </div>
 
                     <Link to={`/books/${bookSlug}`}>
-                      <h3 className="font-editorial-serif text-xl font-bold text-[#181616] line-clamp-1 group-hover:text-[#7B021D] transition-colors leading-snug">
+                      <h3 className="font-editorial-serif text-xl font-bold text-[#181616] line-clamp-1 group-hover:text-[#212842] transition-colors leading-snug">
                         {bookTitle}
                       </h3>
                     </Link>
@@ -141,9 +141,9 @@ export default function BookmarksView() {
                     <div className="flex items-center gap-2">
                       <Link
                         to={`/books/${bookSlug}`}
-                        className="px-4 py-2.5 rounded-full border border-[#D8CFAE] bg-[#F8F6E5] text-[#181616] text-xs font-mono font-bold uppercase tracking-wider hover:border-[#7B021D] transition-colors flex items-center gap-1"
+                        className="px-4 py-2.5 rounded-full border border-[#D8CFAE] bg-[#F8F6E5] text-[#181616] text-xs font-mono font-bold uppercase tracking-wider hover:border-[#212842] transition-colors flex items-center gap-1"
                       >
-                        <Eye className="w-3.5 h-3.5 text-[#7B021D]" />
+                        <Eye className="w-3.5 h-3.5 text-[#212842]" />
                         <span>Details</span>
                       </Link>
 
@@ -156,7 +156,7 @@ export default function BookmarksView() {
                             navigate(`/books/${bookSlug}`);
                           }
                         }}
-                        className="px-4 py-2.5 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#520014] transition-colors shadow-md flex items-center gap-1.5"
+                        className="px-4 py-2.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-md flex items-center gap-1.5"
                       >
                         <BookOpen className="w-3.5 h-3.5" />
                         <span>Open Book</span>
@@ -175,8 +175,8 @@ export default function BookmarksView() {
             transition={{ duration: 0.4 }}
             className="flex flex-col items-center justify-center py-20 text-center bg-[#FFFDF3] rounded-3xl border border-[#D8CFAE] p-8 space-y-4 shadow-sm"
           >
-            <div className="w-16 h-16 rounded-2xl bg-[#F8F6E5] border border-[#D8CFAE] flex items-center justify-center text-[#7B021D] shadow-xs">
-              <BookmarkIcon className="w-7 h-7 text-[#7B021D]" />
+            <div className="w-16 h-16 rounded-2xl bg-[#F8F6E5] border border-[#D8CFAE] flex items-center justify-center text-[#212842] shadow-xs">
+              <BookmarkIcon className="w-7 h-7 text-[#212842]" />
             </div>
 
             <div className="space-y-1 max-w-md">
@@ -191,7 +191,7 @@ export default function BookmarksView() {
             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
               <Link
                 to="/books"
-                className="px-6 py-3 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#520014] transition-colors shadow-md inline-flex items-center gap-2"
+                className="px-6 py-3 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-md inline-flex items-center gap-2"
               >
                 <span>Explore Books</span>
                 <ArrowRight className="w-4 h-4" />

@@ -65,8 +65,8 @@ export default function AuthorBooksView() {
       {/* ── 1. HEADER ── */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[#D8CFAE] pb-6">
         <div>
-          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#7B021D] font-bold flex items-center gap-1.5 mb-1">
-            <BookOpen className="w-3.5 h-3.5 text-[#7B021D]" />
+          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#212842] font-bold flex items-center gap-1.5 mb-1">
+            <BookOpen className="w-3.5 h-3.5 text-[#212842]" />
             Author Manuscript Studio Catalog
           </span>
           <h1 className="font-editorial-serif text-3xl sm:text-4xl text-[#181616] font-bold">
@@ -80,7 +80,7 @@ export default function AuthorBooksView() {
         <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
           <Link
             to="/author/upload"
-            className="px-6 py-3 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#520014] transition-colors shadow-md flex items-center gap-2"
+            className="px-6 py-3 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-md flex items-center gap-2"
           >
             <Plus className="w-4 h-4 text-[#F5F5DA]" />
             <span>Submit New Manuscript</span>
@@ -98,7 +98,7 @@ export default function AuthorBooksView() {
             placeholder="Search by title or genre…"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-11 pr-4 py-2.5 rounded-full border border-[#D8CFAE] bg-[#FFFDF3] text-xs font-mono text-[#181616] focus:outline-none focus:border-[#7B021D] transition-colors shadow-2xs"
+            className="w-full pl-11 pr-4 py-2.5 rounded-full border border-[#D8CFAE] bg-[#FFFDF3] text-xs font-mono text-[#181616] focus:outline-none focus:border-[#212842] transition-colors shadow-2xs"
           />
         </div>
 
@@ -110,7 +110,7 @@ export default function AuthorBooksView() {
               type="button"
               onClick={() => setFilterStatus(st)}
               className={`px-3.5 py-1.5 rounded-full text-xs font-mono uppercase tracking-wider font-bold transition-all whitespace-nowrap ${
-                filterStatus === st ? 'bg-[#7B021D] text-[#F5F5DA] shadow-xs' : 'text-[#5F594F] hover:text-[#181616]'
+                filterStatus === st ? 'bg-[#212842] text-[#F5F5DA] shadow-xs' : 'text-[#5F594F] hover:text-[#181616]'
               }`}
             >
               {st.replace('_', ' ')}
@@ -136,7 +136,7 @@ export default function AuthorBooksView() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: idx * 0.05, ease: [0.16, 1, 0.3, 1] }}
               whileHover={{ y: -4 }}
-              className="group relative rounded-3xl bg-[#FFFDF3] border border-[#D8CFAE] overflow-hidden shadow-md hover:shadow-xl hover:border-[#7B021D] transition-all duration-300 flex flex-col justify-between"
+              className="group relative rounded-3xl bg-[#FFFDF3] border border-[#D8CFAE] overflow-hidden shadow-md hover:shadow-xl hover:border-[#212842] transition-all duration-300 flex flex-col justify-between"
             >
               {/* Cover & Status Badge */}
               <div className="relative aspect-[3/4] overflow-hidden bg-[#F8F6E5]">
@@ -168,7 +168,7 @@ export default function AuthorBooksView() {
                   {isPublished && (
                     <Link
                       to={`/books/${book.slug || bookId}`}
-                      className="p-3 rounded-full bg-[#FFFDF3] text-[#181616] hover:bg-[#7B021D] hover:text-[#F5F5DA] transition-colors shadow-md"
+                      className="p-3 rounded-full bg-[#FFFDF3] text-[#181616] hover:bg-[#212842] hover:text-[#F5F5DA] transition-colors shadow-md"
                       title="View Public Details Page"
                     >
                       <Eye className="w-4 h-4" />
@@ -177,7 +177,7 @@ export default function AuthorBooksView() {
 
                   <Link
                     to={`/author/books/${bookId}/edit`}
-                    className="p-3 rounded-full bg-[#FFFDF3] text-[#181616] hover:bg-[#7B021D] hover:text-[#F5F5DA] transition-colors shadow-md"
+                    className="p-3 rounded-full bg-[#FFFDF3] text-[#181616] hover:bg-[#212842] hover:text-[#F5F5DA] transition-colors shadow-md"
                     title="Edit Manuscript Details"
                   >
                     <Edit3 className="w-4 h-4" />
@@ -197,10 +197,10 @@ export default function AuthorBooksView() {
               {/* Book Info & Rejection Reason Banner */}
               <div className="p-5 space-y-3 flex-1 flex flex-col justify-between">
                 <div className="space-y-2">
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#7B021D] font-bold">
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#212842] font-bold">
                     {book.genre}
                   </span>
-                  <h3 className="font-editorial-serif text-lg font-bold text-[#181616] truncate group-hover:text-[#7B021D] transition-colors">
+                  <h3 className="font-editorial-serif text-lg font-bold text-[#181616] truncate group-hover:text-[#212842] transition-colors">
                     {book.title}
                   </h3>
 
@@ -220,14 +220,14 @@ export default function AuthorBooksView() {
                 <div className="pt-3 border-t border-[#DED7BD] space-y-2">
                   <div className="flex items-center justify-between text-xs font-mono text-[#5F594F]">
                     <span className="font-bold text-[#181616]">{formatPrice(book.price)}</span>
-                    <span className="text-[#7B021D] font-bold">{book.isbn || 'BV-978-INTERNAL'}</span>
+                    <span className="text-[#212842] font-bold">{book.isbn || 'BV-978-INTERNAL'}</span>
                   </div>
 
                   {/* Action Buttons Depending on Status */}
                   {isRejected && (
                     <Link
                       to={`/author/books/${bookId}/edit`}
-                      className="w-full py-2.5 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#520014] transition-colors flex items-center justify-center gap-1.5 shadow-xs"
+                      className="w-full py-2.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors flex items-center justify-center gap-1.5 shadow-xs"
                     >
                       <RotateCcw className="w-3.5 h-3.5" />
                       <span>Edit & Resubmit</span>
@@ -237,7 +237,7 @@ export default function AuthorBooksView() {
                   {status === 'Draft' && (
                     <Link
                       to={`/author/books/${bookId}/edit`}
-                      className="w-full py-2.5 rounded-full bg-[#F1EED2] border border-[#D8CFAE] text-xs font-mono font-bold uppercase tracking-wider text-[#181616] hover:border-[#7B021D] hover:text-[#7B021D] transition-colors flex items-center justify-center gap-1.5"
+                      className="w-full py-2.5 rounded-full bg-[#F1EED2] border border-[#D8CFAE] text-xs font-mono font-bold uppercase tracking-wider text-[#181616] hover:border-[#212842] hover:text-[#212842] transition-colors flex items-center justify-center gap-1.5"
                     >
                       <Edit3 className="w-3.5 h-3.5" />
                       <span>Edit & Submit</span>
@@ -247,7 +247,7 @@ export default function AuthorBooksView() {
                   {isPublished && (
                     <Link
                       to={`/books/${book.slug || bookId}`}
-                      className="w-full py-2 rounded-full bg-[#F8F6E5] border border-[#D8CFAE] text-xs font-mono font-bold text-[#181616] hover:text-[#7B021D] transition-colors flex items-center justify-center gap-1"
+                      className="w-full py-2 rounded-full bg-[#F8F6E5] border border-[#D8CFAE] text-xs font-mono font-bold text-[#181616] hover:text-[#212842] transition-colors flex items-center justify-center gap-1"
                     >
                       <span>View Published Book</span>
                     </Link>
@@ -311,7 +311,7 @@ export default function AuthorBooksView() {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-6 right-6 z-[130] px-5 py-3.5 rounded-2xl bg-[#7B021D] text-[#F5F5DA] text-xs font-mono shadow-2xl flex items-center gap-3 border border-[#D8CFAE]/30"
+            className="fixed bottom-6 right-6 z-[130] px-5 py-3.5 rounded-2xl bg-[#212842] text-[#F5F5DA] text-xs font-mono shadow-2xl flex items-center gap-3 border border-[#D8CFAE]/30"
           >
             <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
             <span>{toastMessage}</span>

@@ -14,7 +14,7 @@ export default function CategorySection() {
         {/* ── SECTION HEADER ── */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
-            <span className="text-[11px] uppercase tracking-[0.2em] font-editorial-sans text-[#7B021D] block mb-2.5 font-bold">
+            <span className="text-[11px] uppercase tracking-[0.2em] font-editorial-sans text-[#212842] block mb-2.5 font-bold">
               Taxonomy & Imprints
             </span>
             <h2 className="font-editorial-serif text-4xl sm:text-5xl lg:text-[3.5rem] text-[#211D1D] font-normal tracking-tight leading-tight">
@@ -27,7 +27,7 @@ export default function CategorySection() {
             </p>
             <Link
               to="/categories"
-              className="inline-flex items-center gap-1.5 text-xs font-editorial-sans font-bold uppercase tracking-[0.1em] text-[#7B021D] hover:text-[#520014] transition-colors"
+              className="inline-flex items-center gap-1.5 text-xs font-editorial-sans font-bold uppercase tracking-[0.1em] text-[#212842] hover:text-[#181E33] transition-colors"
             >
               <span>View Table of Contents</span>
               <ArrowUpRight className="w-4 h-4" />

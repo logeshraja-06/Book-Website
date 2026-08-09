@@ -46,8 +46,8 @@ export default function PublisherBooks() {
       {/* ── 1. HEADER & SEARCH ── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E9E5C8] pb-6">
         <div>
-          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#7B021D] font-bold block flex items-center gap-1.5 mb-1">
-            <BookOpen className="w-3.5 h-3.5 text-[#7B021D]" />
+          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#212842] font-bold block flex items-center gap-1.5 mb-1">
+            <BookOpen className="w-3.5 h-3.5 text-[#212842]" />
             Catalog Console
           </span>
           <h2 className="font-editorial-serif text-3xl text-[#211D1D] font-bold">
@@ -65,7 +65,7 @@ export default function PublisherBooks() {
             placeholder="Search catalog titles, authors, genres…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2.5 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] text-xs text-[#211D1D] placeholder-[#6B5E5E]/60 focus:outline-none focus:border-[#7B021D] transition-colors font-mono"
+            className="w-full pl-9 pr-4 py-2.5 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] text-xs text-[#211D1D] placeholder-[#6B5E5E]/60 focus:outline-none focus:border-[#212842] transition-colors font-mono"
           />
         </div>
       </div>
@@ -87,7 +87,7 @@ export default function PublisherBooks() {
               {isActive && (
                 <motion.div
                   layoutId="publisherBooksTabUnderline"
-                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#7B021D]"
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#212842]"
                   transition={{ type: 'spring', stiffness: 350, damping: 30 }}
                 />
               )}
@@ -115,7 +115,7 @@ export default function PublisherBooks() {
                   </div>
 
                   <div>
-                    <h4 className="font-editorial-serif text-base font-bold text-[#211D1D] group-hover:text-[#7B021D] transition-colors">
+                    <h4 className="font-editorial-serif text-base font-bold text-[#211D1D] group-hover:text-[#212842] transition-colors">
                       {book.title}
                     </h4>
                     <p className="text-xs text-[#6B5E5E] font-sans">
@@ -144,11 +144,11 @@ export default function PublisherBooks() {
                       className="p-2 rounded-full hover:bg-[#F5F5DA] text-[#211D1D] transition-colors"
                       title="View Public Details"
                     >
-                      <Eye className="w-4 h-4 text-[#7B021D]" />
+                      <Eye className="w-4 h-4 text-[#212842]" />
                     </Link>
                     <Link
                       to={`/publisher/review/${bookId}`}
-                      className="px-4 py-1.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-xs font-mono font-bold uppercase tracking-wider text-[#211D1D] hover:border-[#7B021D] hover:text-[#7B021D] transition-colors shadow-2xs"
+                      className="px-4 py-1.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-xs font-mono font-bold uppercase tracking-wider text-[#211D1D] hover:border-[#212842] hover:text-[#212842] transition-colors shadow-2xs"
                     >
                       Review
                     </Link>
@@ -159,7 +159,7 @@ export default function PublisherBooks() {
           })
         ) : (
           <div className="text-center py-20 space-y-3">
-            <BookOpen className="w-8 h-8 text-[#7B021D] mx-auto opacity-60" />
+            <BookOpen className="w-8 h-8 text-[#212842] mx-auto opacity-60" />
             <h3 className="font-editorial-serif text-xl font-bold text-[#211D1D]">
               No Catalog Books Found
             </h3>

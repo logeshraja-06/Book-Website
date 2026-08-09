@@ -18,7 +18,7 @@ export default function NewsletterSection() {
       <div className="max-w-4xl mx-auto px-6 text-center space-y-6">
         
         <div className="space-y-2">
-          <span className="text-xs uppercase tracking-widest font-mono text-[#7B021D] font-bold">
+          <span className="text-xs uppercase tracking-widest font-mono text-[#212842] font-bold">
             Literary Dispatch
           </span>
           <h2 className="font-editorial-serif text-3xl sm:text-4xl text-[#211D1D] font-normal">
@@ -36,7 +36,7 @@ export default function NewsletterSection() {
             animate={{ opacity: 1, scale: 1 }}
             className="p-4 rounded-2xl bg-[#FFFDF3] border border-[#E9E5C8] max-w-md mx-auto flex items-center justify-center gap-2 text-xs font-mono text-[#211D1D]"
           >
-            <CheckCircle2 className="w-4 h-4 text-[#7B021D]" />
+            <CheckCircle2 className="w-4 h-4 text-[#212842]" />
             <span>Subscribed! Check your inbox for our monthly literary dispatch.</span>
           </motion.div>
         ) : (
@@ -49,12 +49,12 @@ export default function NewsletterSection() {
                 placeholder="Enter your email address…"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full pl-11 pr-4 py-3.5 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] text-xs text-[#211D1D] placeholder-[#6B5E5E]/60 focus:outline-none focus:border-[#7B021D] transition-colors"
+                className="w-full pl-11 pr-4 py-3.5 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] text-xs text-[#211D1D] placeholder-[#6B5E5E]/60 focus:outline-none focus:border-[#212842] transition-colors"
               />
             </div>
             <button
               type="submit"
-              className="w-full sm:w-auto px-7 py-3.5 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-bold uppercase tracking-wider hover:bg-[#520014] transition-colors shrink-0 min-h-[44px]"
+              className="w-full sm:w-auto px-7 py-3.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shrink-0 min-h-[44px]"
             >
               Subscribe
             </button>

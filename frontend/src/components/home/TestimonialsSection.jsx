@@ -28,7 +28,7 @@ export default function TestimonialsSection() {
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
         
         <div className="text-center max-w-xl mx-auto mb-16 space-y-2">
-          <span className="text-xs uppercase tracking-widest font-mono text-[#7B021D] font-bold">
+          <span className="text-xs uppercase tracking-widest font-mono text-[#212842] font-bold">
             Literary Perspectives
           </span>
           <h2 className="font-editorial-serif text-4xl text-[#211D1D] font-normal">
@@ -45,10 +45,10 @@ export default function TestimonialsSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: idx * 0.1 }}
-              className="bg-[#FFFDF3] rounded-3xl p-8 border border-[#E9E5C8] shadow-2xs flex flex-col justify-between hover:border-[#7B021D] transition-colors"
+              className="bg-[#FFFDF3] rounded-3xl p-8 border border-[#E9E5C8] shadow-2xs flex flex-col justify-between hover:border-[#212842] transition-colors"
             >
               <div className="space-y-4">
-                <Quote className="w-8 h-8 text-[#7B021D]/30" />
+                <Quote className="w-8 h-8 text-[#212842]/30" />
                 <blockquote className="font-editorial-serif text-lg italic text-[#211D1D] leading-relaxed">
                   "{item.quote}"
                 </blockquote>

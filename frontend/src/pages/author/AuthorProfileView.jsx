@@ -181,7 +181,7 @@ export default function AuthorProfileView() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             className={`fixed bottom-6 right-6 z-50 px-5 py-3.5 rounded-2xl text-[#F5F5DA] shadow-2xl border flex items-center gap-3 text-xs font-mono backdrop-blur-md ${
-              toastMessage.type === 'success' ? 'bg-[#7B021D]/95 border-[#D8CFAE]/30' : 'bg-rose-950/95 border-rose-600'
+              toastMessage.type === 'success' ? 'bg-[#212842]/95 border-[#D8CFAE]/30' : 'bg-rose-950/95 border-rose-600'
             }`}
           >
             {toastMessage.type === 'success' ? (
@@ -197,8 +197,8 @@ export default function AuthorProfileView() {
       {/* ── 1. HEADER ── */}
       <motion.div variants={itemVariants} className="flex flex-col sm:flex-row sm:items-end justify-between border-b border-[#D8CFAE] pb-6 gap-4">
         <div>
-          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#7B021D] font-bold flex items-center gap-1.5 mb-1">
-            <Feather className="w-3.5 h-3.5 text-[#7B021D]" />
+          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#212842] font-bold flex items-center gap-1.5 mb-1">
+            <Feather className="w-3.5 h-3.5 text-[#212842]" />
             Writing Studio & Publishing Identity
           </span>
           <h1 className="font-editorial-serif text-3xl sm:text-4xl font-normal text-[#181616]">
@@ -220,7 +220,7 @@ export default function AuthorProfileView() {
                 type="button"
                 onClick={() => setActiveTab(t.id)}
                 className={`relative flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-mono font-semibold transition-all whitespace-nowrap ${
-                  isActive ? 'text-[#F5F5DA] bg-[#7B021D] shadow-sm' : 'text-[#5F594F] hover:text-[#181616] hover:bg-[#F8F6E5]'
+                  isActive ? 'text-[#F5F5DA] bg-[#212842] shadow-sm' : 'text-[#5F594F] hover:text-[#181616] hover:bg-[#F8F6E5]'
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" />
@@ -236,20 +236,20 @@ export default function AuthorProfileView() {
         <motion.div variants={itemVariants} className="space-y-8">
           {/* HEADER IDENTITY CARD */}
           <div className="p-8 sm:p-10 rounded-3xl bg-[#FFFDF3] border border-[#D8CFAE] shadow-md space-y-8 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-72 h-72 bg-[#7B021D]/5 blur-3xl rounded-full pointer-events-none" />
+            <div className="absolute top-0 right-0 w-72 h-72 bg-[#212842]/5 blur-3xl rounded-full pointer-events-none" />
 
             <div className="flex flex-col sm:flex-row items-center gap-6 border-b border-[#DED7BD] pb-8 relative z-10">
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.3 }}
-                className="relative p-1 rounded-full bg-gradient-to-tr from-[#7B021D] to-[#D8CFAE] shadow-lg shrink-0"
+                className="relative p-1 rounded-full bg-gradient-to-tr from-[#212842] to-[#D8CFAE] shadow-lg shrink-0"
               >
                 <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-[#FFFDF3] bg-[#F8F6E5] group">
                   {formData.avatarUrl ? (
                     <img src={formData.avatarUrl} alt={formData.name} className="w-full h-full object-cover" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <User className="w-8 h-8 text-[#7B021D]" />
+                      <User className="w-8 h-8 text-[#212842]" />
                     </div>
                   )}
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer">
@@ -263,8 +263,8 @@ export default function AuthorProfileView() {
                   <h3 className="font-editorial-serif text-2xl font-bold text-[#181616]">
                     {formData.name}
                   </h3>
-                  <span className="inline-flex items-center gap-1 px-3 py-0.5 rounded-full bg-[#F1EED2] border border-[#D8CFAE] text-[10px] font-mono text-[#7B021D] font-bold">
-                    <ShieldCheck className="w-3 h-3 text-[#7B021D]" />
+                  <span className="inline-flex items-center gap-1 px-3 py-0.5 rounded-full bg-[#F1EED2] border border-[#D8CFAE] text-[10px] font-mono text-[#212842] font-bold">
+                    <ShieldCheck className="w-3 h-3 text-[#212842]" />
                     Verified Studio Author
                   </span>
                 </div>
@@ -281,7 +281,7 @@ export default function AuthorProfileView() {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 py-6 border-y border-[#DED7BD] bg-[#F8F6E5] rounded-2xl px-6">
               <div className="space-y-1">
                 <span className="text-[10px] uppercase font-mono tracking-widest text-[#827A6D] font-bold block flex items-center gap-1">
-                  <BookOpen className="w-3 h-3 text-[#7B021D]" /> Works
+                  <BookOpen className="w-3 h-3 text-[#212842]" /> Works
                 </span>
                 <StatCounter target={authorWorks.length || 5} />
                 <span className="text-[11px] text-[#5F594F] font-sans block">Published titles</span>
@@ -289,7 +289,7 @@ export default function AuthorProfileView() {
 
               <div className="space-y-1">
                 <span className="text-[10px] uppercase font-mono tracking-widest text-[#827A6D] font-bold block flex items-center gap-1">
-                  <Users className="w-3 h-3 text-[#7B021D]" /> Readers
+                  <Users className="w-3 h-3 text-[#212842]" /> Readers
                 </span>
                 <StatCounter target={28400} />
                 <span className="text-[11px] text-[#5F594F] font-sans block">Cumulative reach</span>
@@ -297,7 +297,7 @@ export default function AuthorProfileView() {
 
               <div className="space-y-1">
                 <span className="text-[10px] uppercase font-mono tracking-widest text-[#827A6D] font-bold block flex items-center gap-1">
-                  <Star className="w-3 h-3 text-[#7B021D]" /> Rating
+                  <Star className="w-3 h-3 text-[#212842]" /> Rating
                 </span>
                 <StatCounter target={4.9} decimals={1} suffix=" ★" />
                 <span className="text-[11px] text-[#5F594F] font-sans block">Average feedback</span>
@@ -305,7 +305,7 @@ export default function AuthorProfileView() {
 
               <div className="space-y-1">
                 <span className="text-[10px] uppercase font-mono tracking-widest text-[#827A6D] font-bold block flex items-center gap-1">
-                  <FileText className="w-3 h-3 text-[#7B021D]" /> Manuscripts
+                  <FileText className="w-3 h-3 text-[#212842]" /> Manuscripts
                 </span>
                 <StatCounter target={8} />
                 <span className="text-[11px] text-[#5F594F] font-sans block">In editorial queue</span>
@@ -373,7 +373,7 @@ export default function AuthorProfileView() {
                     <img src={b.coverImage || b.coverUrl} alt={b.title} className="w-full h-full object-cover" />
                   </div>
                   <div>
-                    <span className="text-[10px] font-mono uppercase text-[#7B021D] font-bold block">{b.genre}</span>
+                    <span className="text-[10px] font-mono uppercase text-[#212842] font-bold block">{b.genre}</span>
                     <h4 className="font-editorial-serif text-lg font-bold text-[#181616] leading-tight mt-0.5">{b.title}</h4>
                     <span className="text-xs font-mono text-[#5F594F] block mt-1">₹{b.price} · {b.rating}★</span>
                   </div>
@@ -398,13 +398,13 @@ export default function AuthorProfileView() {
 
           <div className="space-y-6">
             <div className="space-y-2">
-              <label className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] block font-bold">
+              <label className="text-[10px] uppercase font-mono tracking-widest text-[#212842] block font-bold">
                 Primary Writing Genre Category
               </label>
               <select
                 value={preferences.genreCategory}
                 onChange={(e) => setPreferences({ ...preferences, genreCategory: e.target.value })}
-                className="w-full px-4 py-3 rounded-2xl bg-[#FFFDF3] border border-[#D8CFAE] text-xs font-mono text-[#181616] focus:outline-none focus:border-[#7B021D]"
+                className="w-full px-4 py-3 rounded-2xl bg-[#FFFDF3] border border-[#D8CFAE] text-xs font-mono text-[#181616] focus:outline-none focus:border-[#212842]"
               >
                 <option>Historical Realism & Epic Fiction</option>
                 <option>Literary Fiction & Drama</option>

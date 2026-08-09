@@ -41,8 +41,8 @@ export default function StudioManifesto() {
   return (
     <section className="py-24 sm:py-28 lg:py-32 bg-[#F5F5DA] border-b border-[#E9E5C8]">
       <div className="max-w-4xl mx-auto px-6 lg:px-12 text-center space-y-10">
-        <Quote className="w-6 h-6 text-[#7B021D]/40 mx-auto" />
-        <span className="text-xs uppercase tracking-widest font-mono text-[#7B021D] font-bold block">
+        <Quote className="w-6 h-6 text-[#212842]/40 mx-auto" />
+        <span className="text-xs uppercase tracking-widest font-mono text-[#212842] font-bold block">
           The Studio Manifesto
         </span>
         <motion.blockquote

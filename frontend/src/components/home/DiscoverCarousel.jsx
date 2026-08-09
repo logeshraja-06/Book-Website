@@ -25,7 +25,7 @@ export default function DiscoverCarousel() {
         {/* Section Header with Arrows */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#E9E5C8] pb-6">
           <div>
-            <span className="text-xs uppercase tracking-widest font-mono text-[#7B021D] font-bold block mb-1">
+            <span className="text-xs uppercase tracking-widest font-mono text-[#212842] font-bold block mb-1">
               Curated Index
             </span>
             <h2 className="font-editorial-serif text-3xl sm:text-4xl text-[#211D1D] font-normal">
@@ -37,7 +37,7 @@ export default function DiscoverCarousel() {
             <button
               type="button"
               onClick={() => scroll('left')}
-              className="w-10 h-10 rounded-full border border-[#E9E5C8] bg-[#F5F5DA] flex items-center justify-center text-[#211D1D] hover:border-[#7B021D] hover:text-[#7B021D] transition-colors"
+              className="w-10 h-10 rounded-full border border-[#E9E5C8] bg-[#F5F5DA] flex items-center justify-center text-[#211D1D] hover:border-[#212842] hover:text-[#212842] transition-colors"
               aria-label="Scroll Left"
             >
               <ChevronLeft className="w-5 h-5" />
@@ -45,7 +45,7 @@ export default function DiscoverCarousel() {
             <button
               type="button"
               onClick={() => scroll('right')}
-              className="w-10 h-10 rounded-full border border-[#E9E5C8] bg-[#F5F5DA] flex items-center justify-center text-[#211D1D] hover:border-[#7B021D] hover:text-[#7B021D] transition-colors"
+              className="w-10 h-10 rounded-full border border-[#E9E5C8] bg-[#F5F5DA] flex items-center justify-center text-[#211D1D] hover:border-[#212842] hover:text-[#212842] transition-colors"
               aria-label="Scroll Right"
             >
               <ChevronRight className="w-5 h-5" />
@@ -65,7 +65,7 @@ export default function DiscoverCarousel() {
             return (
               <div
                 key={`${bookSlug || 'disc'}-${idx}`}
-                className="w-72 shrink-0 snap-start bg-[#F5F5DA] rounded-3xl p-5 border border-[#E9E5C8] flex flex-col justify-between shadow-2xs hover:border-[#7B021D] hover:shadow-md transition-all group"
+                className="w-72 shrink-0 snap-start bg-[#F5F5DA] rounded-3xl p-5 border border-[#E9E5C8] flex flex-col justify-between shadow-2xs hover:border-[#212842] hover:shadow-md transition-all group"
               >
                 <div>
                   <Link to={`/books/${bookSlug}`} className="block relative aspect-[3/4] rounded-2xl overflow-hidden mb-4 bg-[#FFFDF3] border border-[#E9E5C8]">
@@ -80,18 +80,18 @@ export default function DiscoverCarousel() {
                         e.preventDefault();
                         toggleWishlist(book.id || book._id);
                       }}
-                      className="absolute top-3 right-3 p-2 rounded-full bg-[#FFFDF3]/90 backdrop-blur-sm border border-[#E9E5C8] text-[#211D1D] hover:text-[#7B021D] transition-colors"
+                      className="absolute top-3 right-3 p-2 rounded-full bg-[#FFFDF3]/90 backdrop-blur-sm border border-[#E9E5C8] text-[#211D1D] hover:text-[#212842] transition-colors"
                     >
-                      <Bookmark className={`w-3.5 h-3.5 ${isWishlisted ? 'fill-[#7B021D] text-[#7B021D]' : ''}`} />
+                      <Bookmark className={`w-3.5 h-3.5 ${isWishlisted ? 'fill-[#212842] text-[#212842]' : ''}`} />
                     </button>
                   </Link>
 
-                  <span className="text-[10px] uppercase font-mono tracking-wider text-[#7B021D] font-bold block mb-1">
+                  <span className="text-[10px] uppercase font-mono tracking-wider text-[#212842] font-bold block mb-1">
                     {book.genre}
                   </span>
 
                   <Link to={`/books/${bookSlug}`}>
-                    <h3 className="font-editorial-serif text-lg font-bold text-[#211D1D] truncate group-hover:text-[#7B021D] transition-colors">
+                    <h3 className="font-editorial-serif text-lg font-bold text-[#211D1D] truncate group-hover:text-[#212842] transition-colors">
                       {book.title}
                     </h3>
                   </Link>
@@ -104,8 +104,8 @@ export default function DiscoverCarousel() {
                   <span className="font-bold text-[#211D1D]">
                     {formatPrice(book.price)}
                   </span>
-                  <span className="flex items-center gap-1 text-[#7B021D] font-bold">
-                    <Star className="w-3.5 h-3.5 fill-[#7B021D]" />
+                  <span className="flex items-center gap-1 text-[#212842] font-bold">
+                    <Star className="w-3.5 h-3.5 fill-[#212842]" />
                     {book.rating || 4.8}
                   </span>
                 </div>

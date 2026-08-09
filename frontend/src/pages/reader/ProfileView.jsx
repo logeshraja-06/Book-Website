@@ -184,7 +184,7 @@ export default function ProfileView() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.95 }}
             className={`fixed top-6 right-6 z-50 px-5 py-3.5 rounded-2xl text-[#F5F5DA] shadow-2xl border flex items-center gap-3 text-xs font-mono backdrop-blur-md ${
-              toastMessage.type === 'success' ? 'bg-[#7B021D]/95 border-[#D8CFAE]/40' : 'bg-rose-950/95 border-rose-600'
+              toastMessage.type === 'success' ? 'bg-[#212842]/95 border-[#D8CFAE]/40' : 'bg-rose-950/95 border-rose-600'
             }`}
           >
             <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
@@ -196,8 +196,8 @@ export default function ProfileView() {
       {/* ── 1. PAGE HEADER ── */}
       <motion.div variants={itemVariants} className="flex flex-col sm:flex-row sm:items-end justify-between border-b border-[#D8CFAE] pb-6 gap-4">
         <div>
-          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#7B021D] font-bold flex items-center gap-1.5 mb-1">
-            <Sparkles className="w-3.5 h-3.5 text-[#7B021D]" />
+          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#212842] font-bold flex items-center gap-1.5 mb-1">
+            <Sparkles className="w-3.5 h-3.5 text-[#212842]" />
             Personal Literary Membership
           </span>
           <h2 className="font-editorial-serif text-3xl sm:text-4xl text-[#181616] font-bold tracking-tight">
@@ -219,7 +219,7 @@ export default function ProfileView() {
                 type="button"
                 onClick={() => setActiveTab(t.id)}
                 className={`relative flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-mono font-semibold transition-all whitespace-nowrap ${
-                  isActive ? 'text-[#F5F5DA] bg-[#7B021D] shadow-sm' : 'text-[#5F594F] hover:text-[#181616] hover:bg-[#F8F6E5]'
+                  isActive ? 'text-[#F5F5DA] bg-[#212842] shadow-sm' : 'text-[#5F594F] hover:text-[#181616] hover:bg-[#F8F6E5]'
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" />
@@ -235,20 +235,20 @@ export default function ProfileView() {
         <motion.div variants={itemVariants} className="space-y-8">
           {/* HERO IDENTITY CARD */}
           <div className="bg-[#FFFDF3] rounded-3xl p-8 lg:p-10 border border-[#D8CFAE] shadow-md space-y-10 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-80 h-80 bg-[#7B021D]/5 blur-3xl rounded-full pointer-events-none" />
+            <div className="absolute top-0 right-0 w-80 h-80 bg-[#212842]/5 blur-3xl rounded-full pointer-events-none" />
 
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-8 border-b border-[#DED7BD] pb-8 relative z-10">
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.3 }}
-                className="relative p-1 rounded-full bg-gradient-to-tr from-[#7B021D] to-[#D8CFAE] shadow-lg shrink-0"
+                className="relative p-1 rounded-full bg-gradient-to-tr from-[#212842] to-[#D8CFAE] shadow-lg shrink-0"
               >
                 <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-[#FFFDF3] bg-[#F8F6E5]">
                   {avatar ? (
                     <img src={avatar} alt={name} className="w-full h-full object-cover" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <User className="w-8 h-8 text-[#7B021D]" />
+                      <User className="w-8 h-8 text-[#212842]" />
                     </div>
                   )}
                 </div>
@@ -261,10 +261,10 @@ export default function ProfileView() {
                       {name}
                     </h3>
                     <div className="flex items-center gap-2 mt-0.5">
-                      <span className="text-xs font-mono text-[#7B021D] font-bold">
+                      <span className="text-xs font-mono text-[#212842] font-bold">
                         {handle}
                       </span>
-                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#F1EED2] border border-[#D8CFAE] text-[10px] font-mono text-[#7B021D] font-bold">
+                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#F1EED2] border border-[#D8CFAE] text-[10px] font-mono text-[#212842] font-bold">
                         Verified Reader Passport
                       </span>
                     </div>
@@ -275,9 +275,9 @@ export default function ProfileView() {
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.97 }}
                     onClick={handleEditOpen}
-                    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#F1EED2] border border-[#D8CFAE] text-xs font-mono font-bold uppercase tracking-wider text-[#181616] hover:border-[#7B021D] hover:text-[#7B021D] transition-colors shadow-2xs self-start sm:self-auto"
+                    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#F1EED2] border border-[#D8CFAE] text-xs font-mono font-bold uppercase tracking-wider text-[#181616] hover:border-[#212842] hover:text-[#212842] transition-colors shadow-2xs self-start sm:self-auto"
                   >
-                    <Edit2 className="w-3.5 h-3.5 text-[#7B021D]" />
+                    <Edit2 className="w-3.5 h-3.5 text-[#212842]" />
                     <span>Edit Profile</span>
                   </motion.button>
                 </div>
@@ -290,8 +290,8 @@ export default function ProfileView() {
 
             {/* COUNT-UP METRICS */}
             <div className="space-y-4 relative z-10">
-              <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-[#7B021D] font-bold block flex items-center gap-1.5">
-                <Award className="w-3.5 h-3.5 text-[#7B021D]" />
+              <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-[#212842] font-bold block flex items-center gap-1.5">
+                <Award className="w-3.5 h-3.5 text-[#212842]" />
                 Reader Overview Statistics
               </span>
               
@@ -314,7 +314,7 @@ export default function ProfileView() {
 
                 <div className="space-y-1">
                   <span className="text-[10px] uppercase font-mono tracking-widest text-[#827A6D] font-bold block flex items-center gap-1">
-                    <Heart className="w-3 h-3 text-[#7B021D]" /> Saved Books
+                    <Heart className="w-3 h-3 text-[#212842]" /> Saved Books
                   </span>
                   <StatCounter target={wishlistBooks.length || 6} />
                   <span className="text-[11px] text-[#5F594F] font-sans block">Wishlist catalogue</span>
@@ -322,7 +322,7 @@ export default function ProfileView() {
 
                 <div className="space-y-1">
                   <span className="text-[10px] uppercase font-mono tracking-widest text-[#827A6D] font-bold block flex items-center gap-1">
-                    <Flame className="w-3 h-3 text-[#7B021D]" /> Active Streak
+                    <Flame className="w-3 h-3 text-[#212842]" /> Active Streak
                   </span>
                   <StatCounter target={18} suffix=" Days" />
                   <span className="text-[11px] text-[#5F594F] font-sans block">Consecutive reading</span>
@@ -332,8 +332,8 @@ export default function ProfileView() {
 
             {/* PREFERRED GENRES PILLS */}
             <div className="space-y-4 relative z-10">
-              <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-[#7B021D] font-bold block flex items-center gap-1.5">
-                <BookOpen className="w-3.5 h-3.5 text-[#7B021D]" />
+              <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-[#212842] font-bold block flex items-center gap-1.5">
+                <BookOpen className="w-3.5 h-3.5 text-[#212842]" />
                 Preferred Literary Taxonomy
               </span>
               <div className="flex flex-wrap items-center gap-3">
@@ -369,13 +369,13 @@ export default function ProfileView() {
           <div className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <label className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] block font-bold">
+                <label className="text-[10px] uppercase font-mono tracking-widest text-[#212842] block font-bold">
                   Reader Font Size
                 </label>
                 <select
                   value={preferences.fontSize}
                   onChange={(e) => setPreferences({ ...preferences, fontSize: e.target.value })}
-                  className="w-full px-4 py-3 rounded-2xl bg-[#FFFDF3] border border-[#D8CFAE] text-xs font-mono text-[#181616] focus:outline-none focus:border-[#7B021D]"
+                  className="w-full px-4 py-3 rounded-2xl bg-[#FFFDF3] border border-[#D8CFAE] text-xs font-mono text-[#181616] focus:outline-none focus:border-[#212842]"
                 >
                   <option>Small (14px)</option>
                   <option>Medium (16px)</option>
@@ -385,13 +385,13 @@ export default function ProfileView() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] block font-bold">
+                <label className="text-[10px] uppercase font-mono tracking-widest text-[#212842] block font-bold">
                   Serif Typography Family
                 </label>
                 <select
                   value={preferences.fontFamily}
                   onChange={(e) => setPreferences({ ...preferences, fontFamily: e.target.value })}
-                  className="w-full px-4 py-3 rounded-2xl bg-[#FFFDF3] border border-[#D8CFAE] text-xs font-mono text-[#181616] focus:outline-none focus:border-[#7B021D]"
+                  className="w-full px-4 py-3 rounded-2xl bg-[#FFFDF3] border border-[#D8CFAE] text-xs font-mono text-[#181616] focus:outline-none focus:border-[#212842]"
                 >
                   <option>Cormorant Garamond (Serif)</option>
                   <option>EB Garamond (Editorial Classic)</option>
@@ -401,13 +401,13 @@ export default function ProfileView() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] block font-bold">
+              <label className="text-[10px] uppercase font-mono tracking-widest text-[#212842] block font-bold">
                 Default Canvas Surface Theme
               </label>
               <select
                 value={preferences.theme}
                 onChange={(e) => setPreferences({ ...preferences, theme: e.target.value })}
-                className="w-full px-4 py-3 rounded-2xl bg-[#FFFDF3] border border-[#D8CFAE] text-xs font-mono text-[#181616] focus:outline-none focus:border-[#7B021D]"
+                className="w-full px-4 py-3 rounded-2xl bg-[#FFFDF3] border border-[#D8CFAE] text-xs font-mono text-[#181616] focus:outline-none focus:border-[#212842]"
               >
                 <option>Warm Ivory (BookVerse Standard)</option>
                 <option>Sepia Vintage Paper</option>
@@ -487,7 +487,7 @@ export default function ProfileView() {
                 type="checkbox"
                 checked={preferences.activityPublic}
                 onChange={(e) => setPreferences({ ...preferences, activityPublic: e.target.checked })}
-                className="w-4 h-4 accent-[#7B021D]"
+                className="w-4 h-4 accent-[#212842]"
               />
             </label>
 
@@ -500,7 +500,7 @@ export default function ProfileView() {
                 type="checkbox"
                 checked={preferences.weeklyDigest}
                 onChange={(e) => setPreferences({ ...preferences, weeklyDigest: e.target.checked })}
-                className="w-4 h-4 accent-[#7B021D]"
+                className="w-4 h-4 accent-[#212842]"
               />
             </label>
           </div>

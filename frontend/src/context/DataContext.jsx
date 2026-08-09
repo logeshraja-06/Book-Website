@@ -654,7 +654,7 @@ export function DataProvider({ children }) {
             className="fixed bottom-8 right-8 z-50 bg-[#181616] text-[#F5F5DA] px-5 py-3.5 rounded-2xl border border-[#D8CFAE]/30 shadow-2xl flex items-center gap-3 font-editorial-sans text-xs font-semibold select-none pointer-events-none"
           >
             {toastState.type === 'success' ? (
-              <CheckCircle className="w-4 h-4 text-[#7B021D]" />
+              <CheckCircle className="w-4 h-4 text-[#212842]" />
             ) : (
               <Info className="w-4 h-4 text-[#D8CFAE]" />
             )}
@@ -689,8 +689,8 @@ export function DataProvider({ children }) {
                 <X className="w-4 h-4" />
               </button>
 
-              <div className="w-14 h-14 rounded-2xl bg-[#F8F6E5] border border-[#D8CFAE] flex items-center justify-center mx-auto text-[#7B021D] shadow-xs">
-                <Bookmark className="w-6 h-6 text-[#7B021D]" />
+              <div className="w-14 h-14 rounded-2xl bg-[#F8F6E5] border border-[#D8CFAE] flex items-center justify-center mx-auto text-[#212842] shadow-xs">
+                <Bookmark className="w-6 h-6 text-[#212842]" />
               </div>
 
               <div className="space-y-2">
@@ -706,7 +706,7 @@ export function DataProvider({ children }) {
                 <Link
                   to="/login"
                   onClick={() => setAuthModalOpen(false)}
-                  className="w-full py-3.5 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-[0.1em] hover:bg-[#520014] transition-all shadow-md flex items-center justify-center gap-2"
+                  className="w-full py-3.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-[0.1em] hover:bg-[#181E33] transition-all shadow-md flex items-center justify-center gap-2"
                 >
                   <User className="w-4 h-4" />
                   <span>Sign In</span>
@@ -715,7 +715,7 @@ export function DataProvider({ children }) {
                 <Link
                   to="/register"
                   onClick={() => setAuthModalOpen(false)}
-                  className="w-full py-3.5 rounded-full bg-[#FFFDF3] border border-[#D8CFAE] text-[#181616] text-xs font-mono font-bold uppercase tracking-[0.1em] hover:border-[#7B021D] hover:bg-[#F5F5DA] transition-all shadow-2xs"
+                  className="w-full py-3.5 rounded-full bg-[#FFFDF3] border border-[#D8CFAE] text-[#181616] text-xs font-mono font-bold uppercase tracking-[0.1em] hover:border-[#212842] hover:bg-[#F5F5DA] transition-all shadow-2xs"
                 >
                   <span>Create Account</span>
                 </Link>

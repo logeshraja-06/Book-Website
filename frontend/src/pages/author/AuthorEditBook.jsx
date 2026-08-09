@@ -151,7 +151,7 @@ export default function AuthorEditBook() {
         <button
           type="button"
           onClick={() => navigate('/author/books')}
-          className="text-xs font-mono text-[#7B021D] hover:underline font-bold"
+          className="text-xs font-mono text-[#212842] hover:underline font-bold"
         >
           Return to My Books
         </button>
@@ -174,9 +174,9 @@ export default function AuthorEditBook() {
           <button
             type="button"
             onClick={() => navigate('/author/books')}
-            className="text-xs font-mono text-[#5F594F] hover:text-[#7B021D] transition-colors flex items-center gap-1 mb-2 font-bold uppercase tracking-wider"
+            className="text-xs font-mono text-[#5F594F] hover:text-[#212842] transition-colors flex items-center gap-1 mb-2 font-bold uppercase tracking-wider"
           >
-            <ArrowLeft className="w-3.5 h-3.5 text-[#7B021D]" />
+            <ArrowLeft className="w-3.5 h-3.5 text-[#212842]" />
             <span>Back to Author Catalog</span>
           </button>
           <h1 className="font-editorial-serif text-3xl sm:text-4xl font-bold text-[#181616]">
@@ -197,7 +197,7 @@ export default function AuthorEditBook() {
               whileTap={{ scale: 0.97 }}
               disabled={isSubmitting}
               onClick={(e) => handleSave(e, true)}
-              className="px-6 py-3 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#520014] transition-colors shadow-md flex items-center gap-2"
+              className="px-6 py-3 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-md flex items-center gap-2"
             >
               <RotateCcw className="w-4 h-4 text-[#F5F5DA]" />
               <span>{isSubmitting ? 'Submitting...' : 'Resubmit for Review'}</span>
@@ -209,7 +209,7 @@ export default function AuthorEditBook() {
               whileTap={{ scale: 0.97 }}
               disabled={isSubmitting}
               onClick={(e) => handleSave(e, false)}
-              className="px-6 py-3 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#520014] transition-colors shadow-md flex items-center gap-2"
+              className="px-6 py-3 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-md flex items-center gap-2"
             >
               <Save className="w-4 h-4 text-[#F5F5DA]" />
               <span>{isSubmitting ? 'Saving...' : 'Save Changes'}</span>
@@ -234,7 +234,7 @@ export default function AuthorEditBook() {
       {/* ── 2. DOCUMENT-STYLE FORM CONTAINER ── */}
       <form onSubmit={(e) => handleSave(e, false)} className="p-8 sm:p-10 rounded-3xl bg-[#FFFDF3] border border-[#D8CFAE] shadow-md space-y-6">
         <div className="space-y-2">
-          <label className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] block font-bold">
+          <label className="text-[10px] uppercase font-mono tracking-widest text-[#212842] block font-bold">
             Book Title *
           </label>
           <input
@@ -242,12 +242,12 @@ export default function AuthorEditBook() {
             required
             value={formData.title}
             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-            className="w-full px-4 py-3 rounded-2xl border border-[#D8CFAE] bg-[#FFFDF3] text-sm text-[#181616] focus:outline-none focus:border-[#7B021D] font-editorial-serif shadow-inner"
+            className="w-full px-4 py-3 rounded-2xl border border-[#D8CFAE] bg-[#FFFDF3] text-sm text-[#181616] focus:outline-none focus:border-[#212842] font-editorial-serif shadow-inner"
           />
         </div>
 
         <div className="space-y-2">
-          <label className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] block font-bold">
+          <label className="text-[10px] uppercase font-mono tracking-widest text-[#212842] block font-bold">
             Synopsis / Description *
           </label>
           <textarea
@@ -255,44 +255,44 @@ export default function AuthorEditBook() {
             required
             value={formData.synopsis}
             onChange={(e) => setFormData({ ...formData, synopsis: e.target.value })}
-            className="w-full px-4 py-3 rounded-2xl border border-[#D8CFAE] bg-[#FFFDF3] text-sm text-[#181616] focus:outline-none focus:border-[#7B021D] leading-relaxed font-sans shadow-inner resize-none"
+            className="w-full px-4 py-3 rounded-2xl border border-[#D8CFAE] bg-[#FFFDF3] text-sm text-[#181616] focus:outline-none focus:border-[#212842] leading-relaxed font-sans shadow-inner resize-none"
           />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           <div className="space-y-2">
-            <label className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] block font-bold">
+            <label className="text-[10px] uppercase font-mono tracking-widest text-[#212842] block font-bold">
               Genre
             </label>
             <input
               type="text"
               value={formData.genre}
               onChange={(e) => setFormData({ ...formData, genre: e.target.value })}
-              className="w-full px-4 py-3 rounded-2xl border border-[#D8CFAE] bg-[#FFFDF3] text-xs font-mono text-[#181616] focus:outline-none focus:border-[#7B021D] shadow-inner"
+              className="w-full px-4 py-3 rounded-2xl border border-[#D8CFAE] bg-[#FFFDF3] text-xs font-mono text-[#181616] focus:outline-none focus:border-[#212842] shadow-inner"
             />
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] block font-bold">
+            <label className="text-[10px] uppercase font-mono tracking-widest text-[#212842] block font-bold">
               Language
             </label>
             <input
               type="text"
               value={formData.language}
               onChange={(e) => setFormData({ ...formData, language: e.target.value })}
-              className="w-full px-4 py-3 rounded-2xl border border-[#D8CFAE] bg-[#FFFDF3] text-xs font-mono text-[#181616] focus:outline-none focus:border-[#7B021D] shadow-inner"
+              className="w-full px-4 py-3 rounded-2xl border border-[#D8CFAE] bg-[#FFFDF3] text-xs font-mono text-[#181616] focus:outline-none focus:border-[#212842] shadow-inner"
             />
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] block font-bold">
+            <label className="text-[10px] uppercase font-mono tracking-widest text-[#212842] block font-bold">
               Price (INR ₹)
             </label>
             <input
               type="number"
               value={formData.price}
               onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-              className="w-full px-4 py-3 rounded-2xl border border-[#D8CFAE] bg-[#FFFDF3] text-xs font-mono text-[#181616] focus:outline-none focus:border-[#7B021D] shadow-inner"
+              className="w-full px-4 py-3 rounded-2xl border border-[#D8CFAE] bg-[#FFFDF3] text-xs font-mono text-[#181616] focus:outline-none focus:border-[#212842] shadow-inner"
             />
           </div>
         </div>
@@ -300,7 +300,7 @@ export default function AuthorEditBook() {
         {/* Cover Artwork & PDF replacement section */}
         <div className="pt-6 border-t border-[#DED7BD] grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="space-y-3">
-            <label className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] block font-bold">
+            <label className="text-[10px] uppercase font-mono tracking-widest text-[#212842] block font-bold">
               Book Cover Artwork
             </label>
             <div className="flex items-center gap-4">
@@ -309,11 +309,11 @@ export default function AuthorEditBook() {
                   <img src={formData.coverUrl} alt="Cover" className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
-                    <ImageIcon className="w-5 h-5 text-[#7B021D]" />
+                    <ImageIcon className="w-5 h-5 text-[#212842]" />
                   </div>
                 )}
               </div>
-              <label className="flex-1 p-3 rounded-2xl border border-dashed border-[#D8CFAE] bg-[#F8F6E5] text-center text-xs font-mono text-[#7B021D] font-bold hover:border-[#7B021D] cursor-pointer">
+              <label className="flex-1 p-3 rounded-2xl border border-dashed border-[#D8CFAE] bg-[#F8F6E5] text-center text-xs font-mono text-[#212842] font-bold hover:border-[#212842] cursor-pointer">
                 Upload New Cover
                 <input
                   type="file"
@@ -326,15 +326,15 @@ export default function AuthorEditBook() {
           </div>
 
           <div className="space-y-3">
-            <label className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] block font-bold">
+            <label className="text-[10px] uppercase font-mono tracking-widest text-[#212842] block font-bold">
               Manuscript File (PDF)
             </label>
             <div className="p-3.5 rounded-2xl border border-[#D8CFAE] bg-[#F8F6E5] flex items-center justify-between text-xs font-mono relative shadow-inner">
               <div className="flex items-center gap-2">
-                <FileText className="w-4 h-4 text-[#7B021D]" />
+                <FileText className="w-4 h-4 text-[#212842]" />
                 <span className="truncate max-w-[150px] font-bold text-[#181616]">{formData.pdfFileName}</span>
               </div>
-              <label className="text-[11px] text-[#7B021D] font-bold hover:underline cursor-pointer">
+              <label className="text-[11px] text-[#212842] font-bold hover:underline cursor-pointer">
                 Replace PDF
                 <input
                   type="file"
@@ -355,7 +355,7 @@ export default function AuthorEditBook() {
               whileTap={{ scale: 0.97 }}
               disabled={isSubmitting}
               onClick={(e) => handleSave(e, true)}
-              className="px-8 py-3.5 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#520014] transition-colors shadow-lg flex items-center gap-2"
+              className="px-8 py-3.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-lg flex items-center gap-2"
             >
               <Sparkles className="w-4 h-4 text-[#F5F5DA]" />
               <span>{isSubmitting ? 'Submitting...' : 'Save & Resubmit to Publisher'}</span>
@@ -366,7 +366,7 @@ export default function AuthorEditBook() {
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
               disabled={isSubmitting}
-              className="px-8 py-3.5 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#520014] transition-colors shadow-lg flex items-center gap-2"
+              className="px-8 py-3.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-lg flex items-center gap-2"
             >
               <Save className="w-4 h-4 text-[#F5F5DA]" />
               <span>{isSubmitting ? 'Saving...' : 'Save Metadata Changes'}</span>
@@ -382,7 +382,7 @@ export default function AuthorEditBook() {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-6 right-6 z-[130] px-5 py-3.5 rounded-2xl bg-[#7B021D] text-[#F5F5DA] text-xs font-mono shadow-2xl flex items-center gap-3 border border-[#D8CFAE]/30"
+            className="fixed bottom-6 right-6 z-[130] px-5 py-3.5 rounded-2xl bg-[#212842] text-[#F5F5DA] text-xs font-mono shadow-2xl flex items-center gap-3 border border-[#D8CFAE]/30"
           >
             <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
             <span>{toastMessage}</span>

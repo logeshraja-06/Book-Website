@@ -25,7 +25,7 @@ export default function FeaturedSection() {
         {/* ── 1. SECTION HEADER ── */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-4 border-b border-[#E9E5C8]">
           <div>
-            <span className="text-[11px] uppercase tracking-[0.2em] font-editorial-sans text-[#7B021D] block mb-2 font-bold">
+            <span className="text-[11px] uppercase tracking-[0.2em] font-editorial-sans text-[#212842] block mb-2 font-bold">
               Curated Selections
             </span>
             <h2 className="font-editorial-serif text-3xl sm:text-4xl lg:text-5xl text-[#211D1D] font-normal tracking-tight leading-tight">
@@ -38,7 +38,7 @@ export default function FeaturedSection() {
             </p>
             <Link
               to="/books"
-              className="inline-flex items-center gap-1.5 text-xs font-editorial-sans font-bold uppercase tracking-[0.1em] text-[#7B021D] hover:text-[#520014] transition-colors"
+              className="inline-flex items-center gap-1.5 text-xs font-editorial-sans font-bold uppercase tracking-[0.1em] text-[#212842] hover:text-[#181E33] transition-colors"
             >
               <span>Browse Full Index</span>
               <ArrowUpRight className="w-4 h-4" />

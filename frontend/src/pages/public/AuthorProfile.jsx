@@ -106,7 +106,7 @@ export default function AuthorProfile() {
             className="lg:col-span-7 space-y-6"
           >
             <div className="space-y-2">
-              <span className="text-xs font-mono uppercase tracking-widest text-[#7B021D] font-bold block">
+              <span className="text-xs font-mono uppercase tracking-widest text-[#212842] font-bold block">
                 {author.role || 'Published Author'}
               </span>
               <h1 className="font-editorial-serif text-4xl sm:text-5xl lg:text-6xl text-[#211D1D] font-normal tracking-tight">
@@ -129,7 +129,7 @@ export default function AuthorProfile() {
               </span>
             </div>
 
-            <blockquote className="font-editorial-serif text-xl sm:text-2xl italic text-[#211D1D] leading-relaxed border-l-2 border-[#7B021D] pl-6">
+            <blockquote className="font-editorial-serif text-xl sm:text-2xl italic text-[#211D1D] leading-relaxed border-l-2 border-[#212842] pl-6">
               "{author.bio}"
             </blockquote>
 
@@ -137,7 +137,7 @@ export default function AuthorProfile() {
             <div className="pt-2 flex flex-wrap items-center gap-4">
               <Link
                 to={`/books`}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-bold uppercase tracking-wider hover:bg-[#520014] transition-colors shadow-sm"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-sm"
               >
                 <Feather className="w-3.5 h-3.5" />
                 <span>Explore Works ({books.length})</span>
@@ -152,7 +152,7 @@ export default function AuthorProfile() {
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-4">
             <div>
-              <span className="text-xs uppercase tracking-widest font-mono text-[#7B021D] font-bold block mb-1">
+              <span className="text-xs uppercase tracking-widest font-mono text-[#212842] font-bold block mb-1">
                 Catalog Bibliography
               </span>
               <h2 className="font-editorial-serif text-3xl sm:text-4xl text-[#211D1D] font-normal">

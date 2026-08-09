@@ -41,7 +41,7 @@ export default function BlogPreviewSection() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-[#E9E5C8] pb-6">
           <div>
-            <span className="text-xs uppercase tracking-widest font-mono text-[#7B021D] font-bold block mb-2">
+            <span className="text-xs uppercase tracking-widest font-mono text-[#212842] font-bold block mb-2">
               Studio Essays & Journal
             </span>
             <h2 className="font-editorial-serif text-4xl text-[#211D1D] font-normal tracking-tight">
@@ -51,7 +51,7 @@ export default function BlogPreviewSection() {
 
           <Link
             to="/blog"
-            className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#7B021D] hover:text-[#520014] transition-colors"
+            className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#212842] hover:text-[#181E33] transition-colors"
           >
             <span>Read All Essays</span>
             <ArrowRight className="w-4 h-4" />

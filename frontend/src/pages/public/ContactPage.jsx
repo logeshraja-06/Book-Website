@@ -22,7 +22,7 @@ export default function ContactPage() {
       {/* ── Editorial Header ── */}
       <section className="border-b border-[#E9E5C8] bg-[#F5F5DA] pt-16 pb-14">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          <span className="text-xs uppercase tracking-widest font-mono text-[#7B021D] font-bold block mb-2">
+          <span className="text-xs uppercase tracking-widest font-mono text-[#212842] font-bold block mb-2">
             Correspondence & Submissions
           </span>
           <h1 className="font-editorial-serif text-4xl sm:text-6xl text-[#211D1D] font-normal tracking-tight max-w-4xl leading-tight">
@@ -46,14 +46,14 @@ export default function ContactPage() {
                 animate={{ opacity: 1, scale: 1 }}
                 className="bg-[#FFFDF3] rounded-3xl p-10 border border-[#E9E5C8] space-y-4 text-center shadow-2xs"
               >
-                <CheckCircle2 className="w-12 h-12 text-[#7B021D] mx-auto" />
+                <CheckCircle2 className="w-12 h-12 text-[#212842] mx-auto" />
                 <h3 className="font-editorial-serif text-3xl text-[#211D1D]">Correspondence Received</h3>
                 <p className="text-sm text-[#6B5E5E] max-w-md mx-auto leading-relaxed font-sans">
                   Thank you for reaching out. Our editorial team reviews submissions weekly and will reply to <strong className="text-[#211D1D]">{formData.email}</strong> within 3 business days.
                 </p>
                 <button
                   onClick={() => setSubmitted(false)}
-                  className="mt-4 px-6 py-2.5 rounded-full bg-[#F5F5DA] border border-[#E9E5C8] text-xs font-bold uppercase tracking-wider text-[#211D1D] hover:border-[#7B021D] transition-colors"
+                  className="mt-4 px-6 py-2.5 rounded-full bg-[#F5F5DA] border border-[#E9E5C8] text-xs font-bold uppercase tracking-wider text-[#211D1D] hover:border-[#212842] transition-colors"
                 >
                   Send Another Message
                 </button>
@@ -72,7 +72,7 @@ export default function ContactPage() {
                     placeholder="e.g. Arundhati Roy"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full bg-transparent border-b-2 border-[#E9E5C8] focus:border-[#7B021D] py-3 text-lg text-[#211D1D] placeholder-[#6B5E5E]/40 focus:outline-none transition-colors duration-300 font-editorial-serif"
+                    className="w-full bg-transparent border-b-2 border-[#E9E5C8] focus:border-[#212842] py-3 text-lg text-[#211D1D] placeholder-[#6B5E5E]/40 focus:outline-none transition-colors duration-300 font-editorial-serif"
                   />
                 </div>
 
@@ -87,7 +87,7 @@ export default function ContactPage() {
                     placeholder="arundhati@bookverse.studio"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full bg-transparent border-b-2 border-[#E9E5C8] focus:border-[#7B021D] py-3 text-lg text-[#211D1D] placeholder-[#6B5E5E]/40 focus:outline-none transition-colors duration-300 font-editorial-serif"
+                    className="w-full bg-transparent border-b-2 border-[#E9E5C8] focus:border-[#212842] py-3 text-lg text-[#211D1D] placeholder-[#6B5E5E]/40 focus:outline-none transition-colors duration-300 font-editorial-serif"
                   />
                 </div>
 
@@ -99,7 +99,7 @@ export default function ContactPage() {
                   <select
                     value={formData.subject}
                     onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                    className="w-full bg-transparent border-b-2 border-[#E9E5C8] focus:border-[#7B021D] py-3 text-lg text-[#211D1D] focus:outline-none transition-colors duration-300 font-editorial-serif cursor-pointer"
+                    className="w-full bg-transparent border-b-2 border-[#E9E5C8] focus:border-[#212842] py-3 text-lg text-[#211D1D] focus:outline-none transition-colors duration-300 font-editorial-serif cursor-pointer"
                   >
                     <option value="Author Submission">Manuscript & Author Submission</option>
                     <option value="Publisher Partnership">Independent Publisher Inquiry</option>
@@ -119,14 +119,14 @@ export default function ContactPage() {
                     placeholder="Describe your inquiry or manuscript details…"
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full bg-transparent border-b-2 border-[#E9E5C8] focus:border-[#7B021D] py-3 text-lg text-[#211D1D] placeholder-[#6B5E5E]/40 focus:outline-none transition-colors duration-300 font-editorial-serif resize-none"
+                    className="w-full bg-transparent border-b-2 border-[#E9E5C8] focus:border-[#212842] py-3 text-lg text-[#211D1D] placeholder-[#6B5E5E]/40 focus:outline-none transition-colors duration-300 font-editorial-serif resize-none"
                   />
                 </div>
 
                 {/* Submit CTA */}
                 <button
                   type="submit"
-                  className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-bold uppercase tracking-wider hover:bg-[#520014] transition-all duration-300 shadow-md group"
+                  className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-bold uppercase tracking-wider hover:bg-[#181E33] transition-all duration-300 shadow-md group"
                 >
                   <span>Dispatch Message</span>
                   <Send className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -140,7 +140,7 @@ export default function ContactPage() {
           <div className="lg:col-span-5 space-y-10 lg:pl-8 lg:border-l lg:border-[#E9E5C8]">
             
             <div className="space-y-3">
-              <span className="text-xs uppercase tracking-widest font-mono text-[#7B021D] font-bold">
+              <span className="text-xs uppercase tracking-widest font-mono text-[#212842] font-bold">
                 Editorial Colophon
               </span>
               <h3 className="font-editorial-serif text-2xl text-[#211D1D] font-normal">
@@ -176,7 +176,7 @@ export default function ContactPage() {
                   Rights & Syndication
                 </h4>
                 <p>For international translation rights, licensing, and adaptation inquiries:</p>
-                <p className="font-mono text-xs text-[#7B021D] font-bold pt-1">rights@bookverse.studio</p>
+                <p className="font-mono text-xs text-[#212842] font-bold pt-1">rights@bookverse.studio</p>
               </div>
 
               {/* Review Cadence */}
@@ -199,7 +199,7 @@ export default function ContactPage() {
         <div className="max-w-4xl mx-auto px-6 space-y-12">
           
           <div className="text-center space-y-2">
-            <span className="text-xs uppercase tracking-widest font-mono text-[#7B021D] font-bold">
+            <span className="text-xs uppercase tracking-widest font-mono text-[#212842] font-bold">
               Platform FAQ & Knowledge Base
             </span>
             <h2 className="font-editorial-serif text-3xl sm:text-4xl text-[#211D1D] font-normal">
@@ -262,10 +262,10 @@ function FaqAccordion() {
             <button
               type="button"
               onClick={() => setOpenIndex(isOpen ? null : idx)}
-              className="w-full p-6 text-left flex items-center justify-between gap-4 font-editorial-serif text-lg font-bold text-[#211D1D] hover:text-[#7B021D] transition-colors"
+              className="w-full p-6 text-left flex items-center justify-between gap-4 font-editorial-serif text-lg font-bold text-[#211D1D] hover:text-[#212842] transition-colors"
             >
               <span>{item.q}</span>
-              <span className="text-xl font-mono text-[#7B021D]">{isOpen ? '−' : '+'}</span>
+              <span className="text-xl font-mono text-[#212842]">{isOpen ? '−' : '+'}</span>
             </button>
 
             {isOpen && (

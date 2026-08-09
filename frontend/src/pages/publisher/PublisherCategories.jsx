@@ -66,7 +66,7 @@ export default function PublisherCategories() {
             exit={{ opacity: 0, y: -20, scale: 0.95 }}
             className={`fixed top-6 right-6 z-50 px-5 py-3.5 rounded-2xl text-[#F5F5DA] shadow-2xl border flex items-center gap-3 text-xs font-mono backdrop-blur-md ${
               toastMessage.type === 'success'
-                ? 'bg-[#211D1D]/95 border-[#7B021D]'
+                ? 'bg-[#211D1D]/95 border-[#212842]'
                 : 'bg-rose-950/95 border-rose-600'
             }`}
           >
@@ -83,8 +83,8 @@ export default function PublisherCategories() {
       {/* ── 2. HEADER ── */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#E9E5C8] pb-6">
         <div>
-          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#7B021D] font-bold block flex items-center gap-1.5 mb-1">
-            <Tag className="w-3.5 h-3.5 text-[#7B021D]" />
+          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#212842] font-bold block flex items-center gap-1.5 mb-1">
+            <Tag className="w-3.5 h-3.5 text-[#212842]" />
             Taxonomy Console
           </span>
           <h2 className="font-editorial-serif text-3xl text-[#211D1D] font-bold">
@@ -106,7 +106,7 @@ export default function PublisherCategories() {
           placeholder="Category name (e.g. Behavioral Economics)…"
           value={newCatName}
           onChange={(e) => setNewCatName(e.target.value)}
-          className="flex-1 bg-[#FFFDF3] rounded-2xl border border-[#E9E5C8] px-4 py-2.5 text-xs text-[#211D1D] focus:border-[#7B021D] focus:outline-none transition-colors font-mono"
+          className="flex-1 bg-[#FFFDF3] rounded-2xl border border-[#E9E5C8] px-4 py-2.5 text-xs text-[#211D1D] focus:border-[#212842] focus:outline-none transition-colors font-mono"
           required
         />
         <input
@@ -114,14 +114,14 @@ export default function PublisherCategories() {
           placeholder="Brief description (optional)…"
           value={newCatDesc}
           onChange={(e) => setNewCatDesc(e.target.value)}
-          className="flex-1 bg-[#FFFDF3] rounded-2xl border border-[#E9E5C8] px-4 py-2.5 text-xs text-[#211D1D] focus:border-[#7B021D] focus:outline-none transition-colors font-mono"
+          className="flex-1 bg-[#FFFDF3] rounded-2xl border border-[#E9E5C8] px-4 py-2.5 text-xs text-[#211D1D] focus:border-[#212842] focus:outline-none transition-colors font-mono"
         />
         <motion.button
           type="submit"
           disabled={isLoading}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          className="inline-flex items-center justify-center gap-1.5 px-6 py-2.5 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#520014] transition-colors shrink-0 shadow-md disabled:opacity-50"
+          className="inline-flex items-center justify-center gap-1.5 px-6 py-2.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shrink-0 shadow-md disabled:opacity-50"
         >
           <Plus className="w-4 h-4" />
           <span>{isLoading ? 'Creating…' : 'Add Category'}</span>
@@ -141,7 +141,7 @@ export default function PublisherCategories() {
               className="p-5 flex items-center justify-between hover:bg-[#FFFDF3] transition-colors group"
             >
               <div>
-                <h4 className="font-editorial-serif text-base font-bold text-[#211D1D] group-hover:text-[#7B021D] transition-colors">
+                <h4 className="font-editorial-serif text-base font-bold text-[#211D1D] group-hover:text-[#212842] transition-colors">
                   {cat.name}
                 </h4>
                 <p className="text-xs text-[#6B5E5E] font-sans mt-0.5">{cat.desc || cat.description}</p>

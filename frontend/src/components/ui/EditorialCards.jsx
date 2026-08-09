@@ -44,8 +44,8 @@ export function FeaturedBookCard({ book, className = '' }) {
     >
       <div className="space-y-6">
         <div className="flex items-center justify-between pb-4 border-b border-[#E9E5C8] text-xs">
-          <span className="px-3.5 py-1 rounded-full bg-[#F5F5DA] border border-[#E9E5C8] text-[#7B021D] text-[11px] font-editorial-sans font-bold tracking-wide flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-[#7B021D]" />
+          <span className="px-3.5 py-1 rounded-full bg-[#F5F5DA] border border-[#E9E5C8] text-[#212842] text-[11px] font-editorial-sans font-bold tracking-wide flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-[#212842]" />
             Editor's Spotlight
           </span>
           <span className="font-mono text-[11px] text-[#6B5E5E] tracking-wider font-bold">
@@ -64,13 +64,13 @@ export function FeaturedBookCard({ book, className = '' }) {
           <div className="sm:col-span-7 space-y-3">
             <Link
               to={`/categories/${categorySlug}`}
-              className="text-[11px] uppercase tracking-[0.14em] font-editorial-sans text-[#7B021D] font-bold hover:underline block"
+              className="text-[11px] uppercase tracking-[0.14em] font-editorial-sans text-[#212842] font-bold hover:underline block"
             >
               {book.genre || book.category}
             </Link>
 
             <Link to={`/books/${bookSlug}`}>
-              <h3 className="font-editorial-serif text-2xl sm:text-[26px] font-semibold tracking-tight text-[#211D1D] leading-[1.2] group-hover:text-[#7B021D] transition-colors duration-300">
+              <h3 className="font-editorial-serif text-2xl sm:text-[26px] font-semibold tracking-tight text-[#211D1D] leading-[1.2] group-hover:text-[#212842] transition-colors duration-300">
                 {book.title}
               </h3>
             </Link>
@@ -79,7 +79,7 @@ export function FeaturedBookCard({ book, className = '' }) {
               By{' '}
               <Link
                 to={`/authors/${authorSlug}`}
-                className="text-[#211D1D] font-semibold hover:text-[#7B021D] transition-colors"
+                className="text-[#211D1D] font-semibold hover:text-[#212842] transition-colors"
               >
                 {book.author}
               </Link>
@@ -113,14 +113,14 @@ export function FeaturedBookCard({ book, className = '' }) {
           <button
             type="button"
             onClick={() => toggleWishlist(book.id || book._id)}
-            className="p-2.5 rounded-full border border-[#E9E5C8] text-[#211D1D] hover:border-[#7B021D] hover:text-[#7B021D] transition-colors"
+            className="p-2.5 rounded-full border border-[#E9E5C8] text-[#211D1D] hover:border-[#212842] hover:text-[#212842] transition-colors"
             title="Bookmark to Wishlist"
           >
-            <Bookmark className={`w-4 h-4 ${isWishlisted ? 'fill-[#7B021D] text-[#7B021D]' : ''}`} />
+            <Bookmark className={`w-4 h-4 ${isWishlisted ? 'fill-[#212842] text-[#212842]' : ''}`} />
           </button>
           <Link
             to={`/books/${bookSlug}`}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-editorial-sans font-bold uppercase tracking-wider hover:bg-[#520014] transition-colors duration-300 shadow-xs"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-editorial-sans font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors duration-300 shadow-xs"
           >
             <span>View Details</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
@@ -145,32 +145,37 @@ export function BookCatalogCard({ book, index = 0, className = '' }) {
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -6 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.45, delay: index * 0.06, ease: [0.16, 1, 0.3, 1] }}
-      className={`bg-[#FFFDF3] rounded-2xl p-5 border border-[#E9E5C8] hover:border-[#7B021D] shadow-2xs hover:shadow-lg transition-all duration-300 flex flex-col justify-between h-full group ${className}`}
+      transition={{ duration: 0.45, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
+      className={`flex flex-col justify-between h-full group select-none ${className}`}
     >
       <div>
-        <Link to={`/books/${bookSlug}`} className="block relative mb-4">
-          <BookCover book={book} variant="default" imageClassName="group-hover:scale-105" />
+        <div className="book-container relative mb-4">
+          <div className="book-card-3d relative rounded-r-2xl rounded-l-xs overflow-hidden shadow-md group-hover:shadow-2xl transition-shadow duration-400">
+            <Link to={`/books/${bookSlug}`} className="block relative aspect-[3/4] overflow-hidden">
+              <BookCover book={book} variant="3d" imageClassName="group-hover:scale-[1.02] transition-transform duration-400 ease-out" />
+            </Link>
+          </div>
           <button
             type="button"
             onClick={(e) => {
               e.preventDefault();
               toggleWishlist(book.id || book._id);
             }}
-            className="absolute top-3 right-3 p-2 rounded-full bg-[#FFFDF3]/90 backdrop-blur-sm border border-[#E9E5C8] text-[#211D1D] hover:text-[#7B021D] transition-colors"
+            className="absolute top-3 right-3 z-20 p-2 rounded-full bg-[#FFFDF3]/95 backdrop-blur-md border border-[#E9E5C8] text-[#211D1D] hover:text-[#212842] transition-colors shadow-sm"
             title="Bookmark Title"
           >
-            <Bookmark className={`w-3.5 h-3.5 ${isWishlisted ? 'fill-[#7B021D] text-[#7B021D]' : ''}`} />
+            <Bookmark className={`w-3.5 h-3.5 ${isWishlisted ? 'fill-[#212842] text-[#212842]' : ''}`} />
           </button>
-        </Link>
+        </div>
 
-        <span className="text-[10px] uppercase font-mono tracking-wider text-[#7B021D] font-bold block mb-1">
-          {book.genre || book.category}
+        <span className="text-[10px] uppercase font-mono tracking-widest text-[#212842] font-bold block mb-1">
+          {book.genre || book.category || 'Literature'}
         </span>
 
         <Link to={`/books/${bookSlug}`}>
-          <h3 className="font-editorial-serif text-lg sm:text-xl font-bold text-[#211D1D] leading-snug line-clamp-1 group-hover:text-[#7B021D] transition-colors">
+          <h3 className="font-editorial-serif text-lg sm:text-xl font-bold text-[#211D1D] leading-snug line-clamp-1 group-hover:text-[#212842] transition-colors">
             {book.title}
           </h3>
         </Link>
@@ -180,15 +185,15 @@ export function BookCatalogCard({ book, index = 0, className = '' }) {
         </p>
       </div>
 
-      <div className="pt-4 mt-4 border-t border-[#E9E5C8] flex items-center justify-between font-mono text-xs">
+      <div className="pt-2 mt-3 border-t border-[#E9E5C8]/60 flex items-center justify-between font-mono text-xs">
         <span className="font-bold text-[#211D1D] font-editorial-sans text-[15px]">
           {formatPrice(book.price)}
         </span>
 
-        <div className="flex items-center gap-1 text-[#7B021D] font-bold">
-          <Star className="w-3.5 h-3.5 fill-[#7B021D]" />
+        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] text-[#212842] font-editorial-sans font-bold text-[11px] shadow-2xs">
+          <Star className="w-3 h-3 fill-[#212842]" />
           <span>{book.rating || 4.8}</span>
-        </div>
+        </span>
       </div>
     </motion.div>
   );
@@ -210,7 +215,7 @@ export function HorizontalBookCard({ book, index = 0, className = '' }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.45, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
-      className={`bg-[#FFFDF3] rounded-3xl p-6 border border-[#E9E5C8] hover:border-[#7B021D] shadow-2xs hover:shadow-lg transition-all duration-300 flex flex-col sm:flex-row gap-6 items-start group ${className}`}
+      className={`bg-[#FFFDF3] rounded-3xl p-6 border border-[#E9E5C8] hover:border-[#212842] shadow-2xs hover:shadow-lg transition-all duration-300 flex flex-col sm:flex-row gap-6 items-start group ${className}`}
     >
       <Link to={`/books/${bookSlug}`} className="w-full sm:w-40 aspect-[3/4] rounded-2xl overflow-hidden bg-[#F5F5DA] shrink-0 border border-[#E9E5C8]">
         <img
@@ -223,20 +228,20 @@ export function HorizontalBookCard({ book, index = 0, className = '' }) {
       <div className="flex-1 space-y-3 w-full flex flex-col justify-between h-full">
         <div>
           <div className="flex items-center justify-between">
-            <span className="text-[10px] uppercase font-mono tracking-wider text-[#7B021D] font-bold">
+            <span className="text-[10px] uppercase font-mono tracking-wider text-[#212842] font-bold">
               {book.genre}
             </span>
             <button
               type="button"
               onClick={() => toggleWishlist(book.id || book._id)}
-              className="p-1.5 rounded-full text-[#6B5E5E] hover:text-[#7B021D] transition-colors"
+              className="p-1.5 rounded-full text-[#6B5E5E] hover:text-[#212842] transition-colors"
             >
-              <Bookmark className={`w-4 h-4 ${isWishlisted ? 'fill-[#7B021D] text-[#7B021D]' : ''}`} />
+              <Bookmark className={`w-4 h-4 ${isWishlisted ? 'fill-[#212842] text-[#212842]' : ''}`} />
             </button>
           </div>
 
           <Link to={`/books/${bookSlug}`}>
-            <h3 className="font-editorial-serif text-2xl font-bold text-[#211D1D] mt-1 group-hover:text-[#7B021D] transition-colors leading-snug">
+            <h3 className="font-editorial-serif text-2xl font-bold text-[#211D1D] mt-1 group-hover:text-[#212842] transition-colors leading-snug">
               {book.title}
             </h3>
           </Link>
@@ -252,7 +257,7 @@ export function HorizontalBookCard({ book, index = 0, className = '' }) {
           </span>
           <Link
             to={`/books/${bookSlug}`}
-            className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-editorial-sans font-bold uppercase tracking-wider hover:bg-[#520014] transition-colors"
+            className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-editorial-sans font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors"
           >
             <span>Read Details</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
@@ -278,7 +283,7 @@ export function EditorialFeatureCard({ book, className = '' }) {
       className={`bg-[#F5F5DA] rounded-3xl p-8 sm:p-12 border border-[#E9E5C8] grid grid-cols-1 lg:grid-cols-12 gap-8 items-center ${className}`}
     >
       <div className="lg:col-span-7 space-y-6">
-        <span className="px-3.5 py-1.5 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] text-[#7B021D] text-xs font-mono uppercase tracking-widest font-bold inline-block">
+        <span className="px-3.5 py-1.5 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] text-[#212842] text-xs font-mono uppercase tracking-widest font-bold inline-block">
           Featured Magazine Selection
         </span>
         <h2 className="font-editorial-serif text-4xl sm:text-5xl font-normal text-[#211D1D] leading-tight">
@@ -290,7 +295,7 @@ export function EditorialFeatureCard({ book, className = '' }) {
         <div className="pt-2 flex items-center gap-4">
           <Link
             to={`/books/${bookSlug}`}
-            className="px-8 py-4 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-bold uppercase tracking-wider hover:bg-[#520014] transition-colors shadow-md"
+            className="px-8 py-4 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-md"
           >
             Explore Feature
           </Link>
@@ -317,32 +322,33 @@ export function AuthorCard({ author, index = 0, className = '' }) {
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -6, scale: 1.01 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.45, delay: index * 0.08 }}
-      className={`group relative rounded-3xl overflow-hidden bg-[#FFFDF3] border border-[#E9E5C8] shadow-2xs hover:border-[#7B021D] hover:shadow-xl transition-all duration-400 ${className}`}
+      transition={{ duration: 0.4, delay: index * 0.06, ease: [0.16, 1, 0.3, 1] }}
+      className={`group relative flex flex-col justify-between h-full rounded-3xl overflow-hidden bg-[#FFFDF3] border border-[#E9E5C8] shadow-sm hover:shadow-lg hover:border-[#212842]/50 transition-all duration-350 ${className}`}
     >
-      <div className="aspect-[4/5] relative overflow-hidden bg-[#F5F5DA]">
+      <div className="aspect-[4/5] relative overflow-hidden bg-[#F5F5DA] w-full shrink-0">
         <img
-          src={author.avatarUrl}
+          src={author.avatarUrl || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80'}
           alt={author.name}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 filter grayscale-[15%] group-hover:grayscale-0"
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out filter grayscale-[10%] group-hover:grayscale-0"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#211D1D]/90 via-[#211D1D]/25 to-transparent opacity-85 group-hover:opacity-90 transition-opacity" />
 
-        <div className="absolute bottom-6 left-6 right-6 text-[#F5F5DA] space-y-1">
-          <span className="text-[11px] font-mono uppercase tracking-widest text-[#E9E5C8] font-bold block">
+        <div className="absolute bottom-5 left-5 right-5 text-[#F5F5DA] space-y-1">
+          <span className="text-[10px] font-mono uppercase tracking-widest text-[#E9E5C8] font-bold block">
             {author.role || author.genre || 'Laureate Author'}
           </span>
-          <h3 className="font-editorial-serif text-2xl font-bold leading-tight">
+          <h3 className="font-editorial-serif text-xl sm:text-2xl font-bold leading-tight drop-shadow-sm">
             {author.name}
           </h3>
-          <p className="text-xs text-[#E9E5C8]/80 font-sans line-clamp-2 pt-1 font-normal">
+          <p className="text-xs text-[#E9E5C8]/80 font-sans line-clamp-2 pt-0.5 font-normal">
             {author.bio}
           </p>
-          <div className="pt-3">
+          <div className="pt-2">
             <Link
               to={`/authors/${authorSlug}`}
-              className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-[#F5F5DA] hover:text-[#7B021D] transition-colors"
+              className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-[#F5F5DA] hover:text-[#FFFDF3] transition-colors"
             >
               <span>View Profile</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
@@ -367,7 +373,7 @@ export function CategoryCard({ category, index = 0, className = '' }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.45, delay: index * 0.06 }}
-      className={`bg-[#FFFDF3] rounded-3xl p-6 border border-[#E9E5C8] hover:border-[#7B021D] shadow-2xs hover:shadow-lg transition-all group flex flex-col justify-between h-full ${className}`}
+      className={`bg-[#FFFDF3] rounded-3xl p-6 border border-[#E9E5C8] hover:border-[#212842] shadow-2xs hover:shadow-lg transition-all group flex flex-col justify-between h-full ${className}`}
     >
       <div>
         <div className="w-full aspect-[16/9] rounded-2xl overflow-hidden bg-[#F5F5DA] border border-[#E9E5C8] mb-4">
@@ -377,10 +383,10 @@ export function CategoryCard({ category, index = 0, className = '' }) {
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
         </div>
-        <span className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] font-bold block mb-1">
+        <span className="text-[10px] uppercase font-mono tracking-widest text-[#212842] font-bold block mb-1">
           {category.count || 12}+ Archived Works
         </span>
-        <h3 className="font-editorial-serif text-2xl font-bold text-[#211D1D] group-hover:text-[#7B021D] transition-colors">
+        <h3 className="font-editorial-serif text-2xl font-bold text-[#211D1D] group-hover:text-[#212842] transition-colors">
           {category.name}
         </h3>
         <p className="text-xs text-[#6B5E5E] font-sans leading-relaxed line-clamp-2 mt-1">
@@ -391,7 +397,7 @@ export function CategoryCard({ category, index = 0, className = '' }) {
       <div className="pt-4 mt-4 border-t border-[#E9E5C8] flex items-center justify-between">
         <Link
           to={`/categories/${categorySlug}`}
-          className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-[#7B021D] hover:underline"
+          className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-[#212842] hover:underline"
         >
           <span>Explore Category</span>
           <ChevronRight className="w-4 h-4" />
@@ -440,23 +446,29 @@ export function FeaturedAuthorSpotlightCard({ author, className = '' }) {
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className={`bg-[#FFFDF3] rounded-3xl p-8 sm:p-12 border border-[#E9E5C8] shadow-md grid grid-cols-1 lg:grid-cols-12 gap-8 items-center ${className}`}
+      className={`bg-[#FFFDF3] rounded-3xl p-8 sm:p-10 lg:p-12 border border-[#E9E5C8] shadow-sm hover:shadow-md transition-all duration-300 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center group ${className}`}
     >
       <div className="lg:col-span-5 flex justify-center">
-        <div className="w-64 aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl border border-[#E9E5C8]">
-          <img src={author.avatarUrl} alt={author.name} className="w-full h-full object-cover" />
+        <div className="w-full max-w-xs aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl border border-[#E9E5C8] relative bg-[#F5F5DA]">
+          <img
+            src={author.avatarUrl}
+            alt={author.name}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 filter grayscale-[10%] group-hover:grayscale-0"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#211D1D]/75 via-transparent to-transparent pointer-events-none" />
         </div>
       </div>
 
       <div className="lg:col-span-7 space-y-6">
         <div className="space-y-2">
-          <span className="px-3.5 py-1 rounded-full bg-[#F5F5DA] border border-[#E9E5C8] text-[#7B021D] text-xs font-mono uppercase tracking-widest font-bold">
+          <span className="px-3.5 py-1 rounded-full bg-[#F5F5DA] border border-[#E9E5C8] text-[#212842] text-[11px] font-editorial-sans uppercase tracking-[0.16em] font-bold inline-flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-[#212842]" />
             Laureate Author Spotlight
           </span>
-          <h2 className="font-editorial-serif text-4xl sm:text-5xl font-bold text-[#211D1D]">
+          <h2 className="font-editorial-serif text-4xl sm:text-5xl lg:text-[3.25rem] font-bold text-[#211D1D] leading-tight">
             {author.name}
           </h2>
-          <p className="text-xs font-mono text-[#7B021D] uppercase tracking-wider font-bold">
+          <p className="text-xs font-editorial-sans text-[#212842] uppercase tracking-widest font-bold">
             {author.role || 'Master Storyteller'}
           </p>
         </div>
@@ -468,10 +480,10 @@ export function FeaturedAuthorSpotlightCard({ author, className = '' }) {
         <div className="pt-2 flex items-center gap-4">
           <Link
             to={`/authors/${authorSlug}`}
-            className="px-8 py-4 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-bold uppercase tracking-wider hover:bg-[#520014] transition-colors shadow-md inline-flex items-center gap-2"
+            className="px-8 py-4 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-editorial-sans font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-md inline-flex items-center gap-2 group/btn"
           >
             <span>Meet Author Shelf</span>
-            <ArrowUpRight className="w-4 h-4" />
+            <ArrowUpRight className="w-4 h-4 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
           </Link>
         </div>
       </div>
@@ -491,11 +503,11 @@ export function ReaderCommunityCard({ title, userCount, quote, className = '' })
       className={`bg-[#F5F5DA] rounded-3xl p-6 sm:p-8 border border-[#E9E5C8] space-y-4 shadow-2xs ${className}`}
     >
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] flex items-center justify-center text-[#7B021D]">
+        <div className="w-10 h-10 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] flex items-center justify-center text-[#212842]">
           <BookOpen className="w-5 h-5" />
         </div>
         <div>
-          <span className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] font-bold block">
+          <span className="text-[10px] uppercase font-mono tracking-widest text-[#212842] font-bold block">
             Reader Community
           </span>
           <h4 className="font-editorial-serif text-lg font-bold text-[#211D1D]">
@@ -510,7 +522,7 @@ export function ReaderCommunityCard({ title, userCount, quote, className = '' })
 
       <div className="pt-2 border-t border-[#E9E5C8] flex items-center justify-between text-xs font-mono text-[#6B5E5E]">
         <span>{userCount || '12,400'} Active Readers</span>
-        <span className="text-[#7B021D] font-bold">DRM-Free Library</span>
+        <span className="text-[#212842] font-bold">DRM-Free Library</span>
       </div>
     </motion.div>
   );
@@ -529,7 +541,7 @@ export function BlogEditorialCard({ article, index = 0, className = '' }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.45, delay: index * 0.08 }}
-      className={`bg-[#FFFDF3] rounded-3xl p-6 border border-[#E9E5C8] hover:border-[#7B021D] shadow-2xs hover:shadow-lg transition-all group flex flex-col justify-between ${className}`}
+      className={`bg-[#FFFDF3] rounded-3xl p-6 border border-[#E9E5C8] hover:border-[#212842] shadow-2xs hover:shadow-lg transition-all group flex flex-col justify-between ${className}`}
     >
       <div>
         <div className="w-full aspect-[16/10] rounded-2xl overflow-hidden bg-[#F5F5DA] border border-[#E9E5C8] mb-4">
@@ -541,7 +553,7 @@ export function BlogEditorialCard({ article, index = 0, className = '' }) {
         </div>
 
         <div className="flex items-center gap-3 text-[11px] font-mono text-[#6B5E5E] mb-2">
-          <span className="text-[#7B021D] font-bold uppercase tracking-wider">{article.category || 'Editorial'}</span>
+          <span className="text-[#212842] font-bold uppercase tracking-wider">{article.category || 'Editorial'}</span>
           <span>·</span>
           <span>{article.date || 'Aug 2025'}</span>
           <span>·</span>
@@ -549,7 +561,7 @@ export function BlogEditorialCard({ article, index = 0, className = '' }) {
         </div>
 
         <Link to={`/blog/${articleSlug}`}>
-          <h3 className="font-editorial-serif text-xl sm:text-2xl font-bold text-[#211D1D] group-hover:text-[#7B021D] transition-colors leading-snug">
+          <h3 className="font-editorial-serif text-xl sm:text-2xl font-bold text-[#211D1D] group-hover:text-[#212842] transition-colors leading-snug">
             {article.title}
           </h3>
         </Link>
@@ -562,7 +574,7 @@ export function BlogEditorialCard({ article, index = 0, className = '' }) {
       <div className="pt-4 mt-6 border-t border-[#E9E5C8] flex items-center justify-between">
         <Link
           to={`/blog/${articleSlug}`}
-          className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-[#7B021D] hover:underline"
+          className="inline-flex items-center gap-1.5 text-xs font-mono font-bold uppercase tracking-wider text-[#212842] hover:underline"
         >
           <span>Read Essay</span>
           <ArrowUpRight className="w-3.5 h-3.5" />
@@ -589,7 +601,7 @@ export function BookShelfShowcase({ books = [], title = "Editorial Shelf" }) {
     <div className="bg-[#FFFDF3] rounded-3xl p-8 border border-[#E9E5C8] space-y-6 shadow-2xs">
       <div className="flex items-center justify-between border-b border-[#E9E5C8] pb-4">
         <h3 className="font-editorial-serif text-2xl font-bold text-[#211D1D]">{title}</h3>
-        <span className="text-xs font-mono text-[#7B021D] font-bold">{books.length} Volume Collections</span>
+        <span className="text-xs font-mono text-[#212842] font-bold">{books.length} Volume Collections</span>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
         {books.slice(0, 5).map((book, idx) => (

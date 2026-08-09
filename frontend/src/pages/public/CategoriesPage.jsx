@@ -13,7 +13,7 @@ export default function CategoriesPage() {
     <div className="min-h-screen bg-[#F5F5DA]">
       <section className="border-b border-[#E9E5C8] bg-[#F5F5DA] pt-16 pb-14">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          <span className="text-xs uppercase tracking-widest font-mono text-[#7B021D] font-bold block mb-2">
+          <span className="text-xs uppercase tracking-widest font-mono text-[#212842] font-bold block mb-2">
             Taxonomy & Literary Index
           </span>
           <h1 className="font-editorial-serif text-5xl sm:text-6xl text-[#211D1D] font-normal tracking-tight">
@@ -53,7 +53,7 @@ export default function CategoriesPage() {
                 }`}>
                   <div className={`lg:col-span-7 space-y-6 ${isEven ? 'lg:order-2' : 'lg:order-1'}`}>
                     <div className="flex items-center gap-4">
-                      <span className="font-mono text-xs text-[#7B021D] font-bold">
+                      <span className="font-mono text-xs text-[#212842] font-bold">
                         CHAPTER 0{idx + 1}
                       </span>
                       <span className="h-px w-12 bg-[#E9E5C8]" />
@@ -62,7 +62,7 @@ export default function CategoriesPage() {
                       </span>
                     </div>
 
-                    <h2 className="font-editorial-serif text-4xl sm:text-5xl lg:text-6xl text-[#211D1D] group-hover:text-[#7B021D] transition-colors leading-tight font-normal">
+                    <h2 className="font-editorial-serif text-4xl sm:text-5xl lg:text-6xl text-[#211D1D] group-hover:text-[#212842] transition-colors leading-tight font-normal">
                       {cat.name}
                     </h2>
 
@@ -71,7 +71,7 @@ export default function CategoriesPage() {
                     </p>
 
                     <div className="pt-2">
-                      <span className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#211D1D] font-bold group-hover:text-[#7B021D] transition-colors">
+                      <span className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#211D1D] font-bold group-hover:text-[#212842] transition-colors">
                         <span>Explore {cat.name} Collection</span>
                         <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                       </span>

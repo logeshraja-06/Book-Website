@@ -3,14 +3,14 @@ import { BookOpen, ArrowUpRight, Lock } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="bg-[#520014] text-[#F5F5DA] pt-20 pb-12 border-t border-[#E9E5C8]/20 selection:bg-[#7B021D] selection:text-[#F5F5DA]">
+    <footer className="bg-[#181E33] text-[#F5F5DA] pt-20 pb-12 border-t border-[#E9E5C8]/20 selection:bg-[#212842] selection:text-[#F5F5DA]">
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-12 pb-16 border-b border-[#E9E5C8]/15">
           
           {/* Brand & Manifesto Column */}
           <div className="md:col-span-2 space-y-6">
             <Link to="/" className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[#7B021D] border border-[#E9E5C8]/30 flex items-center justify-center text-[#F5F5DA]">
+              <div className="w-10 h-10 rounded-xl bg-[#212842] border border-[#E9E5C8]/30 flex items-center justify-center text-[#F5F5DA]">
                 <BookOpen className="w-5 h-5" />
               </div>
               <div className="flex flex-col">
@@ -49,12 +49,12 @@ export default function Footer() {
             <ul className="space-y-2.5 text-sm text-[#FFFDF3]/80 font-sans">
               <li>
                 <Link to="/my-shelf" className="inline-flex items-center gap-1.5 hover:text-[#F5F5DA] transition-colors font-medium">
-                  My Reading Shelf <ArrowUpRight className="w-3 h-3 text-[#A64A5B]" />
+                  My Reading Shelf <ArrowUpRight className="w-3 h-3 text-[#384266]" />
                 </Link>
               </li>
               <li>
                 <Link to="/authors" className="inline-flex items-center gap-1.5 hover:text-[#F5F5DA] transition-colors font-medium">
-                  Author Index <ArrowUpRight className="w-3 h-3 text-[#A64A5B]" />
+                  Author Index <ArrowUpRight className="w-3 h-3 text-[#384266]" />
                 </Link>
               </li>
               <li><Link to="/about" className="hover:text-[#F5F5DA] transition-colors">Publishing Guidelines</Link></li>
@@ -69,7 +69,7 @@ export default function Footer() {
               <li><Link to="/about" className="hover:text-[#F5F5DA] transition-colors">Editorial Terms</Link></li>
               <li>
                 <Link to="/publisher/login" className="inline-flex items-center gap-1.5 text-xs font-mono text-[#E9E5C8]/90 hover:text-[#F5F5DA] transition-colors">
-                  <Lock className="w-3 h-3 text-[#A64A5B]" />
+                  <Lock className="w-3 h-3 text-[#384266]" />
                   <span>Publisher Access Portal</span>
                 </Link>
               </li>
