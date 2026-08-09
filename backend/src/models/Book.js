@@ -28,7 +28,7 @@ const bookSchema = new mongoose.Schema(
     sampleFile: { type: String, default: '' },
     status: {
       type: String,
-      enum: ['Draft', 'In Review', 'Pending Review', 'Approved', 'Published', 'Rejected', 'Needs Revision'],
+      enum: ['Draft', 'Submitted', 'In Review', 'Pending Review', 'Approved', 'Published', 'Rejected', 'Needs Revision'],
       default: 'Draft'
     },
     lastEdited: { type: String, default: '' },

@@ -33,7 +33,7 @@ const generateBookCodeAndIsbn = async () => {
 const getBooks = asyncHandler(async (req, res) => {
   const { genre, language, search, sort, page = 1, limit = 50 } = req.query;
 
-  const query = { status: { $in: ['Published', 'Approved'] } };
+  const query = { status: 'Published' };
 
   if (genre && genre !== 'All') {
     query.genre = genre;
@@ -120,7 +120,7 @@ const getBookById = asyncHandler(async (req, res) => {
   }
 
   // Filter non-published books for public catalog access
-  if (book.status !== 'Published' && book.status !== 'Approved') {
+  if (book.status !== 'Published') {
     if (!req.user || (req.user.role !== 'publisher' && req.user.role !== 'admin' && req.user.role !== 'author')) {
       return ApiResponse.error(res, 'Book not found or not published yet', 404);
     }

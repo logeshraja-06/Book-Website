@@ -12,13 +12,13 @@ export { BookCover };
    1. BOOK CARD (Catalog & General Grid View)
    ========================================================================= */
 export function BookCard({ book, index = 0, className = '' }) {
-  const { wishlistBooks = [], toggleWishlist } = useData();
+  const { isBookInWishlist, toggleWishlist } = useData();
   if (!book) return null;
 
   const bookSlug = book.slug || book.id || book._id;
   const authorSlug = book.author?.toLowerCase().replace(/\s+/g, '-') || 'kalki-krishnamurthy';
   const categorySlug = book.genre?.toLowerCase().replace(/[^a-z0-9]+/g, '-') || 'general';
-  const isWishlisted = wishlistBooks.some((b) => (b.id || b._id) === (book.id || book._id));
+  const isWishlisted = isBookInWishlist(book);
 
   return (
     <motion.div
@@ -42,18 +42,20 @@ export function BookCard({ book, index = 0, className = '' }) {
             {book.genre || book.category}
           </Link>
 
-          <button
+          <motion.button
             type="button"
+            whileHover={{ scale: 1.12 }}
+            whileTap={{ scale: 0.85 }}
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              toggleWishlist(book.id || book._id);
+              toggleWishlist(book);
             }}
-            className="absolute top-3.5 right-3.5 p-2 rounded-full bg-[#F5F5DA]/95 backdrop-blur-sm border border-[#E9E5C8] text-[#6B5E5E] hover:text-[#211D1D] hover:border-[#7B021D] transition-all"
-            title={isWishlisted ? 'Saved in Wishlist' : 'Bookmark Title'}
+            className="absolute top-3.5 right-3.5 p-2 rounded-full bg-[#F5F5DA]/95 backdrop-blur-sm border border-[#E9E5C8] text-[#6B5E5E] hover:text-[#211D1D] hover:border-[#7B021D] transition-all shadow-xs"
+            title={isWishlisted ? 'Saved in Wishlist' : 'Add to Wishlist'}
           >
-            <Bookmark className={`w-3.5 h-3.5 ${isWishlisted ? 'fill-[#7B021D] text-[#7B021D]' : ''}`} />
-          </button>
+            <Bookmark className={`w-3.5 h-3.5 transition-colors ${isWishlisted ? 'fill-[#7B021D] text-[#7B021D]' : ''}`} />
+          </motion.button>
         </div>
 
         <div className="space-y-1.5">
@@ -91,13 +93,13 @@ export function BookCard({ book, index = 0, className = '' }) {
    2. FEATURED BOOK CARD (Large Split Editorial Composition)
    ========================================================================= */
 export function FeaturedBookCard({ book, className = '' }) {
-  const { wishlistBooks = [], toggleWishlist } = useData();
+  const { isBookInWishlist, toggleWishlist } = useData();
   if (!book) return null;
 
   const bookSlug = book.slug || book.id || book._id;
   const authorSlug = book.author?.toLowerCase().replace(/\s+/g, '-') || 'kalki-krishnamurthy';
   const categorySlug = book.genre?.toLowerCase().replace(/[^a-z0-9]+/g, '-') || 'general';
-  const isWishlisted = wishlistBooks.some((b) => (b.id || b._id) === (book.id || book._id));
+  const isWishlisted = isBookInWishlist(book);
 
   return (
     <motion.div
@@ -179,12 +181,14 @@ export function FeaturedBookCard({ book, className = '' }) {
         </div>
 
         <div className="flex items-center gap-3">
-          <button
+          <motion.button
             type="button"
+            whileHover={{ scale: 1.12 }}
+            whileTap={{ scale: 0.85 }}
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              toggleWishlist(book.id || book._id);
+              toggleWishlist(book);
             }}
             className={`p-2.5 rounded-full border transition-all ${
               isWishlisted
@@ -194,7 +198,7 @@ export function FeaturedBookCard({ book, className = '' }) {
             title={isWishlisted ? 'Saved in Wishlist' : 'Add to Wishlist'}
           >
             <Bookmark className={`w-4 h-4 ${isWishlisted ? 'fill-[#F5F5DA] text-[#F5F5DA]' : ''}`} />
-          </button>
+          </motion.button>
 
           <Link
             to={`/books/${bookSlug}`}
@@ -213,13 +217,13 @@ export function FeaturedBookCard({ book, className = '' }) {
    3. HORIZONTAL BOOK CARD (Cover Left, Story Right)
    ========================================================================= */
 export function HorizontalBookCard({ book, index = 0, className = '' }) {
-  const { wishlistBooks = [], toggleWishlist } = useData();
+  const { isBookInWishlist, toggleWishlist } = useData();
   if (!book) return null;
 
   const bookSlug = book.slug || book.id || book._id;
   const authorSlug = book.author?.toLowerCase().replace(/\s+/g, '-') || 'kalki-krishnamurthy';
   const categorySlug = book.genre?.toLowerCase().replace(/[^a-z0-9]+/g, '-') || 'general';
-  const isWishlisted = wishlistBooks.some((b) => (b.id || b._id) === (book.id || book._id));
+  const isWishlisted = isBookInWishlist(book);
 
   return (
     <motion.div
@@ -245,18 +249,20 @@ export function HorizontalBookCard({ book, index = 0, className = '' }) {
             >
               {book.genre || book.category}
             </Link>
-            <button
+            <motion.button
               type="button"
+              whileHover={{ scale: 1.15 }}
+              whileTap={{ scale: 0.85 }}
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                toggleWishlist(book.id || book._id);
+                toggleWishlist(book);
               }}
-              className="text-[#6B5E5E] hover:text-[#211D1D]"
-              title={isWishlisted ? 'Saved in Wishlist' : 'Bookmark Title'}
+              className="text-[#6B5E5E] hover:text-[#211D1D] p-1 rounded-full hover:bg-[#F5F5DA]"
+              title={isWishlisted ? 'Saved in Wishlist' : 'Add to Wishlist'}
             >
               <Bookmark className={`w-3.5 h-3.5 ${isWishlisted ? 'fill-[#7B021D] text-[#7B021D]' : ''}`} />
-            </button>
+            </motion.button>
           </div>
 
           <Link to={`/books/${bookSlug}`}>
@@ -303,8 +309,10 @@ export function EditorialBookCard({ book, index = 0, className = '' }) {
    5. AUTHOR BOOK CARD (Book for Author's Published Works Shelf)
    ========================================================================= */
 export function AuthorBookCard({ book, index = 0 }) {
+  const { isBookInWishlist, toggleWishlist } = useData();
   if (!book) return null;
   const bookSlug = book.slug || book.id || book._id;
+  const isWishlisted = isBookInWishlist(book);
 
   return (
     <motion.div
@@ -312,11 +320,28 @@ export function AuthorBookCard({ book, index = 0 }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.4, delay: index * 0.05 }}
-      className="group bg-[#FFFDF3] rounded-2xl p-4.5 border border-[#E9E5C8] hover:border-[#7B021D] transition-all shadow-2xs hover:shadow-md block"
+      className="group bg-[#FFFDF3] rounded-2xl p-4.5 border border-[#E9E5C8] hover:border-[#7B021D] transition-all shadow-2xs hover:shadow-md block relative"
     >
-      <Link to={`/books/${bookSlug}`} className="block mb-3.5">
-        <BookCover book={book} variant="shelf" imageClassName="group-hover:scale-105" />
-      </Link>
+      <div className="relative mb-3.5">
+        <Link to={`/books/${bookSlug}`} className="block">
+          <BookCover book={book} variant="shelf" imageClassName="group-hover:scale-105" />
+        </Link>
+        <motion.button
+          type="button"
+          whileHover={{ scale: 1.15 }}
+          whileTap={{ scale: 0.85 }}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleWishlist(book);
+          }}
+          className="absolute top-2 right-2 p-1.5 rounded-full bg-[#F5F5DA]/95 backdrop-blur-sm border border-[#E9E5C8] text-[#6B5E5E] hover:text-[#211D1D]"
+          title={isWishlisted ? 'Saved in Wishlist' : 'Add to Wishlist'}
+        >
+          <Bookmark className={`w-3.5 h-3.5 ${isWishlisted ? 'fill-[#7B021D] text-[#7B021D]' : ''}`} />
+        </motion.button>
+      </div>
+
       <Link to={`/books/${bookSlug}`}>
         <h4 className="font-editorial-serif text-[17px] font-semibold text-[#211D1D] group-hover:text-[#7B021D] transition-colors line-clamp-1">
           {book.title}
@@ -334,9 +359,11 @@ export function AuthorBookCard({ book, index = 0 }) {
    6. RELATED BOOK CARD (Compact Recommendation Card)
    ========================================================================= */
 export function RelatedBookCard({ book, index = 0 }) {
+  const { isBookInWishlist, toggleWishlist } = useData();
   if (!book) return null;
   const bookSlug = book.slug || book.id || book._id;
   const authorSlug = book.author?.toLowerCase().replace(/\s+/g, '-') || 'kalki-krishnamurthy';
+  const isWishlisted = isBookInWishlist(book);
 
   return (
     <motion.div
@@ -344,12 +371,29 @@ export function RelatedBookCard({ book, index = 0 }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.35, delay: index * 0.04 }}
-      className="group bg-[#FFFDF3] rounded-2xl p-4 border border-[#E9E5C8] hover:border-[#7B021D] transition-all shadow-2xs hover:shadow-md flex flex-col justify-between"
+      className="group bg-[#FFFDF3] rounded-2xl p-4 border border-[#E9E5C8] hover:border-[#7B021D] transition-all shadow-2xs hover:shadow-md flex flex-col justify-between relative"
     >
       <div>
-        <Link to={`/books/${bookSlug}`} className="block mb-3">
-          <BookCover book={book} variant="compact" imageClassName="group-hover:scale-105" />
-        </Link>
+        <div className="relative mb-3">
+          <Link to={`/books/${bookSlug}`} className="block">
+            <BookCover book={book} variant="compact" imageClassName="group-hover:scale-105" />
+          </Link>
+          <motion.button
+            type="button"
+            whileHover={{ scale: 1.15 }}
+            whileTap={{ scale: 0.85 }}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              toggleWishlist(book);
+            }}
+            className="absolute top-2 right-2 p-1.5 rounded-full bg-[#F5F5DA]/95 backdrop-blur-sm border border-[#E9E5C8] text-[#6B5E5E]"
+            title={isWishlisted ? 'Saved in Wishlist' : 'Add to Wishlist'}
+          >
+            <Bookmark className={`w-3.5 h-3.5 ${isWishlisted ? 'fill-[#7B021D] text-[#7B021D]' : ''}`} />
+          </motion.button>
+        </div>
+
         <Link to={`/books/${bookSlug}`}>
           <h4 className="font-editorial-serif text-[16px] font-semibold text-[#211D1D] group-hover:text-[#7B021D] transition-colors line-clamp-1">
             {book.title}

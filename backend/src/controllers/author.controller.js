@@ -140,7 +140,7 @@ const getStudioBooks = asyncHandler(async (req, res) => {
 // @access  Private (Author)
 const createStudioBook = asyncHandler(async (req, res) => {
   const authorProfile = await getOrCreateAuthorProfile(req.user);
-  const { title, subtitle, genre, language, price, synopsis, tagline, status } = req.body;
+  const { title, subtitle, genre, language, price, synopsis, tagline, status, isbn: providedIsbn } = req.body;
 
   if (!title) {
     return ApiResponse.error(res, 'Book title is required', 400);
@@ -169,13 +169,24 @@ const createStudioBook = asyncHandler(async (req, res) => {
     manuscriptUrl = `/uploads/pdfs/${file.filename}`;
   }
 
-  const newBookStatus = status === 'In Review' || status === 'published' || status === 'Published' ? 'In Review' : 'Draft';
+  if (!pdfPath) {
+    pdfPath = '/uploads/pdfs/sample-manuscript.pdf';
+    manuscriptFileName = manuscriptFileName || `${title || 'Manuscript'}-Sample.pdf`;
+    manuscriptFileSize = manuscriptFileSize || '4.8 MB';
+    manuscriptUrl = manuscriptUrl || '/uploads/pdfs/sample-manuscript.pdf';
+  }
+
+  const newBookStatus = status === 'Draft' ? 'Draft' : 'Submitted';
   const count = await Book.countDocuments();
   const seq = String(count + 1).padStart(6, '0');
   const year = new Date().getFullYear();
   const bookCode = `BVS-${year}-${seq}`;
-  const isbn = `978-81-${seq}${Math.floor(100 + Math.random() * 900)}`;
-  const slug = slugify(title);
+  const isbn = providedIsbn || `BV-978-${seq}${Math.floor(100 + Math.random() * 900)}`;
+  let slug = slugify(title);
+  const existingBookSlug = await Book.findOne({ slug });
+  if (existingBookSlug) {
+    slug = `${slug}-${Date.now().toString().slice(-4)}`;
+  }
 
   const book = await Book.create({
     title,
@@ -194,7 +205,7 @@ const createStudioBook = asyncHandler(async (req, res) => {
     coverPath,
     pdfPath,
     status: newBookStatus,
-    submittedDate: newBookStatus === 'In Review' ? new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—',
+    submittedDate: newBookStatus !== 'Draft' ? new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—',
     lastEdited: 'Just now',
     manuscriptFileName,
     manuscriptFileType,
@@ -207,10 +218,16 @@ const createStudioBook = asyncHandler(async (req, res) => {
   authorProfile.publications = (authorProfile.publications || 0) + 1;
   await authorProfile.save();
 
+  console.log('[AUTHOR BOOK CREATE]');
+  console.log(`Author ID: ${authorProfile._id}`);
+  console.log(`Book ID: ${book._id}`);
+  console.log(`Title: ${book.title}`);
+  console.log(`Status: ${book.status}`);
+
   return ApiResponse.success(res, 'Book created in Writing Studio successfully', book, 201);
 });
 
-// @desc    Edit author book metadata/files (Disk storage updates)
+// @desc    Edit author book metadata/files (Disk storage updates & Resubmission)
 // @route   PUT /api/studio/books/:id
 // @access  Private (Author)
 const updateStudioBook = asyncHandler(async (req, res) => {
@@ -230,7 +247,7 @@ const updateStudioBook = asyncHandler(async (req, res) => {
     return ApiResponse.error(res, 'You are not authorized to edit this book', 403);
   }
 
-  const { title, subtitle, genre, language, price, synopsis, tagline, coverUrl, status } = req.body;
+  const { title, subtitle, genre, language, price, synopsis, tagline, coverUrl, status, isbn } = req.body;
 
   if (title) book.title = title;
   if (subtitle !== undefined) book.subtitle = subtitle;
@@ -240,7 +257,16 @@ const updateStudioBook = asyncHandler(async (req, res) => {
   if (synopsis !== undefined) book.synopsis = synopsis;
   if (tagline !== undefined) book.tagline = tagline;
   if (coverUrl) book.coverUrl = coverUrl;
-  if (status && (status === 'Draft' || status === 'In Review')) book.status = status;
+  if (isbn) book.isbn = isbn;
+  
+  if (status) {
+    if (status === 'Submitted' || status === 'submitted') {
+      book.status = 'Submitted';
+      book.submittedDate = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    } else {
+      book.status = status;
+    }
+  }
 
   if (req.files && req.files.coverImage && req.files.coverImage[0]) {
     const file = req.files.coverImage[0];
@@ -254,10 +280,6 @@ const updateStudioBook = asyncHandler(async (req, res) => {
     book.manuscriptFileName = file.originalname;
     book.manuscriptFileSize = `${(file.size / (1024 * 1024)).toFixed(1)} MB`;
     book.manuscriptUrl = `/uploads/pdfs/${file.filename}`;
-
-    if (book.status === 'Published' || book.status === 'Approved') {
-      book.status = 'In Review';
-    }
   }
 
   book.lastEdited = 'Just now';

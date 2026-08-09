@@ -30,6 +30,7 @@ export default function PublisherLayout() {
     { name: 'Books', path: '/publisher/books' },
     { name: 'Categories', path: '/publisher/categories' },
     { name: 'Reports', path: '/publisher/reports' },
+    { name: 'Profile & Settings', path: '/publisher/profile' },
   ];
 
   const handleLogout = () => {

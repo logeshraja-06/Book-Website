@@ -118,13 +118,12 @@ const streamManuscript = asyncHandler(async (req, res) => {
     return ApiResponse.error(res, 'Manuscript file not found', 404);
   }
 
-  const pdfRel = book.pdfPath || book.manuscriptUrl;
+  let pdfRel = book.pdfPath || book.manuscriptUrl;
   if (!pdfRel || !pdfRel.startsWith('/uploads/')) {
-    // Return sample or fallback if no file uploaded
-    return ApiResponse.error(res, 'PDF file not available for this manuscript', 404);
+    pdfRel = '/uploads/pdfs/sample-manuscript.pdf';
   }
 
-  const absPath = path.join(__dirname, '../../', pdfRel);
+  const absPath = path.join(__dirname, '../../', pdfRel.startsWith('/') ? pdfRel : `/${pdfRel}`);
   if (!fs.existsSync(absPath)) {
     return ApiResponse.error(res, 'File missing on server disk', 404);
   }

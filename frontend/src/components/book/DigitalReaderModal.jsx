@@ -13,7 +13,8 @@ import {
   ZoomIn,
   ZoomOut,
   List,
-  Check
+  Check,
+  Download
 } from 'lucide-react';
 import { apiFetch } from '../../context/AuthContext';
 
@@ -231,6 +232,19 @@ export default function DigitalReaderModal({ isOpen, onClose, book, initialPage 
                 >
                   <Bookmark className={`w-4 h-4 ${isBookmarked ? 'fill-current' : ''}`} />
                 </button>
+
+                {/* PDF Download Edition Button (If available) */}
+                <a
+                  href={book.pdfPath || book.manuscriptUrl || book.pdfFile || '/books/demo.pdf'}
+                  download
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ borderColor: theme.border, color: theme.text }}
+                  className="p-2 rounded-full border hover:opacity-80 transition-opacity"
+                  title="Download PDF Edition"
+                >
+                  <Download className="w-4 h-4 text-[#7B021D]" />
+                </a>
 
                 {/* Close Reader */}
                 <button

@@ -1,10 +1,16 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Quote, ArrowUpRight, Trash2, Sparkles, BookOpen } from 'lucide-react';
+import { Bookmark as BookmarkIcon, Trash2, ArrowRight, BookOpen, Star, Eye } from 'lucide-react';
+import { useData } from '../../context/DataContext';
 import { apiFetch } from '../../context/AuthContext';
+import BookCover from '../../components/book/BookCover';
+import DigitalReaderModal from '../../components/book/DigitalReaderModal';
 
 export default function BookmarksView() {
+  const navigate = useNavigate();
+  const { toggleBookmark, activeReaderBook, setActiveReaderBook, isBookPurchased } = useData();
+
   const [bookmarks, setBookmarks] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -25,10 +31,11 @@ export default function BookmarksView() {
     fetchBookmarks();
   }, []);
 
-  const handleDeleteBookmark = async (id) => {
+  const handleDeleteBookmark = async (id, bookObj) => {
     try {
       await apiFetch(`/reader/bookmarks/${id}`, { method: 'DELETE' });
       setBookmarks((prev) => prev.filter((b) => b._id !== id && b.id !== id));
+      toggleBookmark(bookObj || id);
     } catch (err) {
       console.error('Delete bookmark error:', err);
     }
@@ -36,123 +43,172 @@ export default function BookmarksView() {
 
   if (loading) {
     return (
-      <div className="py-16 text-center text-xs font-mono text-[#6B5E5E]">
-        Loading your saved bookmarks & annotations…
+      <div className="py-20 text-center text-xs font-mono text-[#5F594F] bg-[#F5F5DA] rounded-3xl">
+        Loading saved bookmarks…
       </div>
     );
   }
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 bg-[#F5F5DA] p-4 sm:p-6 rounded-3xl min-h-screen">
       
       {/* ── 1. HEADER ── */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#E7D9D3] pb-6">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#D8CFAE] pb-6">
         <div>
           <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#7B021D] font-bold block flex items-center gap-1.5 mb-1">
-            <Quote className="w-3.5 h-3.5 text-[#7B021D]" />
-            Saved Excerpts & Annotations
+            <BookmarkIcon className="w-3.5 h-3.5 text-[#7B021D] fill-[#7B021D]" />
+            Personal Reader Bookmarks
           </span>
-          <h2 className="font-editorial-serif text-3xl sm:text-4xl text-[#2B2B2B] font-bold">
-            Reading Passages & Notes
+          <h2 className="font-editorial-serif text-3xl sm:text-4xl text-[#181616] font-bold">
+            Bookmarked Manuscripts
           </h2>
-          <p className="text-xs text-[#6B5E5E] mt-1 font-sans">
-            Bookmarked excerpts and personal reflections from your shelf
+          <p className="text-xs text-[#5F594F] mt-1 font-sans">
+            Quick-access saved volumes and quick references in your library
           </p>
         </div>
-        <span className="text-xs font-mono text-[#7B021D] font-bold bg-[#FFFDF3] px-3.5 py-1.5 rounded-full border border-[#E7D9D3]">
-          {bookmarks.length} Passage(s) Saved
+        <span className="text-xs font-mono text-[#7B021D] font-bold bg-[#FFFDF3] px-3.5 py-1.5 rounded-full border border-[#D8CFAE] shadow-2xs">
+          {bookmarks.length} Bookmarked Volume(s)
         </span>
       </div>
 
-      {/* ── 2. QUOTE CARDS LIST ── */}
-      {bookmarks.length === 0 ? (
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="p-12 text-center bg-gradient-to-br from-[#FFFDF3] to-[#FAF8F6] rounded-3xl border border-[#E7D9D3] text-xs font-mono text-[#6B5E5E] shadow-sm space-y-3"
-        >
-          <BookOpen className="w-8 h-8 text-[#7B021D] mx-auto opacity-60" />
-          <h3 className="font-editorial-serif text-xl font-bold text-[#2B2B2B]">
-            No Bookmarks Saved Yet
-          </h3>
-          <p className="max-w-md mx-auto text-[#6B5E5E] font-sans">
-            While reading books on your shelf, click the bookmark icon to capture notable quotes and personal annotations!
-          </p>
-        </motion.div>
-      ) : (
-        <div className="space-y-6 max-w-4xl">
-          <AnimatePresence mode="popLayout">
+      {/* ── 2. BOOKMARKS GRID / LIST ── */}
+      <AnimatePresence mode="popLayout">
+        {bookmarks.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {bookmarks.map((bm, idx) => {
               const book = bm.bookId || {};
               const bmId = bm._id || bm.id;
-              const bookTitle = book.title || bm.bookTitle || 'Book Passage';
+              const bookTitle = book.title || bm.bookTitle || 'Untitled Book';
               const bookId = book._id || book.id || bm.bookId;
+              const bookSlug = book.slug || bookId;
+              const authorName = book.author || 'BookVerse Author';
+              const category = book.genre || book.category || 'Literature';
+              const dateSaved = bm.dateSaved || bm.createdAt ? new Date(bm.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Recently';
+              const isOwned = isBookPurchased(book);
 
               return (
                 <motion.div
-                  key={bmId}
+                  key={bmId || idx}
                   layout
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
+                  initial={{ opacity: 0, scale: 0.95, y: 16 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.35, delay: idx * 0.05, ease: [0.16, 1, 0.3, 1] }}
-                  className="bg-gradient-to-br from-[#FFFDF3] via-[#FAF8F6] to-[#F4EEEA] rounded-3xl p-8 border border-[#E7D9D3] shadow-md space-y-6 hover:border-[#7B021D] hover:shadow-xl hover:shadow-[#7B021D]/10 transition-all duration-300 relative group"
+                  className="bg-[#FFFDF3] rounded-3xl p-6 border border-[#D8CFAE] hover:border-[#7B021D] shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between group"
                 >
-                  <div className="flex items-center justify-between border-b border-[#E7D9D3]/80 pb-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-[#F4EEEA] border border-[#E7D9D3] flex items-center justify-center text-[#7B021D]">
-                        <Quote className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <Link
-                          to={`/books/${bookId}`}
-                          className="font-editorial-serif text-base font-bold text-[#2B2B2B] hover:text-[#7B021D] transition-colors inline-flex items-center gap-1.5"
-                        >
-                          <span>{bookTitle}</span>
-                          <ArrowUpRight className="w-3.5 h-3.5 text-[#7B021D]" />
-                        </Link>
-                        <span className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] block font-bold">
-                          {bm.pageRef || 'Page Note'}
-                        </span>
+                  <div>
+                    {/* Cover Artwork */}
+                    <div className="relative mb-4 block">
+                      <Link to={`/books/${bookSlug}`} className="block">
+                        <BookCover book={book} imageClassName="group-hover:scale-105 transition-transform duration-500" />
+                      </Link>
+
+                      <div className="absolute top-3.5 left-3.5 px-2.5 py-1 rounded-full bg-[#F5F5DA]/95 text-[10px] uppercase tracking-[0.14em] font-mono text-[#7B021D] font-bold border border-[#D8CFAE]">
+                        Bookmarked
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-3">
-                      <span className="text-xs font-mono text-[#6B5E5E]">
-                        {bm.dateSaved || 'Recently'}
-                      </span>
-                      <motion.button
-                        type="button"
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        onClick={() => handleDeleteBookmark(bmId)}
-                        className="p-2 rounded-full text-[#6B5E5E] hover:text-rose-600 hover:bg-rose-50 transition-colors"
-                        title="Delete Bookmark"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </motion.button>
+                    <div className="flex items-center justify-between text-[10px] font-mono text-[#7B021D] font-bold mb-1">
+                      <span className="uppercase tracking-widest">{category}</span>
+                      <span className="text-[#5F594F]">{dateSaved}</span>
                     </div>
+
+                    <Link to={`/books/${bookSlug}`}>
+                      <h3 className="font-editorial-serif text-xl font-bold text-[#181616] line-clamp-1 group-hover:text-[#7B021D] transition-colors leading-snug">
+                        {bookTitle}
+                      </h3>
+                    </Link>
+                    <p className="text-xs text-[#5F594F] mt-1 font-sans">By {authorName}</p>
+
+                    {bm.quote && (
+                      <blockquote className="mt-3 p-3 rounded-2xl bg-[#F8F6E5] border border-[#D8CFAE] text-xs italic font-serif text-[#181616] leading-relaxed line-clamp-2">
+                        "{bm.quote}"
+                      </blockquote>
+                    )}
                   </div>
 
-                  {bm.quote && (
-                    <blockquote className="font-editorial-serif text-xl sm:text-2xl text-[#2B2B2B] italic leading-relaxed pl-5 border-l-2 border-[#7B021D]">
-                      "{bm.quote}"
-                    </blockquote>
-                  )}
+                  {/* Actions Bar */}
+                  <div className="pt-4 mt-6 border-t border-[#DED7BD] flex items-center justify-between">
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteBookmark(bmId, book)}
+                      className="p-2.5 rounded-full border border-[#D8CFAE] bg-[#F8F6E5] text-[#5F594F] hover:text-rose-600 hover:border-rose-300 transition-colors shadow-2xs"
+                      title="Remove Bookmark"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
 
-                  {bm.note && (
-                    <div className="p-4 rounded-2xl bg-[#FFFDF3] border border-[#E7D9D3] text-xs text-[#6B5E5E] leading-relaxed shadow-inner">
-                      <span className="font-mono uppercase font-bold text-[#7B021D] block mb-1">
-                        Personal Annotation
-                      </span>
-                      {bm.note}
+                    <div className="flex items-center gap-2">
+                      <Link
+                        to={`/books/${bookSlug}`}
+                        className="px-4 py-2.5 rounded-full border border-[#D8CFAE] bg-[#F8F6E5] text-[#181616] text-xs font-mono font-bold uppercase tracking-wider hover:border-[#7B021D] transition-colors flex items-center gap-1"
+                      >
+                        <Eye className="w-3.5 h-3.5 text-[#7B021D]" />
+                        <span>Details</span>
+                      </Link>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (isOwned) {
+                            setActiveReaderBook(book);
+                          } else {
+                            navigate(`/books/${bookSlug}`);
+                          }
+                        }}
+                        className="px-4 py-2.5 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#520014] transition-colors shadow-md flex items-center gap-1.5"
+                      >
+                        <BookOpen className="w-3.5 h-3.5" />
+                        <span>Open Book</span>
+                      </button>
                     </div>
-                  )}
+                  </div>
                 </motion.div>
               );
             })}
-          </AnimatePresence>
-        </div>
+          </div>
+        ) : (
+          /* EDITORIAL EMPTY STATE */
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="flex flex-col items-center justify-center py-20 text-center bg-[#FFFDF3] rounded-3xl border border-[#D8CFAE] p-8 space-y-4 shadow-sm"
+          >
+            <div className="w-16 h-16 rounded-2xl bg-[#F8F6E5] border border-[#D8CFAE] flex items-center justify-center text-[#7B021D] shadow-xs">
+              <BookmarkIcon className="w-7 h-7 text-[#7B021D]" />
+            </div>
+
+            <div className="space-y-1 max-w-md">
+              <h3 className="font-editorial-serif text-2xl font-bold text-[#181616]">
+                Keep the books worth returning to.
+              </h3>
+              <p className="text-xs text-[#5F594F] font-sans leading-relaxed">
+                You haven't bookmarked any titles yet. Bookmark key volumes for quick reference and returning to your favorite passages.
+              </p>
+            </div>
+
+            <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+              <Link
+                to="/books"
+                className="px-6 py-3 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#520014] transition-colors shadow-md inline-flex items-center gap-2"
+              >
+                <span>Explore Books</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Digital Reader Modal */}
+      {activeReaderBook && (
+        <DigitalReaderModal
+          isOpen={Boolean(activeReaderBook)}
+          onClose={() => setActiveReaderBook(null)}
+          book={activeReaderBook}
+          initialPage={activeReaderBook.currentPage || 1}
+        />
       )}
     </div>
   );

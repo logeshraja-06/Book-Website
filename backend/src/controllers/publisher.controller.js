@@ -16,13 +16,19 @@ const resolveBook = async (id) => {
   return await Book.findOne({ legacyId: id });
 };
 
-// @desc    Get review queue (books with status 'In Review', 'Pending Review', 'Needs Revision', 'Rejected')
+// @desc    Get review queue (books with status 'Submitted', 'In Review', 'Pending Review', 'Needs Revision', 'Rejected')
 // @route   GET /api/editorial/queue
 // @access  Private (Publisher)
 const getReviewQueue = asyncHandler(async (req, res) => {
   const queueBooks = await Book.find({
-    status: { $in: ['In Review', 'Pending Review', 'Needs Revision', 'Rejected'] }
+    status: { $in: ['Submitted', 'submitted', 'In Review', 'Pending Review', 'Needs Revision', 'Rejected'] }
   }).sort({ updatedAt: -1 });
+
+  console.log('[EDITORIAL QUEUE]');
+  console.log(`Publisher: ${req.user ? req.user._id : 'Unknown'}`);
+  console.log(`Submitted manuscripts found: ${queueBooks.length}`);
+  console.log(`Manuscript IDs: ${queueBooks.map(b => b._id).join(', ')}`);
+  console.log(`Statuses: ${queueBooks.map(b => b.status).join(', ')}`);
 
   return ApiResponse.success(res, 'Review queue fetched successfully', queueBooks);
 });
@@ -38,10 +44,18 @@ const getEditorialBookById = asyncHandler(async (req, res) => {
     return ApiResponse.error(res, 'Book not found', 404);
   }
 
+  // Automatic transition: SUBMITTED -> IN REVIEW when Publisher opens manuscript
+  if (book.status === 'Submitted' || book.status === 'submitted') {
+    book.status = 'In Review';
+    if (req.user) book.reviewedBy = req.user._id;
+    book.reviewedAt = new Date();
+    await book.save();
+  }
+
   return ApiResponse.success(res, 'Editorial book details fetched successfully', book);
 });
 
-// @desc    Approve book submission (status -> Published/Approved)
+// @desc    Approve book submission (status -> Approved)
 // @route   PUT /api/editorial/books/:id/approve
 // @access  Private (Publisher)
 const approveBook = asyncHandler(async (req, res) => {
@@ -53,15 +67,53 @@ const approveBook = asyncHandler(async (req, res) => {
     return ApiResponse.error(res, 'Book not found', 404);
   }
 
-  book.status = 'Published';
-  book.editorialNotes = notes || book.editorialNotes || 'Approved for full catalog publication.';
+  book.status = 'Approved';
+  book.editorialNotes = notes || book.editorialNotes || 'Approved by editorial team.';
   book.lastEdited = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   book.reviewedAt = new Date();
   if (req.user) book.reviewedBy = req.user._id;
 
   await book.save();
 
-  return ApiResponse.success(res, 'Book approved and published to catalog', book);
+  return ApiResponse.success(res, 'Book manuscript approved for publication', book);
+});
+
+// @desc    Publish approved book (status -> Published)
+// @route   PUT /api/editorial/books/:id/publish
+// @access  Private (Publisher)
+const publishBook = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const book = await resolveBook(id);
+  if (!book) {
+    return ApiResponse.error(res, 'Book not found', 404);
+  }
+
+  if (book.status !== 'Approved' && book.status !== 'Published') {
+    return ApiResponse.error(res, 'Only approved manuscripts can be published', 400);
+  }
+
+  book.status = 'Published';
+  book.lastEdited = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  book.reviewedAt = new Date();
+  if (req.user) book.reviewedBy = req.user._id;
+
+  await book.save();
+
+  // Synchronize Author publications count
+  if (book.authorId) {
+    const author = await Author.findById(book.authorId);
+    if (author) {
+      if (!author.books.includes(book._id)) {
+        author.books.push(book._id);
+      }
+      const publishedCount = await Book.countDocuments({ authorId: author._id, status: { $in: ['Published', 'Approved'] } });
+      author.publications = publishedCount;
+      await author.save();
+    }
+  }
+
+  return ApiResponse.success(res, 'Book published successfully to catalog', book);
 });
 
 // @desc    Reject book submission (status -> Rejected)
@@ -313,6 +365,7 @@ module.exports = {
   getReviewQueue,
   getEditorialBookById,
   approveBook,
+  publishBook,
   rejectBook,
   requestRevision,
   requestChanges,

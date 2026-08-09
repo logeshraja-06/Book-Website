@@ -8,13 +8,15 @@ const {
   getReadingProgress,
   getWishlist,
   toggleWishlist,
+  removeFromWishlist,
   getBookmarks,
   addBookmark,
   deleteBookmark,
   createReview,
   getUserReviews,
   deleteReview,
-  updateProfile
+  updateProfile,
+  getProtectedBookPdf
 } = require('../controllers/reader.controller');
 const { verifyToken } = require('../middleware/auth.middleware');
 const { requireRole } = require('../middleware/role.middleware');
@@ -32,10 +34,13 @@ router.get('/progress/:bookId', getReadingProgress);
 
 router.get('/wishlist', getWishlist);
 router.post('/wishlist/:bookId', toggleWishlist);
+router.delete('/wishlist/:bookId', removeFromWishlist);
 
 router.get('/bookmarks', getBookmarks);
 router.post('/bookmarks', addBookmark);
 router.delete('/bookmarks/:id', deleteBookmark);
+
+router.get('/books/:bookId/pdf', getProtectedBookPdf);
 
 router.get('/reviews', getUserReviews);
 router.post('/reviews', createReview);

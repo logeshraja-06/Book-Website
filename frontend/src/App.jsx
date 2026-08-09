@@ -50,6 +50,7 @@ import PublisherAuthors from './pages/publisher/PublisherAuthors';
 import PublisherBooks from './pages/publisher/PublisherBooks';
 import PublisherCategories from './pages/publisher/PublisherCategories';
 import PublisherReports from './pages/publisher/PublisherReports';
+import PublisherProfileView from './pages/publisher/PublisherProfileView';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -146,6 +147,7 @@ export default function App() {
               <Route path="books" element={<PublisherBooks />} />
               <Route path="categories" element={<PublisherCategories />} />
               <Route path="reports" element={<PublisherReports />} />
+              <Route path="profile" element={<PublisherProfileView />} />
             </Route>
 
             {/* Fallback 404 Redirect */}

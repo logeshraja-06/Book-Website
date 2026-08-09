@@ -4,6 +4,7 @@ const {
   getReviewQueue,
   getEditorialBookById,
   approveBook,
+  publishBook,
   rejectBook,
   requestRevision,
   requestChanges,
@@ -27,6 +28,7 @@ router.get('/analytics', getPublisherAnalytics);
 router.get('/queue', getReviewQueue);
 router.get('/books/:id', getEditorialBookById);
 router.put('/books/:id/approve', approveBook);
+router.put('/books/:id/publish', publishBook);
 router.put('/books/:id/reject', rejectBook);
 router.put('/books/:id/revision', requestRevision);
 router.put('/books/:id/request-changes', requestChanges);

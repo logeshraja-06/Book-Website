@@ -68,31 +68,89 @@ export default function HeroSection() {
   const videoRef = useRef(null);
 
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
-  // Check mobile viewport (< 768px) to serve static poster image
+  // Programmatic Video Lifecycle & Playback Management (Cross-device, Desktop & Mobile)
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+    const video = videoRef.current;
+    if (!video) return;
 
-  // Programmatically trigger video playback to bypass browser autoplay restrictions
-  useEffect(() => {
-    if (videoRef.current && !isMobile) {
-      const p = videoRef.current.play();
-      if (p !== undefined) {
-        p.then(() => {
-          setIsVideoLoaded(true);
-        }).catch((err) => {
-          console.warn('Autoplay handled by browser policy:', err);
+    // Explicit JS property assignment (Strict compliance for Safari/Chrome autoplay & iOS playsInline)
+    video.muted = true;
+    video.playsInline = true;
+
+    const logDiagnostics = (eventTag, customErr = null) => {
+      if (process.env.NODE_ENV !== 'production') {
+        console.log(`[HeroVideo ${eventTag}]`, {
+          src: video.currentSrc || '/hero-bg.mp4',
+          readyState: video.readyState,
+          networkState: video.networkState,
+          paused: video.paused,
+          muted: video.muted,
+          autoplay: video.autoplay,
+          duration: video.duration,
+          currentTime: video.currentTime,
+          videoWidth: video.videoWidth,
+          videoHeight: video.videoHeight,
+          error: customErr || (video.error ? video.error.message || video.error.code : null),
         });
       }
+    };
+
+    const handlePlaying = () => {
+      setIsVideoPlaying(true);
+      setIsVideoLoaded(true);
+      logDiagnostics('playing');
+    };
+
+    const handleLoadedData = () => {
+      setIsVideoLoaded(true);
+      logDiagnostics('loadeddata');
+    };
+
+    const handleError = (e) => {
+      logDiagnostics('error', e);
+      setIsVideoPlaying(false);
+    };
+
+    video.addEventListener('playing', handlePlaying);
+    video.addEventListener('loadeddata', handleLoadedData);
+    video.addEventListener('canplay', handleLoadedData);
+    video.addEventListener('error', handleError);
+
+    // Initial Load & Play Attempt with graceful Promise handling
+    video.load();
+    const playPromise = video.play();
+
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          setIsVideoPlaying(true);
+          setIsVideoLoaded(true);
+          logDiagnostics('playPromiseResolved');
+        })
+        .catch((err) => {
+          logDiagnostics('playPromiseRejected', err.message);
+          // Retry muted playback once if initial trigger was throttled
+          setTimeout(() => {
+            if (videoRef.current) {
+              videoRef.current.muted = true;
+              videoRef.current.play().then(() => {
+                setIsVideoPlaying(true);
+                setIsVideoLoaded(true);
+              }).catch(() => {});
+            }
+          }, 350);
+        });
     }
-  }, [isMobile]);
+
+    return () => {
+      video.removeEventListener('playing', handlePlaying);
+      video.removeEventListener('loadeddata', handleLoadedData);
+      video.removeEventListener('canplay', handleLoadedData);
+      video.removeEventListener('error', handleError);
+    };
+  }, []);
 
   // Check prefers-reduced-motion
   const prefersReducedMotion =
@@ -140,54 +198,68 @@ export default function HeroSection() {
       ref={sectionRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative overflow-hidden pt-4 pb-20 lg:pt-6 lg:pb-28 bg-[#F5F5DA]"
+      className="relative overflow-hidden pt-2 pb-16 lg:pt-3 lg:pb-24 bg-[#F5F5DA]"
     >
-      {/* ── 1. CINEMATIC BACKGROUND IMAGE LAYER WITH WARM GRADIENT ── */}
-      <div className="absolute inset-0 -z-20 overflow-hidden pointer-events-none select-none">
+      {/* ── 1. CINEMATIC FULL HERO BACKGROUND VIDEO LAYER ── */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none">
         <motion.div
           style={{ x: bgX, y: bgY }}
-          animate={{ scale: [1, 1.04, 1] }}
+          animate={{ scale: [1, 1.03, 1] }}
           transition={{
-            duration: 22,
+            duration: 28,
             repeat: Infinity,
             repeatType: 'reverse',
             ease: 'easeInOut',
           }}
-          className="absolute inset-0 w-full h-full"
+          className="absolute inset-0 w-full h-full z-0"
         >
-          {/* High-Resolution Book-Themed Background Image */}
-          <div
-            className="absolute inset-0 w-full h-full opacity-40"
+          {/* High-End HTML5 Background Video (Full Hero Background Layer) */}
+          <video
+            ref={videoRef}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            disablePictureInPicture
+            controlsList="nodownload nofullscreen noremoteplayback"
+            className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none transition-opacity duration-700 ease-in-out opacity-90 sm:opacity-95 object-[center_80%] lg:object-[right_80%]"
             style={{
-              backgroundImage: "url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=2000&q=80')",
-              backgroundSize: 'cover',
-              backgroundPosition: 'center 40%',
+              objectPosition: 'center 80%',
               filter: 'contrast(1.05) saturate(1.05) brightness(1.02)',
             }}
-          />
+          >
+            <source src="/hero-bg.mp4?v=1" type="video/mp4" />
+          </video>
         </motion.div>
 
-        {/* ── 2. EDITORIAL OVERLAY & RADIAL VIGNETTE LAYER ── */}
+        {/* ── 2. EDITORIAL OVERLAY & RADIAL VIGNETTE LAYER (z-10) ── */}
+        {/* Soft Radial Vignette */}
         <div
-          className="absolute inset-0 pointer-events-none"
+          className="absolute inset-0 z-10 pointer-events-none"
           style={{
             background:
-              'radial-gradient(circle at center, transparent 35%, rgba(33,29,29,0.15) 100%)',
+              'radial-gradient(circle at center, transparent 35%, rgba(33,29,29,0.08) 100%)',
           }}
         />
 
-        <div className="absolute inset-0 bg-gradient-to-r from-[#F5F5DA] via-[#F5F5DA]/85 to-[#F5F5DA]/40" />
+        {/* Text Readability Gradient Overlay (Translucent Ivory protecting text on left while keeping background book crisp) */}
+        <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#F5F5DA]/80 via-[#F5F5DA]/40 to-transparent pointer-events-none" />
 
-        <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-[#F5F5DA] via-[#F5F5DA]/90 to-transparent" />
+        {/* Subtle Crimson Ambient Accent Overlay */}
+        <div className="absolute inset-0 z-10 bg-gradient-to-tr from-[#7B021D]/[0.03] via-transparent to-transparent pointer-events-none" />
+
+        {/* Subtle Bottom Darkening Gradient */}
+        <div className="absolute inset-x-0 bottom-0 h-36 z-10 bg-gradient-to-t from-[#F5F5DA] via-[#F5F5DA]/60 to-transparent pointer-events-none" />
       </div>
 
       {/* ── 3. AMBIENT GLOW BLOBS ── */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[760px] h-[440px] bg-gradient-to-tr from-[#7B021D]/[0.08] via-[#E9E5C8]/40 to-transparent blur-3xl rounded-full pointer-events-none -z-10" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[760px] h-[440px] bg-gradient-to-tr from-[#7B021D]/[0.04] via-[#E9E5C8]/25 to-transparent blur-3xl rounded-full pointer-events-none z-10" />
 
-      {/* ── 4. HERO CONTENT LAYER ── */}
+      {/* ── 4. HERO CONTENT LAYER (z-20) ── */}
       <motion.div
         style={{ opacity: heroOpacity, y: heroContentY }}
-        className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 relative z-10"
+        className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 relative z-20"
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
 
@@ -200,7 +272,7 @@ export default function HeroSection() {
                 <motion.span
                   initial={{ opacity: 0, filter: 'blur(8px)', y: 20 }}
                   animate={{ opacity: 1, filter: 'blur(0px)', y: 0 }}
-                  transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
                   className="block"
                 >
                   Stories worth
@@ -208,7 +280,7 @@ export default function HeroSection() {
                 <motion.span
                   initial={{ opacity: 0, filter: 'blur(8px)', y: 20 }}
                   animate={{ opacity: 1, filter: 'blur(0px)', y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
                   className="block"
                 >
                   reading.
@@ -216,7 +288,7 @@ export default function HeroSection() {
                 <motion.span
                   initial={{ opacity: 0, filter: 'blur(8px)', y: 20 }}
                   animate={{ opacity: 1, filter: 'blur(0px)', y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
                   className="italic font-light text-[#7B021D] block pt-1"
                 >
                   Books worth remembering.
@@ -228,7 +300,7 @@ export default function HeroSection() {
             <motion.p
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.7, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
               className="text-base sm:text-lg text-[#6B5E5E] leading-[1.75] max-w-xl font-normal font-sans"
             >
               BookVerse Studio is an interconnected ecosystem where authors craft enduring manuscripts, independent publishers curate authoritative imprints, and discerning readers discover literary treasures.
@@ -238,7 +310,7 @@ export default function HeroSection() {
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.38, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.7, delay: 0.48, ease: [0.16, 1, 0.3, 1] }}
               className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-4"
             >
               <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }} transition={{ duration: 0.2 }}>
@@ -266,7 +338,7 @@ export default function HeroSection() {
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.7, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
               className="pt-6 border-t border-[#E9E5C8] flex items-center gap-8 text-xs text-[#6B5E5E] font-editorial-sans"
             >
               <div>
@@ -289,10 +361,10 @@ export default function HeroSection() {
 
           {/* ── RIGHT COLUMN: 3D FLOATING BOOK SHOWCASE WITH PARALLAX ── */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.94, y: 30 }}
+            initial={{ opacity: 0, scale: 0.94, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-5 flex justify-center lg:justify-end"
+            className="lg:col-span-5 flex justify-center lg:justify-end lg:-mt-8 xl:-mt-12"
           >
             <motion.div
               style={{
@@ -320,7 +392,7 @@ export default function HeroSection() {
                 <span>Featured Hardcover</span>
               </motion.div>
 
-              {/* Physical 3D Book Object: The Psychology of Money */}
+              {/* Physical 3D Book Showcase Card */}
               <Link
                 to={`/books/${bookSlug}`}
                 className="book-card-3d relative rounded-2xl overflow-hidden bg-[#FFFDF3] border border-[#E9E5C8] p-5 shadow-2xl block group cursor-pointer"
@@ -332,9 +404,9 @@ export default function HeroSection() {
                     alt={heroBook.title}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#211D1D]/75 via-transparent to-transparent opacity-85" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#211D1D]/75 via-transparent to-transparent opacity-85 pointer-events-none" />
 
-                  <div className="absolute bottom-4 left-4 right-4 text-[#F5F5DA]">
+                  <div className="absolute bottom-4 left-4 right-4 text-[#F5F5DA] pointer-events-none">
                     <span className="text-[11px] font-mono uppercase tracking-[0.16em] text-[#E9E5C8] block mb-1 font-semibold">
                       {heroBook.genre}
                     </span>

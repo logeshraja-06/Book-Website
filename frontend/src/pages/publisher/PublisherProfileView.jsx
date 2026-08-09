@@ -1,21 +1,19 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useInView, useMotionValue, animate } from 'framer-motion';
 import {
-  User,
-  Camera,
+  ShieldCheck,
   Save,
   CheckCircle2,
-  ShieldCheck,
-  Feather,
+  Building2,
+  Key,
+  Sliders,
   AlertCircle,
   BookOpen,
   Users,
-  Star,
-  FileText,
-  Sliders,
-  Key
+  CheckSquare,
+  FileCheck
 } from 'lucide-react';
-import { useAuth, apiFetch } from '../../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { useData } from '../../context/DataContext';
 import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
@@ -50,30 +48,22 @@ function StatCounter({ target, prefix = '', suffix = '', decimals = 0 }) {
   );
 }
 
-export default function AuthorProfileView() {
+export default function PublisherProfileView() {
   const { currentUser, updateCurrentUser } = useAuth();
-  const { books = [], studioBooks = [] } = useData();
+  const { books = [], editorialQueue = [] } = useData();
 
-  const [activeTab, setActiveTab] = useState('imprint'); // 'imprint' | 'catalogue' | 'preferences' | 'security'
-  const [toastMessage, setToastMessage] = useState(null); // { type: 'success' | 'error', text: string }
+  const [activeTab, setActiveTab] = useState('profile'); // 'profile' | 'imprint' | 'queue' | 'security'
+  const [toastMessage, setToastMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    imprintName: 'BookVerse Editorial House',
     bio: '',
     avatarUrl: '',
-    handle: '',
-    website: 'https://kalkiofficial.in',
-    twitter: '@kalki_official',
-    instagram: '@kalki_literary',
-  });
-
-  const [preferences, setPreferences] = useState({
-    genreCategory: 'Historical Realism & Epic Fiction',
-    royaltiesPayout: 'Direct Bank Transfer (Monthly)',
-    copyrightHolder: 'Kalki Krishnamurthy Imprint Estate',
-    submissionAutoNotify: true
+    reviewThreshold: '4.0',
+    autoAssign: true
   });
 
   const [securityData, setSecurityData] = useState({
@@ -86,11 +76,10 @@ export default function AuthorProfileView() {
     if (currentUser) {
       setFormData((prev) => ({
         ...prev,
-        name: currentUser.name || 'Kalki Krishnamurthy',
-        email: currentUser.email || 'kalki@bookverse.in',
-        bio: currentUser.bio || 'Master storyteller of Tamil historical realism and author of seminal works.',
-        avatarUrl: currentUser.avatarUrl || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
-        handle: currentUser.handle || '@kalkistudio'
+        name: currentUser.name || 'Editorial Control Desk',
+        email: currentUser.email || 'editor@bookverse.studio',
+        bio: currentUser.bio || 'Managing Publisher & Editorial Chief overseeing catalog evaluation and author rights.',
+        avatarUrl: currentUser.avatarUrl || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&q=80'
       }));
     }
   }, [currentUser]);
@@ -100,32 +89,19 @@ export default function AuthorProfileView() {
     setTimeout(() => setToastMessage(null), 3500);
   };
 
-  const handleSaveProfile = async (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      const res = await apiFetch('/studio/profile', {
-        method: 'PUT',
-        body: JSON.stringify({
-          name: formData.name,
-          bio: formData.bio,
-          avatarUrl: formData.avatarUrl,
-          handle: formData.handle || `@${formData.name.toLowerCase().replace(/\s+/g, '')}`
-        })
+      updateCurrentUser({
+        name: formData.name,
+        bio: formData.bio,
+        avatarUrl: formData.avatarUrl
       });
-
-      if (res.success) {
-        updateCurrentUser({
-          name: formData.name,
-          bio: formData.bio,
-          avatarUrl: formData.avatarUrl,
-          handle: formData.handle
-        });
-        showToast('success', 'Author imprint profile updated successfully');
-      }
+      showToast('success', 'Publisher control desk credentials updated successfully');
     } catch (err) {
-      showToast('error', `Failed to save author profile: ${err.message}`);
+      showToast('error', `Failed to update credentials: ${err.message}`);
     } finally {
       setIsLoading(false);
     }
@@ -137,21 +113,13 @@ export default function AuthorProfileView() {
       showToast('error', 'New passwords do not match');
       return;
     }
-    showToast('success', 'Security credentials updated successfully');
+    showToast('success', 'Publisher security credentials updated successfully');
     setSecurityData({ currentPassword: '', newPassword: '', confirmPassword: '' });
   };
 
-  // Filter books published by this author
-  const authorWorks = (studioBooks.length > 0 ? studioBooks : books).filter(
-    (b) => b.authorId === 'kalki-krishnamurthy' || b.author === currentUser?.name || b.author === 'Kalki Krishnamurthy'
-  );
-
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1, delayChildren: 0.05 }
-    }
+    visible: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.05 } }
   };
 
   const itemVariants = {
@@ -160,10 +128,10 @@ export default function AuthorProfileView() {
   };
 
   const tabs = [
-    { id: 'imprint', label: 'Imprint Credentials', icon: Feather },
-    { id: 'catalogue', label: 'Published Catalogue', icon: BookOpen },
-    { id: 'preferences', label: 'Publishing Preferences', icon: Sliders },
-    { id: 'security', label: 'Security & Access', icon: Key }
+    { id: 'profile', label: 'Publisher Profile', icon: ShieldCheck },
+    { id: 'imprint', label: 'House Imprint & Identity', icon: Building2 },
+    { id: 'queue', label: 'Review Queue Preferences', icon: Sliders },
+    { id: 'security', label: 'Security Credentials', icon: Key }
   ];
 
   return (
@@ -198,18 +166,18 @@ export default function AuthorProfileView() {
       <motion.div variants={itemVariants} className="flex flex-col sm:flex-row sm:items-end justify-between border-b border-[#D8CFAE] pb-6 gap-4">
         <div>
           <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#7B021D] font-bold flex items-center gap-1.5 mb-1">
-            <Feather className="w-3.5 h-3.5 text-[#7B021D]" />
-            Writing Studio & Publishing Identity
+            <ShieldCheck className="w-3.5 h-3.5 text-[#7B021D]" />
+            Editorial Authority & Administrative Clearance
           </span>
-          <h1 className="font-editorial-serif text-3xl sm:text-4xl font-normal text-[#181616]">
-            Author Profile & Settings
+          <h1 className="font-editorial-serif text-3xl sm:text-4xl font-bold text-[#181616]">
+            Publisher Settings & Profile
           </h1>
           <p className="text-xs text-[#5F594F] font-sans mt-0.5">
-            Configure your public writer biography, pen name, published catalogue, and imprint preferences
+            Configure house imprint credentials, manuscript review queue parameters, and administrative access
           </p>
         </div>
 
-        {/* Tab Selector */}
+        {/* Tab Navigation Pill Bar */}
         <div className="flex items-center gap-1.5 p-1.5 bg-[#F1EED2] border border-[#D8CFAE] rounded-2xl overflow-x-auto self-start sm:self-auto max-w-full">
           {tabs.map((t) => {
             const Icon = t.icon;
@@ -231,32 +199,18 @@ export default function AuthorProfileView() {
         </div>
       </motion.div>
 
-      {/* ── 2. IMPRINT TAB ── */}
-      {activeTab === 'imprint' && (
+      {/* ── 2. PUBLISHER PROFILE TAB ── */}
+      {activeTab === 'profile' && (
         <motion.div variants={itemVariants} className="space-y-8">
-          {/* HEADER IDENTITY CARD */}
           <div className="p-8 sm:p-10 rounded-3xl bg-[#FFFDF3] border border-[#D8CFAE] shadow-md space-y-8 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-72 h-72 bg-[#7B021D]/5 blur-3xl rounded-full pointer-events-none" />
 
             <div className="flex flex-col sm:flex-row items-center gap-6 border-b border-[#DED7BD] pb-8 relative z-10">
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.3 }}
-                className="relative p-1 rounded-full bg-gradient-to-tr from-[#7B021D] to-[#D8CFAE] shadow-lg shrink-0"
-              >
-                <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-[#FFFDF3] bg-[#F8F6E5] group">
-                  {formData.avatarUrl ? (
-                    <img src={formData.avatarUrl} alt={formData.name} className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <User className="w-8 h-8 text-[#7B021D]" />
-                    </div>
-                  )}
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer">
-                    <Camera className="w-6 h-6 text-white" />
-                  </div>
+              <div className="relative p-1 rounded-full bg-gradient-to-tr from-[#7B021D] to-[#D8CFAE] shadow-lg shrink-0">
+                <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-[#FFFDF3] bg-[#F8F6E5]">
+                  <img src={formData.avatarUrl} alt={formData.name} className="w-full h-full object-cover" />
                 </div>
-              </motion.div>
+              </div>
 
               <div className="space-y-2 text-center sm:text-left flex-1">
                 <div className="flex items-center justify-center sm:justify-start gap-2 flex-wrap">
@@ -265,12 +219,10 @@ export default function AuthorProfileView() {
                   </h3>
                   <span className="inline-flex items-center gap-1 px-3 py-0.5 rounded-full bg-[#F1EED2] border border-[#D8CFAE] text-[10px] font-mono text-[#7B021D] font-bold">
                     <ShieldCheck className="w-3 h-3 text-[#7B021D]" />
-                    Verified Studio Author
+                    Verified Publisher Registrar
                   </span>
                 </div>
-                <p className="text-xs text-[#5F594F] font-mono">
-                  {formData.handle || '@author'} · {formData.email}
-                </p>
+                <p className="text-xs font-mono text-[#5F594F]">{formData.email}</p>
                 <p className="text-xs text-[#5F594F] font-sans italic max-w-xl">
                   "{formData.bio}"
                 </p>
@@ -281,63 +233,57 @@ export default function AuthorProfileView() {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 py-6 border-y border-[#DED7BD] bg-[#F8F6E5] rounded-2xl px-6">
               <div className="space-y-1">
                 <span className="text-[10px] uppercase font-mono tracking-widest text-[#827A6D] font-bold block flex items-center gap-1">
-                  <BookOpen className="w-3 h-3 text-[#7B021D]" /> Works
+                  <BookOpen className="w-3 h-3 text-[#7B021D]" /> Catalog
                 </span>
-                <StatCounter target={authorWorks.length || 5} />
+                <StatCounter target={books.length || 12} />
                 <span className="text-[11px] text-[#5F594F] font-sans block">Published titles</span>
               </div>
 
               <div className="space-y-1">
                 <span className="text-[10px] uppercase font-mono tracking-widest text-[#827A6D] font-bold block flex items-center gap-1">
-                  <Users className="w-3 h-3 text-[#7B021D]" /> Readers
+                  <FileCheck className="w-3 h-3 text-[#7B021D]" /> Queue
                 </span>
-                <StatCounter target={28400} />
-                <span className="text-[11px] text-[#5F594F] font-sans block">Cumulative reach</span>
+                <StatCounter target={editorialQueue.length || 4} />
+                <span className="text-[11px] text-[#5F594F] font-sans block">Under evaluation</span>
               </div>
 
               <div className="space-y-1">
                 <span className="text-[10px] uppercase font-mono tracking-widest text-[#827A6D] font-bold block flex items-center gap-1">
-                  <Star className="w-3 h-3 text-[#7B021D]" /> Rating
+                  <Users className="w-3 h-3 text-[#7B021D]" /> Imprint Authors
                 </span>
-                <StatCounter target={4.9} decimals={1} suffix=" ★" />
-                <span className="text-[11px] text-[#5F594F] font-sans block">Average feedback</span>
+                <StatCounter target={85} />
+                <span className="text-[11px] text-[#5F594F] font-sans block">Verified writers</span>
               </div>
 
               <div className="space-y-1">
                 <span className="text-[10px] uppercase font-mono tracking-widest text-[#827A6D] font-bold block flex items-center gap-1">
-                  <FileText className="w-3 h-3 text-[#7B021D]" /> Manuscripts
+                  <CheckSquare className="w-3 h-3 text-[#7B021D]" /> Approved
                 </span>
-                <StatCounter target={8} />
-                <span className="text-[11px] text-[#5F594F] font-sans block">In editorial queue</span>
+                <StatCounter target={142} />
+                <span className="text-[11px] text-[#5F594F] font-sans block">Approved editions</span>
               </div>
             </div>
 
-            {/* EDIT FORM */}
-            <form onSubmit={handleSaveProfile} className="space-y-6 pt-4">
+            {/* PROFILE FORM */}
+            <form onSubmit={handleSave} className="space-y-6 pt-2">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <Input
-                  label="Display Pen Name"
+                  label="Publisher Title / Chief Name"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   required
                 />
                 <Input
-                  label="Author Handle"
-                  value={formData.handle}
-                  onChange={(e) => setFormData({ ...formData, handle: e.target.value })}
+                  label="Avatar Image URL"
+                  value={formData.avatarUrl}
+                  onChange={(e) => setFormData({ ...formData, avatarUrl: e.target.value })}
                 />
               </div>
 
               <Input
-                label="Avatar Image URL"
-                value={formData.avatarUrl}
-                onChange={(e) => setFormData({ ...formData, avatarUrl: e.target.value })}
-              />
-
-              <Input
-                label="Public Author Biography"
+                label="Editorial Directive & House Bio"
                 type="textarea"
-                rows={4}
+                rows={3}
                 value={formData.bio}
                 onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
               />
@@ -345,7 +291,7 @@ export default function AuthorProfileView() {
               <div className="flex justify-end pt-4 border-t border-[#DED7BD]">
                 <Button type="submit" size="md" disabled={isLoading}>
                   <Save className="w-4 h-4 mr-2" />
-                  <span>{isLoading ? 'Saving Imprint…' : 'Save Imprint Changes'}</span>
+                  <span>{isLoading ? 'Saving Credentials...' : 'Save Publisher Credentials'}</span>
                 </Button>
               </div>
             </form>
@@ -353,82 +299,90 @@ export default function AuthorProfileView() {
         </motion.div>
       )}
 
-      {/* ── 3. CATALOGUE TAB ── */}
-      {activeTab === 'catalogue' && (
-        <motion.div variants={itemVariants} className="p-8 sm:p-10 rounded-3xl bg-[#FFFDF3] border border-[#D8CFAE] shadow-md space-y-6">
+      {/* ── 3. HOUSE IMPRINT TAB ── */}
+      {activeTab === 'imprint' && (
+        <motion.div variants={itemVariants} className="p-8 sm:p-10 rounded-3xl bg-[#FFFDF3] border border-[#D8CFAE] shadow-md space-y-8">
           <div>
             <h3 className="font-editorial-serif text-2xl font-bold text-[#181616]">
-              Published Imprint Catalogue
+              House Imprint & Identity
             </h3>
             <p className="text-xs text-[#5F594F] font-sans mt-1">
-              Active published works curated under your author profile
+              Manage house publication title, imprint branding, and editorial contact info
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-2">
-            {authorWorks.map((b) => (
-              <div key={b.id || b._id} className="p-4 rounded-2xl bg-[#F8F6E5] border border-[#D8CFAE] space-y-3 flex flex-col justify-between">
-                <div className="flex gap-4">
-                  <div className="w-16 h-22 rounded-lg overflow-hidden bg-[#D8CFAE] shrink-0">
-                    <img src={b.coverImage || b.coverUrl} alt={b.title} className="w-full h-full object-cover" />
-                  </div>
-                  <div>
-                    <span className="text-[10px] font-mono uppercase text-[#7B021D] font-bold block">{b.genre}</span>
-                    <h4 className="font-editorial-serif text-lg font-bold text-[#181616] leading-tight mt-0.5">{b.title}</h4>
-                    <span className="text-xs font-mono text-[#5F594F] block mt-1">₹{b.price} · {b.rating}★</span>
-                  </div>
-                </div>
-              </div>
-            ))}
+          <div className="space-y-6">
+            <Input
+              label="House Imprint Name"
+              value={formData.imprintName}
+              onChange={(e) => setFormData({ ...formData, imprintName: e.target.value })}
+            />
+
+            <Input
+              label="Administrative Contact Email"
+              value={formData.email}
+              disabled
+            />
+
+            <div className="p-4 rounded-2xl bg-[#F8F6E5] border border-[#D8CFAE] space-y-1">
+              <span className="text-xs font-mono font-bold text-[#181616] block">Editorial Clearance Level</span>
+              <span className="text-[11px] text-[#5F594F] font-sans block">Master Rights & Catalog Distribution Authority</span>
+            </div>
+          </div>
+
+          <div className="pt-6 border-t border-[#DED7BD] flex justify-end">
+            <Button size="md" onClick={() => showToast('success', 'House imprint identity updated')}>
+              Save House Imprint
+            </Button>
           </div>
         </motion.div>
       )}
 
-      {/* ── 4. PREFERENCES TAB ── */}
-      {activeTab === 'preferences' && (
+      {/* ── 4. REVIEW QUEUE PREFERENCES TAB ── */}
+      {activeTab === 'queue' && (
         <motion.div variants={itemVariants} className="p-8 sm:p-10 rounded-3xl bg-[#FFFDF3] border border-[#D8CFAE] shadow-md space-y-8">
           <div>
             <h3 className="font-editorial-serif text-2xl font-bold text-[#181616]">
-              Author & Publishing Preferences
+              Review Queue Preferences
             </h3>
             <p className="text-xs text-[#5F594F] font-sans mt-1">
-              Configure genre taxonomy defaults, royalties payout, and manuscript submission notifications
+              Set evaluation criteria for manuscript approval and automated review assignments
             </p>
           </div>
 
           <div className="space-y-6">
             <div className="space-y-2">
               <label className="text-[10px] uppercase font-mono tracking-widest text-[#7B021D] block font-bold">
-                Primary Writing Genre Category
+                Manuscript Evaluation Rating Threshold
               </label>
               <select
-                value={preferences.genreCategory}
-                onChange={(e) => setPreferences({ ...preferences, genreCategory: e.target.value })}
+                value={formData.reviewThreshold}
+                onChange={(e) => setFormData({ ...formData, reviewThreshold: e.target.value })}
                 className="w-full px-4 py-3 rounded-2xl bg-[#FFFDF3] border border-[#D8CFAE] text-xs font-mono text-[#181616] focus:outline-none focus:border-[#7B021D]"
               >
-                <option>Historical Realism & Epic Fiction</option>
-                <option>Literary Fiction & Drama</option>
-                <option>Philosophy & Essays</option>
-                <option>Biographies & Memoirs</option>
+                <option value="3.5">Rating ≥ 3.5 Stars (Permissive)</option>
+                <option value="4.0">Rating ≥ 4.0 Stars (Standard Quality)</option>
+                <option value="4.5">Rating ≥ 4.5 Stars (Strict Excellence)</option>
               </select>
             </div>
 
-            <Input
-              label="Royalties Payout Method"
-              value={preferences.royaltiesPayout}
-              onChange={(e) => setPreferences({ ...preferences, royaltiesPayout: e.target.value })}
-            />
-
-            <Input
-              label="Default Copyright Holder Identity"
-              value={preferences.copyrightHolder}
-              onChange={(e) => setPreferences({ ...preferences, copyrightHolder: e.target.value })}
-            />
+            <label className="flex items-center justify-between p-4 rounded-2xl bg-[#F8F6E5] border border-[#D8CFAE] cursor-pointer">
+              <div>
+                <span className="text-xs font-mono font-bold text-[#181616] block">Automated Editorial Assignment</span>
+                <span className="text-[11px] text-[#5F594F] font-sans block">Auto-route incoming submissions to category specialists</span>
+              </div>
+              <input
+                type="checkbox"
+                checked={formData.autoAssign}
+                onChange={(e) => setFormData({ ...formData, autoAssign: e.target.checked })}
+                className="w-4 h-4 accent-[#7B021D]"
+              />
+            </label>
           </div>
 
           <div className="pt-6 border-t border-[#DED7BD] flex justify-end">
-            <Button size="md" onClick={() => showToast('success', 'Author publishing preferences saved')}>
-              Save Publishing Preferences
+            <Button size="md" onClick={() => showToast('success', 'Review queue preferences updated')}>
+              Save Queue Preferences
             </Button>
           </div>
         </motion.div>
@@ -439,16 +393,16 @@ export default function AuthorProfileView() {
         <motion.form variants={itemVariants} onSubmit={handleSecuritySave} className="p-8 sm:p-10 rounded-3xl bg-[#FFFDF3] border border-[#D8CFAE] shadow-md space-y-8">
           <div>
             <h3 className="font-editorial-serif text-2xl font-bold text-[#181616]">
-              Security & Credentials
+              Publisher Security Credentials
             </h3>
             <p className="text-xs text-[#5F594F] font-sans mt-1">
-              Update password, review author email address, and manage security access
+              Update password, manage administrative tokens, and review security clearance
             </p>
           </div>
 
           <div className="space-y-6">
             <Input
-              label="Author Registered Email"
+              label="Publisher Registrar Email"
               value={formData.email}
               disabled
             />
@@ -471,7 +425,7 @@ export default function AuthorProfileView() {
 
           <div className="pt-6 border-t border-[#DED7BD] flex justify-end">
             <Button type="submit" size="md">
-              Save Security Changes
+              Update Publisher Security Credentials
             </Button>
           </div>
         </motion.form>

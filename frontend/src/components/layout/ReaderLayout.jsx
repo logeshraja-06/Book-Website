@@ -28,20 +28,20 @@ export default function ReaderLayout() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF8F6] selection:bg-[#7B021D] selection:text-[#F5F5DA] relative">
+    <div className="min-h-screen bg-[#F5F5DA] text-[#181616] selection:bg-[#7B021D] selection:text-[#F5F5DA] relative">
       {/* ── 1. PERSONAL READER MASTHEAD ── */}
-      <section className="border-b border-[#E7D9D3] bg-gradient-to-br from-[#F4EEEA] via-[#FFFDF3] to-[#FAF8F6] pt-12 pb-8 relative overflow-hidden shadow-xs">
+      <section className="border-b border-[#D8CFAE] bg-[#F5F5DA] pt-12 pb-8 relative overflow-hidden shadow-xs">
         {/* Subtle Ambient Crimson Glow */}
-        <div className="absolute top-0 right-1/3 w-80 h-80 bg-[#D3968C]/15 blur-3xl rounded-full pointer-events-none" />
+        <div className="absolute top-0 right-1/3 w-80 h-80 bg-[#7B021D]/5 blur-3xl rounded-full pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8">
             <div className="flex items-center gap-4">
-              <div className="p-1 rounded-full bg-gradient-to-tr from-[#7B021D] to-[#D3968C] shadow-md shrink-0">
+              <div className="p-1 rounded-full bg-gradient-to-tr from-[#7B021D] to-[#D8CFAE] shadow-md shrink-0">
                 <img
                   src={user.avatarUrl}
                   alt={user.name}
-                  className="w-14 h-14 rounded-full object-cover border-2 border-[#FFFDF3] bg-[#F4EEEA]"
+                  className="w-14 h-14 rounded-full object-cover border-2 border-[#FFFDF3] bg-[#F8F6E5]"
                 />
               </div>
               <div>
@@ -49,19 +49,19 @@ export default function ReaderLayout() {
                   <Sparkles className="w-3.5 h-3.5 text-[#7B021D]" />
                   Personal Reader Sanctuary
                 </span>
-                <h1 className="font-editorial-serif text-2xl sm:text-3xl text-[#2B2B2B] font-bold">
+                <h1 className="font-editorial-serif text-2xl sm:text-3xl text-[#181616] font-bold">
                   {user.name}
                 </h1>
               </div>
             </div>
 
             <div className="flex items-center gap-4">
-              <div className="hidden sm:inline-flex items-center gap-3 px-4 py-2 rounded-full bg-[#FFFDF3] border border-[#E7D9D3] text-xs font-mono text-[#6E6A67] shadow-2xs">
-                <span className="flex items-center gap-1 font-bold text-[#2B2B2B]">
+              <div className="hidden sm:inline-flex items-center gap-3 px-4 py-2 rounded-full bg-[#FFFDF3] border border-[#D8CFAE] text-xs font-mono text-[#5F594F] shadow-2xs">
+                <span className="flex items-center gap-1 font-bold text-[#181616]">
                   <BookOpen className="w-3.5 h-3.5 text-[#7B021D]" />
                   {user.stats?.booksRead || '14'} Books Read
                 </span>
-                <span className="h-3 w-px bg-[#E7D9D3]" />
+                <span className="h-3 w-px bg-[#D8CFAE]" />
                 <span className="flex items-center gap-1 font-bold text-[#7B021D]">
                   <Flame className="w-3.5 h-3.5 text-[#7B021D]" />
                   {user.stats?.currentStreak || '18 Days'} Streak
@@ -73,7 +73,7 @@ export default function ReaderLayout() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handleLogout}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#FFFDF3] border border-[#E7D9D3] text-xs font-mono font-bold uppercase tracking-wider text-[#2B2B2B] hover:border-[#7B021D] hover:text-[#7B021D] transition-colors shadow-2xs"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#FFFDF3] border border-[#D8CFAE] text-xs font-mono font-bold uppercase tracking-wider text-[#181616] hover:border-[#7B021D] hover:text-[#7B021D] transition-colors shadow-2xs"
               >
                 <LogOut className="w-3.5 h-3.5 text-[#7B021D]" />
                 <span>Sign Out</span>
@@ -82,7 +82,7 @@ export default function ReaderLayout() {
           </div>
 
           {/* Navigation Tabs */}
-          <nav className="flex items-center gap-8 border-b border-[#E7D9D3]/60 -mb-8 overflow-x-auto pb-3 scrollbar-none">
+          <nav className="flex items-center gap-8 border-b border-[#D8CFAE]/60 -mb-8 overflow-x-auto pb-3 scrollbar-none">
             {navTabs.map((tab) => {
               const isActive =
                 tab.path === '/my-shelf'
@@ -94,7 +94,7 @@ export default function ReaderLayout() {
                   key={tab.name}
                   to={tab.path}
                   className={`relative text-sm font-editorial-sans transition-colors py-2.5 whitespace-nowrap min-h-[44px] inline-flex items-center ${
-                    isActive ? 'text-[#2B2B2B] font-bold' : 'text-[#6E6A67] hover:text-[#2B2B2B]'
+                    isActive ? 'text-[#181616] font-bold' : 'text-[#5F594F] hover:text-[#181616]'
                   }`}
                 >
                   {tab.name}
@@ -113,7 +113,7 @@ export default function ReaderLayout() {
       </section>
 
       {/* Main Content Area */}
-      <main className="max-w-7xl mx-auto px-6 lg:px-12 py-12 relative z-10">
+      <main className="max-w-7xl mx-auto px-6 lg:px-12 py-12 relative z-10 bg-[#F5F5DA]">
         <AnimatePresence mode="wait">
           <motion.div
             key={location.pathname}

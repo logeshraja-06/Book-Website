@@ -117,6 +117,50 @@ const registerAuthor = asyncHandler(async (req, res) => {
   );
 });
 
+// @desc    Register a Publisher
+// @route   POST /api/auth/register/publisher
+// @access  Public
+const registerPublisher = asyncHandler(async (req, res) => {
+  const { name, email, password } = req.body;
+
+  if (!name || !email || !password) {
+    return ApiResponse.error(res, 'Full name, email, and password are required', 400);
+  }
+
+  if (password.length < 8) {
+    return ApiResponse.error(res, 'Password must be at least 8 characters long', 400);
+  }
+
+  const cleanEmail = String(email).trim().toLowerCase();
+  const existingUser = await User.findOne({ email: cleanEmail });
+  if (existingUser) {
+    return ApiResponse.error(res, 'An account with this email already exists.', 409);
+  }
+
+  const user = await User.create({
+    name: String(name).trim(),
+    email: cleanEmail,
+    password,
+    role: 'publisher',
+    country: 'India',
+    avatarUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&q=80',
+    handle: `@${cleanEmail.split('@')[0]}`
+  });
+
+  const token = generateToken(user._id, user.role);
+  res.cookie('bookverse_token', token, getCookieOptions());
+
+  const userResponse = user.toObject();
+  delete userResponse.password;
+
+  return ApiResponse.success(
+    res,
+    'Publisher account created successfully',
+    { token, user: userResponse },
+    201
+  );
+});
+
 // @desc    General Register Endpoint
 // @route   POST /api/auth/register
 // @access  Public
@@ -124,6 +168,8 @@ const register = asyncHandler(async (req, res) => {
   const { role } = req.body;
   if (role === 'author') {
     return registerAuthor(req, res);
+  } else if (role === 'publisher' || role === 'admin') {
+    return registerPublisher(req, res);
   }
   return registerReader(req, res);
 });

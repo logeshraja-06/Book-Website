@@ -1,4 +1,7 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Bookmark, CheckCircle, Info, User, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { BOOKS } from '../data/books';
 import { AUTHORS } from '../data/authors';
 import { REVIEWS } from '../data/reviews';
@@ -20,8 +23,52 @@ export function DataProvider({ children }) {
   const [studioBooks, setStudioBooks] = useState([]);
   const [editorialQueue, setEditorialQueue] = useState([]);
   const [wishlistBooks, setWishlistBooks] = useState([]);
+  const [bookmarks, setBookmarks] = useState([]);
   const [libraryBookState, setLibraryBookState] = useState(INITIAL_LIBRARY_BOOKS);
   const [wishlistIds, setWishlistIds] = useState(['sapiens', 'atomic-habits', 'immortals-meluha']);
+  const [bookmarkIds, setBookmarkIds] = useState([]);
+  const [purchasedBookIds, setPurchasedBookIds] = useState([]);
+
+  // Global Wishlist Toast & Auth Modal State
+  const [toastState, setToastState] = useState({ show: false, message: '', type: 'success' });
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [activeReaderBook, setActiveReaderBook] = useState(null);
+
+  const showToast = useCallback((message, type = 'success') => {
+    setToastState({ show: true, message, type });
+    setTimeout(() => {
+      setToastState((prev) => ({ ...prev, show: false }));
+    }, 3200);
+  }, []);
+
+  // Helper: check if a book is wishlisted using ID, _id, or slug
+  const isBookInWishlist = useCallback((bookOrId) => {
+    if (!bookOrId) return false;
+    const targetId = typeof bookOrId === 'string' ? bookOrId : (bookOrId.id || bookOrId._id || bookOrId.slug);
+    return wishlistIds.some((id) => id === targetId || (typeof bookOrId === 'object' && (id === bookOrId.id || id === bookOrId._id || id === bookOrId.slug)));
+  }, [wishlistIds]);
+
+  // Helper: check if a book is bookmarked using ID, _id, or slug
+  const isBookBookmarked = useCallback((bookOrId) => {
+    if (!bookOrId) return false;
+    const targetId = typeof bookOrId === 'string' ? bookOrId : (bookOrId.id || bookOrId._id || bookOrId.slug);
+    return bookmarkIds.some((id) => id === targetId || (typeof bookOrId === 'object' && (id === bookOrId.id || id === bookOrId._id || id === bookOrId.slug))) ||
+      bookmarks.some((bm) => {
+        const bmBookId = bm.bookId?._id || bm.bookId?.id || bm.bookId;
+        return bmBookId === targetId;
+      });
+  }, [bookmarkIds, bookmarks]);
+
+  // Helper: check if a book is purchased by current user
+  const isBookPurchased = useCallback((bookOrId) => {
+    if (!bookOrId) return false;
+    const targetId = typeof bookOrId === 'string' ? bookOrId : (bookOrId.id || bookOrId._id || bookOrId.slug);
+    return purchasedBookIds.some((id) => id === targetId) ||
+      libraryBookState.some((libItem) => {
+        const libBookId = libItem.bookId?._id || libItem.bookId?.id || libItem.bookId || libItem.id || libItem._id;
+        return libBookId === targetId || libItem.slug === targetId;
+      });
+  }, [purchasedBookIds, libraryBookState]);
 
   // 1. Fetch Public Books (merge by ID), Authors & Categories on Mount
   const fetchPublicData = useCallback(async () => {
@@ -33,9 +80,9 @@ export function DataProvider({ children }) {
       ]);
 
       if (booksRes.status === 'fulfilled' && booksRes.value?.success && booksRes.value.data) {
-        setBooks(prev => {
-          const map = new Map(prev.map(b => [b.id || b._id, b]));
-          (booksRes.value.data || []).forEach(b => {
+        setBooks((prev) => {
+          const map = new Map(prev.map((b) => [b.id || b._id, b]));
+          (booksRes.value.data || []).forEach((b) => {
             const key = b.id || b._id;
             const existing = map.get(key);
             const coverImage = existing?.coverImage || (b.coverUrl && !b.coverUrl.includes('unsplash') ? b.coverUrl : null) || b.coverImage || `/books/${b.id || b.slug}.jpg`;
@@ -99,19 +146,29 @@ export function DataProvider({ children }) {
         fetchEditorialData();
       }
 
-      // Reader Library & Wishlist
+      // Reader Library, Wishlist, Bookmarks & Purchases
       if (currentUser.role) {
-        const [libRes, wishRes] = await Promise.allSettled([
+        const [libRes, wishRes, bmRes] = await Promise.allSettled([
           apiFetch('/reader/library').catch(() => null),
-          apiFetch('/reader/wishlist').catch(() => null)
+          apiFetch('/reader/wishlist').catch(() => null),
+          apiFetch('/reader/bookmarks').catch(() => null)
         ]);
 
         if (libRes.status === 'fulfilled' && libRes.value?.success && libRes.value.data) {
           setLibraryBookState(libRes.value.data);
+          const purchasedIds = libRes.value.data.map((item) => {
+            const bId = item.bookId?._id || item.bookId?.id || item.bookId || item.id || item._id;
+            return bId;
+          });
+          setPurchasedBookIds(purchasedIds);
         }
         if (wishRes.status === 'fulfilled' && wishRes.value?.success && wishRes.value.data) {
           setWishlistBooks(wishRes.value.data);
-          setWishlistIds(wishRes.value.data.map(b => b.id || b._id));
+          setWishlistIds(wishRes.value.data.map((b) => b.id || b._id || b.slug));
+        }
+        if (bmRes.status === 'fulfilled' && bmRes.value?.success && bmRes.value.data) {
+          setBookmarks(bmRes.value.data);
+          setBookmarkIds(bmRes.value.data.map((bm) => bm.bookId?._id || bm.bookId?.id || bm.bookId));
         }
       }
     } catch (err) {
@@ -136,6 +193,7 @@ export function DataProvider({ children }) {
       if (newBook.price) formData.append('price', String(newBook.price));
       if (newBook.synopsis) formData.append('synopsis', newBook.synopsis);
       if (newBook.tagline) formData.append('tagline', newBook.tagline);
+      if (newBook.isbn) formData.append('isbn', newBook.isbn);
       formData.append('status', newBook.status || 'In Review');
 
       if (newBook.coverImage instanceof File) {
@@ -162,10 +220,10 @@ export function DataProvider({ children }) {
           ...res.data,
           id: res.data.id || res.data._id
         };
-        setBooks(prev => [createdBook, ...prev]);
-        setStudioBooks(prev => [createdBook, ...prev]);
-        setEditorialQueue(prev => [createdBook, ...prev]);
-        setEditorialBooks(prev => [createdBook, ...prev]);
+        setBooks((prev) => [createdBook, ...prev]);
+        setStudioBooks((prev) => [createdBook, ...prev]);
+        setEditorialQueue((prev) => [createdBook, ...prev]);
+        setEditorialBooks((prev) => [createdBook, ...prev]);
 
         fetchPublicData();
         fetchEditorialData();
@@ -175,7 +233,6 @@ export function DataProvider({ children }) {
       console.warn('[addBook API Fallback]:', err.message);
     }
 
-    // In-memory fallback
     const createdBook = {
       id: newBook.id || newBook.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
       title: newBook.title,
@@ -184,46 +241,35 @@ export function DataProvider({ children }) {
       authorId: currentUser?.id || 'kalki-krishnamurthy',
       genre: newBook.genre || 'Historical Fiction',
       language: newBook.language || 'English',
-      price: Number(newBook.price) || 999,
-      isbn: newBook.isbn || `978-${Math.floor(1000000000 + Math.random() * 9000000000)}`,
+      price: Number(newBook.price) || 499,
+      isbn: newBook.isbn || `BV-978-${Math.floor(100000 + Math.random() * 900000)}`,
       rating: 4.8,
       reviewsCount: '0',
       publishYear: Number(newBook.publishYear) || 2026,
       pages: Number(newBook.pages) || 350,
       publisher: newBook.publisher || 'BookVerse Studio Imprint',
-      editorPick: false,
-      tagline: newBook.subtitle || newBook.title,
       synopsis: newBook.synopsis || '',
       coverUrl: newBook.coverUrl || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80',
-      badge: 'New Submission',
-      status: 'In Review',
-      lastEdited: 'Just now',
-      submittedDate: new Date().toLocaleDateString('en-IN', { month: 'short', day: '2-digit', year: 'numeric' }),
-      editorialNotes: 'Submitted for editorial review.',
-      manuscriptFileName: newBook.manuscriptFileName || '',
-      manuscriptFileType: newBook.manuscriptFileType || 'PDF Document',
-      manuscriptFileSize: newBook.manuscriptFileSize || '',
-      manuscriptUrl: newBook.manuscriptUrl || null,
+      status: newBook.status || 'In Review'
     };
 
-    setBooks(prev => [createdBook, ...prev]);
-    setStudioBooks(prev => [createdBook, ...prev]);
-    setEditorialQueue(prev => [createdBook, ...prev]);
-    setEditorialBooks(prev => [createdBook, ...prev]);
+    setBooks((prev) => [createdBook, ...prev]);
+    setStudioBooks((prev) => [createdBook, ...prev]);
+    setEditorialQueue((prev) => [createdBook, ...prev]);
     return createdBook;
   }, [currentUser, fetchPublicData, fetchEditorialData]);
 
   /**
-   * Update a book's fields.
+   * Edit/Update an existing book.
    */
   const updateBook = useCallback(async (bookId, updates) => {
     try {
-      const hasFiles = updates.coverImage instanceof File || updates.manuscriptFile instanceof File || updates.pdfFile instanceof File;
       let body;
+      const isMultipart = updates.coverFile instanceof File || updates.manuscriptFile instanceof File;
 
-      if (hasFiles) {
+      if (isMultipart) {
         body = new FormData();
-        Object.keys(updates).forEach(key => {
+        Object.keys(updates).forEach((key) => {
           if (key === 'coverImage' || key === 'coverFile') {
             if (updates[key] instanceof File) body.append('coverImage', updates[key]);
           } else if (key === 'manuscriptFile' || key === 'pdfFile') {
@@ -243,9 +289,9 @@ export function DataProvider({ children }) {
 
       if (res.success && res.data) {
         const updated = { ...res.data, id: res.data.id || res.data._id };
-        setBooks(prev => prev.map(b => (b.id === bookId || b._id === bookId) ? updated : b));
-        setStudioBooks(prev => prev.map(b => (b.id === bookId || b._id === bookId) ? updated : b));
-        setEditorialBooks(prev => prev.map(b => (b.id === bookId || b._id === bookId) ? updated : b));
+        setBooks((prev) => prev.map((b) => (b.id === bookId || b._id === bookId) ? updated : b));
+        setStudioBooks((prev) => prev.map((b) => (b.id === bookId || b._id === bookId) ? updated : b));
+        setEditorialBooks((prev) => prev.map((b) => (b.id === bookId || b._id === bookId) ? updated : b));
         fetchPublicData();
         fetchEditorialData();
         return;
@@ -254,9 +300,9 @@ export function DataProvider({ children }) {
       console.warn('[updateBook API Fallback]:', err.message);
     }
 
-    setBooks(prev => prev.map(b => (b.id === bookId || b._id === bookId) ? { ...b, ...updates, lastEdited: 'Just now' } : b));
-    setStudioBooks(prev => prev.map(b => (b.id === bookId || b._id === bookId) ? { ...b, ...updates, lastEdited: 'Just now' } : b));
-    setEditorialBooks(prev => prev.map(b => (b.id === bookId || b._id === bookId) ? { ...b, ...updates, lastEdited: 'Just now' } : b));
+    setBooks((prev) => prev.map((b) => (b.id === bookId || b._id === bookId) ? { ...b, ...updates, lastEdited: 'Just now' } : b));
+    setStudioBooks((prev) => prev.map((b) => (b.id === bookId || b._id === bookId) ? { ...b, ...updates, lastEdited: 'Just now' } : b));
+    setEditorialBooks((prev) => prev.map((b) => (b.id === bookId || b._id === bookId) ? { ...b, ...updates, lastEdited: 'Just now' } : b));
   }, [fetchPublicData, fetchEditorialData]);
 
   /**
@@ -269,10 +315,10 @@ export function DataProvider({ children }) {
       console.warn('[deleteBook API Fallback]:', err.message);
     }
 
-    setBooks(prev => prev.filter(b => b.id !== bookId && b._id !== bookId));
-    setStudioBooks(prev => prev.filter(b => b.id !== bookId && b._id !== bookId));
-    setEditorialQueue(prev => prev.filter(b => b.id !== bookId && b._id !== bookId));
-    setEditorialBooks(prev => prev.filter(b => b.id !== bookId && b._id !== bookId));
+    setBooks((prev) => prev.filter((b) => b.id !== bookId && b._id !== bookId));
+    setStudioBooks((prev) => prev.filter((b) => b.id !== bookId && b._id !== bookId));
+    setEditorialQueue((prev) => prev.filter((b) => b.id !== bookId && b._id !== bookId));
+    setEditorialBooks((prev) => prev.filter((b) => b.id !== bookId && b._id !== bookId));
   }, []);
 
   /**
@@ -281,8 +327,10 @@ export function DataProvider({ children }) {
   const updateBookStatus = useCallback(async (bookId, newStatus, notes) => {
     try {
       let endpoint = '';
-      if (newStatus === 'Published') {
+      if (newStatus === 'Approved') {
         endpoint = `/editorial/books/${bookId}/approve`;
+      } else if (newStatus === 'Published') {
+        endpoint = `/editorial/books/${bookId}/publish`;
       } else if (newStatus === 'Rejected') {
         endpoint = `/editorial/books/${bookId}/reject`;
       } else if (newStatus === 'In Review') {
@@ -296,9 +344,9 @@ export function DataProvider({ children }) {
         });
         if (res.success && res.data) {
           const updated = { ...res.data, id: res.data.id || res.data._id };
-          setBooks(prev => prev.map(b => (b.id === bookId || b._id === bookId) ? updated : b));
-          setEditorialBooks(prev => prev.map(b => (b.id === bookId || b._id === bookId) ? updated : b));
-          setEditorialQueue(prev => prev.map(b => (b.id === bookId || b._id === bookId) ? updated : b));
+          setBooks((prev) => prev.map((b) => (b.id === bookId || b._id === bookId) ? updated : b));
+          setEditorialBooks((prev) => prev.map((b) => (b.id === bookId || b._id === bookId) ? updated : b));
+          setEditorialQueue((prev) => prev.map((b) => (b.id === bookId || b._id === bookId) ? updated : b));
           fetchPublicData();
           fetchEditorialData();
           return;
@@ -308,27 +356,170 @@ export function DataProvider({ children }) {
       console.warn('[updateBookStatus API Fallback]:', err.message);
     }
 
-    setBooks(prev => prev.map(b => (b.id === bookId || b._id === bookId) ? { ...b, status: newStatus } : b));
-    setEditorialBooks(prev => prev.map(b => (b.id === bookId || b._id === bookId) ? { ...b, status: newStatus } : b));
+    setBooks((prev) => prev.map((b) => (b.id === bookId || b._id === bookId) ? { ...b, status: newStatus } : b));
+    setEditorialBooks((prev) => prev.map((b) => (b.id === bookId || b._id === bookId) ? { ...b, status: newStatus } : b));
   }, [fetchPublicData, fetchEditorialData]);
 
   /**
-   * Reader: Toggle Wishlist
+   * Reader: Toggle Wishlist with Instant Sync & Auth Prompt Modal Trigger
    */
-  const toggleWishlist = useCallback(async (bookId) => {
+  const toggleWishlist = useCallback(async (bookOrId) => {
+    if (!currentUser) {
+      setAuthModalOpen(true);
+      return false;
+    }
+
+    const targetId = typeof bookOrId === 'string' ? bookOrId : (bookOrId.id || bookOrId._id || bookOrId.slug);
+    const targetBook = typeof bookOrId === 'object' ? bookOrId : books.find((b) => b.id === targetId || b._id === targetId || b.slug === targetId);
+
+    const isCurrentlySaved = wishlistIds.some((id) => id === targetId);
+
+    if (isCurrentlySaved) {
+      setWishlistIds((prev) => prev.filter((id) => id !== targetId));
+      setWishlistBooks((prev) => prev.filter((b) => (b.id || b._id || b.slug) !== targetId));
+      showToast('Removed from your wishlist', 'info');
+    } else {
+      setWishlistIds((prev) => [...prev, targetId]);
+      if (targetBook) {
+        setWishlistBooks((prev) => [...prev, targetBook]);
+      }
+      showToast('Added to your wishlist', 'success');
+    }
+
     try {
-      const res = await apiFetch(`/reader/wishlist/${bookId}`, { method: 'POST' });
+      const res = await apiFetch(`/reader/wishlist/${targetId}`, { method: 'POST' });
       if (res.success && res.data) {
         setWishlistBooks(res.data);
-        setWishlistIds(res.data.map(b => b.id || b._id));
-        return;
+        setWishlistIds(res.data.map((b) => b.id || b._id || b.slug));
       }
     } catch (err) {
       console.warn('[toggleWishlist API Fallback]:', err.message);
     }
+  }, [currentUser, wishlistIds, books, showToast]);
 
-    setWishlistIds(prev => prev.includes(bookId) ? prev.filter(id => id !== bookId) : [...prev, bookId]);
-  }, []);
+  /**
+   * Reader: Toggle Bookmark with Instant Sync & Auth Prompt Modal Trigger
+   */
+  const toggleBookmark = useCallback(async (bookOrId) => {
+    if (!currentUser) {
+      setAuthModalOpen(true);
+      return false;
+    }
+
+    const targetId = typeof bookOrId === 'string' ? bookOrId : (bookOrId.id || bookOrId._id || bookOrId.slug);
+    const targetBook = typeof bookOrId === 'object' ? bookOrId : books.find((b) => b.id === targetId || b._id === targetId || b.slug === targetId);
+
+    const existingBookmark = bookmarks.find((bm) => {
+      const bId = bm.bookId?._id || bm.bookId?.id || bm.bookId;
+      return bId === targetId || bm.bookId === targetId;
+    });
+
+    if (existingBookmark) {
+      // Remove bookmark
+      setBookmarks((prev) => prev.filter((bm) => bm._id !== existingBookmark._id && bm.bookId !== targetId));
+      setBookmarkIds((prev) => prev.filter((id) => id !== targetId));
+      showToast('Bookmark removed', 'info');
+
+      try {
+        const res = await apiFetch(`/reader/bookmarks/${existingBookmark._id || targetId}`, { method: 'DELETE' });
+        if (res.success && res.data) {
+          setBookmarks(res.data);
+          setBookmarkIds(res.data.map((bm) => bm.bookId?._id || bm.bookId?.id || bm.bookId));
+        }
+      } catch (err) {
+        console.warn('[toggleBookmark DELETE Fallback]:', err.message);
+      }
+    } else {
+      // Add bookmark
+      setBookmarkIds((prev) => [...prev, targetId]);
+      showToast('Bookmark saved to your library', 'success');
+
+      try {
+        const res = await apiFetch('/reader/bookmarks', {
+          method: 'POST',
+          body: JSON.stringify({ bookId: targetId, pageRef: 'Page 1' })
+        });
+        if (res.success && res.data) {
+          setBookmarks((prev) => [res.data, ...prev]);
+        }
+      } catch (err) {
+        console.warn('[toggleBookmark POST Fallback]:', err.message);
+      }
+    }
+  }, [currentUser, bookmarks, books, showToast]);
+
+  /**
+   * Reader: Purchase Book (Development Transaction)
+   */
+  const purchaseBook = useCallback(async (bookOrId, price) => {
+    if (!currentUser) {
+      setAuthModalOpen(true);
+      return false;
+    }
+
+    const targetId = typeof bookOrId === 'string' ? bookOrId : (bookOrId.id || bookOrId._id || bookOrId.slug);
+    const targetBook = typeof bookOrId === 'object' ? bookOrId : books.find((b) => b.id === targetId || b._id === targetId || b.slug === targetId);
+
+    try {
+      const res = await apiFetch('/reader/purchase', {
+        method: 'POST',
+        body: JSON.stringify({ bookId: targetId, price: price || targetBook?.price || 499 })
+      });
+
+      if (res.success && res.data) {
+        setPurchasedBookIds((prev) => [...prev, targetId]);
+        if (res.data.library) {
+          setLibraryBookState(res.data.library);
+        }
+        showToast(`Purchased "${targetBook?.title || 'Book'}" successfully!`, 'success');
+        fetchModuleData();
+        return true;
+      }
+    } catch (err) {
+      console.warn('[purchaseBook API Fallback]:', err.message);
+    }
+
+    // In-memory fallback
+    setPurchasedBookIds((prev) => [...prev, targetId]);
+    if (targetBook) {
+      setLibraryBookState((prev) => [
+        {
+          id: targetId,
+          bookId: targetId,
+          title: targetBook.title,
+          author: targetBook.author,
+          coverUrl: targetBook.coverUrl || targetBook.coverImage,
+          price: targetBook.price,
+          progress: 0,
+          currentPage: 1,
+          totalPages: targetBook.pages || 320,
+          status: 'Currently Reading',
+          lastRead: 'Just now'
+        },
+        ...prev
+      ]);
+    }
+    showToast(`Purchased "${targetBook?.title || 'Book'}" successfully!`, 'success');
+    return true;
+  }, [currentUser, books, showToast, fetchModuleData]);
+
+  /**
+   * Reader: Save Reading Progress
+   */
+  const saveReadingProgress = useCallback(async ({ bookId, currentPage, totalPages }) => {
+    if (!currentUser) return;
+    try {
+      const res = await apiFetch('/reader/progress', {
+        method: 'POST',
+        body: JSON.stringify({ bookId, currentPage, totalPages })
+      });
+      if (res.success && res.data) {
+        fetchModuleData();
+      }
+    } catch (err) {
+      console.warn('[saveReadingProgress API Fallback]:', err.message);
+    }
+  }, [currentUser, fetchModuleData]);
 
   /**
    * Reader: Toggle / Add to Library
@@ -344,12 +535,12 @@ export function DataProvider({ children }) {
       console.warn('[toggleLibrary API Fallback]:', err.message);
     }
 
-    setLibraryBookState(prev => {
-      const exists = prev.some(item => item.id === bookId || item._id === bookId);
+    setLibraryBookState((prev) => {
+      const exists = prev.some((item) => item.id === bookId || item._id === bookId);
       if (exists) {
-        return prev.filter(item => item.id !== bookId && item._id !== bookId);
+        return prev.filter((item) => item.id !== bookId && item._id !== bookId);
       } else {
-        const targetBook = books.find(b => b.id === bookId || b._id === bookId);
+        const targetBook = books.find((b) => b.id === bookId || b._id === bookId);
         const newLibraryItem = {
           id: bookId,
           title: targetBook?.title || 'Untitled',
@@ -377,7 +568,7 @@ export function DataProvider({ children }) {
         body: JSON.stringify({ bookId, rating, text })
       });
       if (res.success && res.data) {
-        setReviews(prev => [res.data, ...prev]);
+        setReviews((prev) => [res.data, ...prev]);
         fetchPublicData();
         return;
       }
@@ -393,65 +584,157 @@ export function DataProvider({ children }) {
       date: new Date().toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }),
       text
     };
-    setReviews(prev => [newReview, ...prev]);
+    setReviews((prev) => [newReview, ...prev]);
   }, [fetchPublicData]);
 
-  // Derived helpers — computed from current state with slug and ID matching flexibility
-  const getBookById = useCallback(id => {
+  // Derived helpers
+  const getBookById = useCallback((id) => {
     if (!id) return null;
-    return editorialBooks.find(b => b.slug === id || b.id === id || b._id === id || b.legacyId === id) ||
-           books.find(b => b.slug === id || b.id === id || b._id === id || b.legacyId === id) || null;
+    return editorialBooks.find((b) => b.slug === id || b.id === id || b._id === id || b.legacyId === id) ||
+           books.find((b) => b.slug === id || b.id === id || b._id === id || b.legacyId === id) || null;
   }, [editorialBooks, books]);
 
-  const getAuthorById = useCallback(id => {
+  const getAuthorById = useCallback((id) => {
     if (!id) return null;
-    return authors.find(a => a.slug === id || a.id === id || a._id === id || a.legacyId === id || a.name?.toLowerCase().replace(/\s+/g, '-') === id) || null;
+    return authors.find((a) => a.slug === id || a.id === id || a._id === id || a.legacyId === id || a.name?.toLowerCase().replace(/\s+/g, '-') === id) || null;
   }, [authors]);
 
-  const getReviewsByBookId = useCallback(bookId => {
-    return reviews.filter(r => r.bookId === bookId || r.bookId?._id === bookId);
+  const getReviewsByBookId = useCallback((bookId) => {
+    return reviews.filter((r) => r.bookId === bookId || r.bookId?._id === bookId);
   }, [reviews]);
 
-  const getBooksByAuthorId = useCallback(authorId => {
-    return (editorialBooks.length > 0 ? editorialBooks : books).filter(b => b.authorId === authorId || b.authorId?._id === authorId);
+  const getBooksByAuthorId = useCallback((authorId) => {
+    return (editorialBooks.length > 0 ? editorialBooks : books).filter((b) => b.authorId === authorId || b.authorId?._id === authorId);
   }, [editorialBooks, books]);
 
   return (
     <DataContext.Provider
       value={{
-        // Raw state
         books,
         editorialBooks,
         authors,
         reviews,
         categories,
         wishlistIds,
+        bookmarkIds,
+        bookmarks,
+        purchasedBookIds,
         libraryBookState,
         wishlistBooks,
 
-        // Mutable actions
         fetchPublicData,
         fetchEditorialData,
+        fetchModuleData,
         addBook,
         updateBook,
         deleteBook,
         updateBookStatus,
         toggleWishlist,
+        toggleBookmark,
+        purchaseBook,
+        saveReadingProgress,
         toggleLibrary,
         addReview,
+        isBookInWishlist,
+        isBookBookmarked,
+        isBookPurchased,
+        showToast,
 
-        // Derived helpers
         getBookById,
         getAuthorById,
         getReviewsByBookId,
         getBooksByAuthorId,
 
-        // Module-specific slices
-        studioBooks: studioBooks.length > 0 ? studioBooks : books.filter(b => b.authorId === 'kalki-krishnamurthy' || b.author === currentUser?.name),
-        editorialQueue: editorialQueue.length > 0 ? editorialQueue : (editorialBooks.length > 0 ? editorialBooks.filter(b => b.status === 'In Review' || b.status === 'Rejected') : books.filter(b => b.status === 'In Review' || b.status === 'Rejected')),
+        activeReaderBook,
+        setActiveReaderBook,
+
+        studioBooks: studioBooks.length > 0 ? studioBooks : books.filter((b) => b.authorId === 'kalki-krishnamurthy' || b.author === currentUser?.name),
+        editorialQueue: editorialQueue.length > 0 ? editorialQueue : (editorialBooks.length > 0 ? editorialBooks.filter((b) => b.status === 'Submitted' || b.status === 'submitted' || b.status === 'In Review' || b.status === 'Pending Review' || b.status === 'Rejected') : books.filter((b) => b.status === 'Submitted' || b.status === 'submitted' || b.status === 'In Review' || b.status === 'Pending Review' || b.status === 'Rejected')),
       }}
     >
       {children}
+
+      {/* ── GLOBAL EDITORIAL WISHLIST TOAST ── */}
+      <AnimatePresence>
+        {toastState.show && (
+          <motion.div
+            initial={{ opacity: 0, y: 24, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 24, scale: 0.95 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed bottom-8 right-8 z-50 bg-[#181616] text-[#F5F5DA] px-5 py-3.5 rounded-2xl border border-[#D8CFAE]/30 shadow-2xl flex items-center gap-3 font-editorial-sans text-xs font-semibold select-none pointer-events-none"
+          >
+            {toastState.type === 'success' ? (
+              <CheckCircle className="w-4 h-4 text-[#7B021D]" />
+            ) : (
+              <Info className="w-4 h-4 text-[#D8CFAE]" />
+            )}
+            <span>{toastState.message}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── GLOBAL SIGN-IN PROMPT MODAL (LOGGED OUT USERS) ── */}
+      <AnimatePresence>
+        {authModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setAuthModalOpen(false)}
+              className="fixed inset-0 bg-[#181616]/50 backdrop-blur-md"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.94, y: 14 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.94, y: 14 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="relative w-full max-w-md rounded-3xl bg-[#FFFDF3] border border-[#D8CFAE] p-6 sm:p-8 shadow-2xl z-10 text-center space-y-6"
+            >
+              <button
+                type="button"
+                onClick={() => setAuthModalOpen(false)}
+                className="absolute top-4 right-4 p-2 rounded-full text-[#5F594F] hover:text-[#181616] transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+
+              <div className="w-14 h-14 rounded-2xl bg-[#F8F6E5] border border-[#D8CFAE] flex items-center justify-center mx-auto text-[#7B021D] shadow-xs">
+                <Bookmark className="w-6 h-6 text-[#7B021D]" />
+              </div>
+
+              <div className="space-y-2">
+                <h3 className="font-editorial-serif text-2xl font-bold text-[#181616] tracking-tight">
+                  Sign in to save books to your personal library.
+                </h3>
+                <p className="text-xs text-[#5F594F] font-sans leading-relaxed">
+                  Create an account or sign in to save your favorite titles, sync bookmarks across devices, and access curated reading shelves.
+                </p>
+              </div>
+
+              <div className="pt-2 flex flex-col gap-3">
+                <Link
+                  to="/login"
+                  onClick={() => setAuthModalOpen(false)}
+                  className="w-full py-3.5 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-[0.1em] hover:bg-[#520014] transition-all shadow-md flex items-center justify-center gap-2"
+                >
+                  <User className="w-4 h-4" />
+                  <span>Sign In</span>
+                </Link>
+
+                <Link
+                  to="/register"
+                  onClick={() => setAuthModalOpen(false)}
+                  className="w-full py-3.5 rounded-full bg-[#FFFDF3] border border-[#D8CFAE] text-[#181616] text-xs font-mono font-bold uppercase tracking-[0.1em] hover:border-[#7B021D] hover:bg-[#F5F5DA] transition-all shadow-2xs"
+                >
+                  <span>Create Account</span>
+                </Link>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </DataContext.Provider>
   );
 }

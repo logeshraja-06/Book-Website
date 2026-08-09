@@ -32,21 +32,21 @@ export default function AuthorLayout() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#FAF8F6] text-[#2B2B2B] selection:bg-[#7B021D] selection:text-[#F5F5DA] relative">
+    <div className="min-h-screen bg-[#F5F5DA] text-[#181616] selection:bg-[#7B021D] selection:text-[#F5F5DA] relative">
       
       {/* ── DEEP CHARCOAL & BURGUNDY WRITING STUDIO MASTHEAD ── */}
-      <header className="bg-[#211D1D] text-[#F5F5DA] border-b border-[#E9E5C8]/20 pt-8 pb-6 relative overflow-hidden shadow-xl">
+      <header className="bg-[#211D1D] text-[#F5F5DA] border-b border-[#D8CFAE]/20 pt-8 pb-6 relative overflow-hidden shadow-xl">
         {/* Ambient Crimson Glow */}
         <div className="absolute top-0 right-1/4 w-80 h-80 bg-[#7B021D]/20 blur-3xl rounded-full pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-6">
             <div className="flex items-center gap-4">
-              <div className="w-11 h-11 rounded-full bg-[#520014] border border-[#E9E5C8]/30 flex items-center justify-center text-[#F5F5DA] shadow-md">
-                <Feather className="w-5 h-5 text-[#E9E5C8]" />
+              <div className="w-11 h-11 rounded-full bg-[#520014] border border-[#D8CFAE]/30 flex items-center justify-center text-[#F5F5DA] shadow-md">
+                <Feather className="w-5 h-5 text-[#D8CFAE]" />
               </div>
               <div>
-                <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-[#E9E5C8] font-bold block flex items-center gap-1.5">
+                <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-[#D8CFAE] font-bold block flex items-center gap-1.5">
                   <Sparkles className="w-3 h-3 text-[#7B021D]" />
                   Author Writing Studio & Imprint Console
                 </span>
@@ -57,8 +57,8 @@ export default function AuthorLayout() {
             </div>
 
             <div className="flex items-center gap-3">
-              <div className="hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#520014]/60 border border-[#E9E5C8]/30 text-xs font-mono text-[#E9E5C8]">
-                <ShieldCheck className="w-3.5 h-3.5 text-[#E9E5C8]" />
+              <div className="hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#520014]/60 border border-[#D8CFAE]/30 text-xs font-mono text-[#D8CFAE]">
+                <ShieldCheck className="w-3.5 h-3.5 text-[#D8CFAE]" />
                 <span>Verified Author Imprint</span>
               </div>
               
@@ -74,7 +74,7 @@ export default function AuthorLayout() {
           </div>
 
           {/* Navigation Tabs */}
-          <nav className="flex items-center gap-8 border-b border-[#E9E5C8]/15 -mb-6 overflow-x-auto pb-3 scrollbar-none">
+          <nav className="flex items-center gap-8 border-b border-[#D8CFAE]/15 -mb-6 overflow-x-auto pb-3 scrollbar-none">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive =
@@ -86,10 +86,10 @@ export default function AuthorLayout() {
                   key={item.path}
                   to={item.path}
                   className={`relative text-xs font-mono uppercase tracking-wider font-bold transition-colors py-2.5 flex items-center gap-2 whitespace-nowrap min-h-[44px] ${
-                    isActive ? 'text-[#FFFDF3]' : 'text-[#E9E5C8]/75 hover:text-[#FFFDF3]'
+                    isActive ? 'text-[#FFFDF3]' : 'text-[#D8CFAE]/75 hover:text-[#FFFDF3]'
                   }`}
                 >
-                  <Icon className={`w-4 h-4 ${isActive ? 'text-[#7B021D]' : 'text-[#E9E5C8]/60'}`} />
+                  <Icon className={`w-4 h-4 ${isActive ? 'text-[#7B021D]' : 'text-[#D8CFAE]/60'}`} />
                   <span>{item.label}</span>
                   {isActive && (
                     <motion.div
@@ -106,7 +106,7 @@ export default function AuthorLayout() {
       </header>
 
       {/* Main Routed Content Panel */}
-      <main className="max-w-7xl mx-auto px-6 lg:px-12 py-10 relative z-10">
+      <main className="max-w-7xl mx-auto px-6 lg:px-12 py-10 relative z-10 bg-[#F5F5DA]">
         <AnimatePresence mode="wait">
           <motion.div
             key={location.pathname}

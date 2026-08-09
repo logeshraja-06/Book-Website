@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -28,6 +28,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const [roleModalOpen, setRoleModalOpen] = useState(false);
   
   const lastScrollY = useRef(0);
   const searchInputRef = useRef(null);
@@ -35,11 +36,14 @@ export default function Navbar() {
   const navigate = useNavigate();
   
   const { currentUser, logout } = useAuth();
-  const { books = [], authors = [], wishlistBooks = [] } = useData();
+  const { books = [], authors = [], wishlistBooks = [], activeReaderBook } = useData();
 
   const isReader = currentUser?.role === 'reader';
   const isAuthor = currentUser?.role === 'author';
   const isPublisher = currentUser?.role === 'publisher';
+
+  const isReadingView = location.pathname.startsWith('/reader-full') || activeReaderBook;
+  if (isReadingView) return null;
 
   // ── 1. INTELLIGENT SCROLL BEHAVIOR (Hide on scroll down, reveal on scroll up) ──
   useEffect(() => {
@@ -150,39 +154,39 @@ export default function Navbar() {
       <motion.header
         initial={{ y: 0 }}
         animate={{
-          y: hidden ? -90 : 0,
-          backgroundColor: scrolled ? 'rgba(245, 245, 218, 0.96)' : 'rgba(245, 245, 218, 0.82)',
+          y: hidden ? -100 : 0,
+          backgroundColor: scrolled ? 'rgba(245, 245, 218, 0.96)' : 'rgba(245, 245, 218, 0.88)',
           backdropFilter: scrolled ? 'blur(16px)' : 'blur(8px)',
-          boxShadow: scrolled ? '0 4px 20px -2px rgba(33, 29, 29, 0.05)' : 'none',
+          boxShadow: scrolled ? '0 4px 24px -2px rgba(33, 29, 29, 0.06)' : 'none',
           borderBottomColor: scrolled ? 'rgba(233, 229, 200, 0.9)' : 'rgba(233, 229, 200, 0.4)',
         }}
         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
         className="sticky top-0 z-50 border-b transition-colors duration-300"
       >
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 h-20 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 h-20 sm:h-22 lg:h-24 flex items-center justify-between">
           
           {/* ── LEFT: REFINED BOOKVERSE WORDMARK ── */}
           <Link to="/" className="flex items-center gap-3.5 group select-none shrink-0">
-            <div className="w-10 h-10 rounded-xl bg-[#FFFDF3] border border-[#E9E5C8] flex items-center justify-center text-[#211D1D] group-hover:border-[#7B021D] transition-all duration-300 shadow-xs">
-              <BookOpen className="w-5 h-5 text-[#211D1D] group-hover:text-[#7B021D] transition-colors duration-300" />
+            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-[#FFFDF3] border border-[#E9E5C8] flex items-center justify-center text-[#211D1D] group-hover:border-[#7B021D] transition-all duration-300 shadow-xs">
+              <BookOpen className="w-5 h-5 text-[#7B021D] transition-colors duration-300" />
             </div>
             <div className="flex flex-col">
-              <div className="flex items-baseline gap-1">
-                <span className="font-editorial-serif text-[22px] font-semibold tracking-tight text-[#211D1D] leading-none">
+              <div className="flex items-baseline gap-1.5">
+                <span className="font-editorial-serif text-[23px] sm:text-[25px] font-semibold tracking-tight text-[#211D1D] leading-none">
                   BOOKVERSE
                 </span>
-                <span className="font-editorial-sans text-[10px] uppercase font-semibold text-[#7B021D] tracking-[0.2em] leading-none">
+                <span className="font-mono text-[10px] uppercase font-bold text-[#7B021D] tracking-[0.24em] leading-none">
                   STUDIO
                 </span>
               </div>
-              <span className="font-editorial-sans text-[9px] uppercase tracking-[0.18em] text-[#6B5E5E] mt-1 font-medium">
+              <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#6B5E5E] mt-1 font-medium">
                 Curated Imprint
               </span>
             </div>
           </Link>
 
-          {/* ── CENTER: DESKTOP NAVIGATION LINKS ── */}
-          <nav className="hidden lg:flex items-center gap-9 font-editorial-sans text-[15px] font-medium tracking-[-0.01em] text-[#6B5E5E]">
+          {/* ── CENTER: DESKTOP NAVIGATION LINKS WITH GENEROUS SPACING ── */}
+          <nav className="hidden lg:flex items-center gap-12 xl:gap-14 font-editorial-sans text-[15px] font-medium tracking-[-0.01em] text-[#6B5E5E]">
             {navLinks.map((link) => {
               const isActive =
                 link.path === '/'
@@ -194,7 +198,7 @@ export default function Navbar() {
                   key={link.name}
                   to={link.path}
                   className={`relative py-2 transition-colors duration-250 hover:text-[#211D1D] ${
-                    isActive ? 'text-[#211D1D] font-semibold' : ''
+                    isActive ? 'text-[#211D1D] font-bold' : ''
                   }`}
                 >
                   <motion.span
@@ -207,7 +211,7 @@ export default function Navbar() {
                   
                   {isActive && (
                     <motion.div
-                      layoutId="navbar_active_indicator"
+                      layoutId="navbarActiveUnderline"
                       className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#7B021D] rounded-full"
                       transition={{ type: 'spring', stiffness: 350, damping: 30 }}
                     />
@@ -218,7 +222,7 @@ export default function Navbar() {
           </nav>
 
           {/* ── RIGHT: SEARCH, BOOKMARKS, PUBLISHER ACCESS & AUTH ── */}
-          <div className="hidden md:flex items-center gap-3.5">
+          <div className="hidden md:flex items-center gap-4 xl:gap-5">
             
             {/* Search Trigger Button with Keyboard Shortcut Badge */}
             <motion.button
@@ -227,10 +231,10 @@ export default function Navbar() {
               whileHover={{ y: -1, borderColor: '#7B021D' }}
               whileTap={{ y: 0 }}
               transition={{ duration: 0.2 }}
-              className="flex items-center gap-3 px-3.5 py-2 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-[#6B5E5E] hover:text-[#211D1D] transition-all text-xs font-editorial-sans font-medium shadow-xs"
+              className="flex items-center gap-3 px-4 py-2.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-[#6B5E5E] hover:text-[#211D1D] transition-all text-xs font-editorial-sans font-medium shadow-xs"
               title="Search Catalogue (⌘K)"
             >
-              <Search className="w-3.5 h-3.5 text-[#6B5E5E]" />
+              <Search className="w-3.5 h-3.5 text-[#7B021D]" />
               <span className="hidden xl:inline text-[13px]">Search catalogue…</span>
               <kbd className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-[#F5F5DA] border border-[#E9E5C8] text-[10px] font-mono text-[#7B021D]">
                 <Command className="w-2.5 h-2.5" />K
@@ -243,9 +247,9 @@ export default function Navbar() {
               className="relative p-2.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-[#6B5E5E] hover:text-[#211D1D] hover:border-[#7B021D] transition-all duration-200"
               title="My Saved Shelf / Bookmarks"
             >
-              <Bookmark className="w-4 h-4" />
+              <Bookmark className="w-4 h-4 text-[#7B021D]" />
               {wishlistBooks.length > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#7B021D] text-[#F5F5DA] text-[9px] font-mono font-bold flex items-center justify-center shadow-xs">
+                <span className="absolute -top-1 -right-1 w-4.5 h-4.5 rounded-full bg-[#7B021D] text-[#F5F5DA] text-[9px] font-mono font-bold flex items-center justify-center shadow-xs">
                   {wishlistBooks.length}
                 </span>
               )}
@@ -255,7 +259,7 @@ export default function Navbar() {
             {!isPublisher && (
               <Link
                 to="/publisher/login"
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-[11px] font-editorial-sans uppercase tracking-[0.1em] font-semibold text-[#6B5E5E] hover:text-[#211D1D] hover:border-[#7B021D] transition-all duration-200"
+                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-[11px] font-mono uppercase tracking-[0.12em] font-bold text-[#6B5E5E] hover:text-[#211D1D] hover:border-[#7B021D] transition-all duration-200"
                 title="Publisher & Editorial Registrar"
               >
                 <Lock className="w-3 h-3 text-[#7B021D]" />
@@ -269,12 +273,12 @@ export default function Navbar() {
                 <button
                   type="button"
                   onClick={() => setUserDropdownOpen((prev) => !prev)}
-                  className="flex items-center gap-2 p-1.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] hover:border-[#7B021D] transition-all"
+                  className="flex items-center gap-2 p-1.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] hover:border-[#7B021D] transition-all shadow-2xs"
                 >
                   <img
                     src={currentUser.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'}
                     alt={currentUser.name}
-                    className="w-7 h-7 rounded-full object-cover border border-[#E9E5C8]"
+                    className="w-7.5 h-7.5 rounded-full object-cover border border-[#E9E5C8]"
                   />
                   <ChevronDown className="w-3.5 h-3.5 text-[#6B5E5E]" />
                 </button>
@@ -322,7 +326,7 @@ export default function Navbar() {
                           setUserDropdownOpen(false);
                           logout();
                         }}
-                        className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-red-700 hover:bg-red-50 transition-colors text-left font-medium"
+                        className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-rose-700 hover:bg-rose-50 transition-colors text-left font-medium"
                       >
                         <LogOut className="w-3.5 h-3.5" />
                         <span>Sign Out</span>
@@ -332,13 +336,27 @@ export default function Navbar() {
                 </AnimatePresence>
               </div>
             ) : (
-              <Link
-                to="/login"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-editorial-sans font-semibold uppercase tracking-[0.08em] hover:bg-[#520014] transition-all duration-300 shadow-sm hover:shadow-md"
-              >
-                <User className="w-3.5 h-3.5 text-[#F5F5DA]" />
-                <span>Sign In</span>
-              </Link>
+              <div className="flex items-center gap-2.5">
+                <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+                  <Link
+                    to="/login"
+                    className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-[#211D1D] text-xs font-mono font-bold uppercase tracking-[0.1em] hover:border-[#7B021D] hover:bg-[#F5F5DA] transition-all duration-300 shadow-2xs"
+                  >
+                    <span>LOGIN</span>
+                  </Link>
+                </motion.div>
+
+                <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+                  <button
+                    type="button"
+                    onClick={() => setRoleModalOpen(true)}
+                    className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-[0.1em] hover:bg-[#520014] transition-all duration-300 shadow-md whitespace-nowrap"
+                  >
+                    <User className="w-3.5 h-3.5 text-[#F5F5DA]" />
+                    <span>SIGN IN</span>
+                  </button>
+                </motion.div>
+              </div>
             )}
           </div>
 
@@ -400,7 +418,7 @@ export default function Navbar() {
                     setMobileMenuOpen(false);
                     logout();
                   }}
-                  className="p-2 rounded-xl text-[#6B5E5E] hover:text-red-700 transition-colors"
+                  className="p-2 rounded-xl text-[#6B5E5E] hover:text-rose-700 transition-colors"
                   title="Sign Out"
                 >
                   <LogOut className="w-4 h-4" />
@@ -460,7 +478,7 @@ export default function Navbar() {
                 <Link
                   to="/login"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="w-full py-4 rounded-full bg-[#7B021D] text-[#F5F5DA] text-center text-xs font-editorial-sans font-bold uppercase tracking-[0.1em] hover:bg-[#520014] transition-all shadow-md flex items-center justify-center gap-2"
+                  className="w-full py-4 rounded-full bg-[#7B021D] text-[#F5F5DA] text-center text-xs font-mono font-bold uppercase tracking-[0.1em] hover:bg-[#520014] transition-all shadow-md flex items-center justify-center gap-2"
                 >
                   <User className="w-3.5 h-3.5 text-[#F5F5DA]" />
                   <span>Sign In to BookVerse</span>
@@ -500,16 +518,10 @@ export default function Navbar() {
                 <input
                   ref={searchInputRef}
                   type="text"
+                  placeholder="Search by title, author, genre, or ISBN…"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && searchQuery.trim()) {
-                      setSearchModalOpen(false);
-                      navigate(`/books?query=${encodeURIComponent(searchQuery.trim())}`);
-                    }
-                  }}
-                  placeholder="Search titles, authors, genres, or ISBN…"
-                  className="w-full bg-transparent text-[#211D1D] text-base font-editorial-sans placeholder-[#6B5E5E]/60 focus:outline-none"
+                  className="w-full bg-transparent text-sm font-editorial-sans text-[#211D1D] focus:outline-none placeholder:text-[#6B5E5E]"
                 />
                 {searchQuery && (
                   <button
@@ -520,48 +532,51 @@ export default function Navbar() {
                     <X className="w-4 h-4" />
                   </button>
                 )}
-                <kbd className="hidden sm:inline-block px-2 py-1 rounded bg-[#FFFDF3] border border-[#E9E5C8] text-[10px] font-mono text-[#7B021D]">
-                  ESC
-                </kbd>
+                <button
+                  type="button"
+                  onClick={() => setSearchModalOpen(false)}
+                  className="px-3 py-1.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-[#211D1D] hover:text-[#7B021D] hover:border-[#7B021D] transition-colors flex items-center gap-1.5 text-xs font-mono font-bold shadow-2xs"
+                  title="Close Search (ESC)"
+                  aria-label="Close Search"
+                >
+                  <X className="w-3.5 h-3.5 text-[#7B021D]" />
+                  <span>CLOSE</span>
+                </button>
               </div>
 
-              {/* Modal Body: Results or Suggestions */}
+              {/* Modal Body */}
               <div className="p-6 max-h-[60vh] overflow-y-auto space-y-6">
                 
-                {/* Popular Topics Pill Tags */}
+                {/* Popular Tags */}
                 {!searchQuery && (
-                  <div>
-                    <span className="text-[10px] uppercase font-mono tracking-[0.16em] text-[#6B5E5E] block mb-3 font-semibold">
-                      Popular Curations
+                  <div className="space-y-2">
+                    <span className="text-[10px] font-mono uppercase tracking-[0.16em] text-[#6B5E5E] block font-bold">
+                      Popular Searches
                     </span>
                     <div className="flex flex-wrap gap-2">
-                      {popularSearches.map((tag) => (
+                      {popularSearches.map((term) => (
                         <button
-                          key={tag}
+                          key={term}
                           type="button"
-                          onClick={() => setSearchQuery(tag)}
-                          className="px-3.5 py-1.5 rounded-full bg-[#F5F5DA] border border-[#E9E5C8] text-xs font-editorial-sans text-[#211D1D] hover:border-[#7B021D] hover:bg-[#FFFDF3] transition-colors"
+                          onClick={() => setSearchQuery(term)}
+                          className="px-3 py-1.5 rounded-full bg-[#F5F5DA] border border-[#E9E5C8] text-xs font-editorial-sans text-[#211D1D] hover:border-[#7B021D] transition-colors"
                         >
-                          {tag}
+                          {term}
                         </button>
                       ))}
                     </div>
                   </div>
                 )}
 
-                {/* Filtered Books Section */}
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-[10px] uppercase font-mono tracking-[0.16em] text-[#6B5E5E] font-semibold">
-                      {searchQuery ? `Matching Works (${filteredBooks.length})` : 'Recommended Works'}
+                {/* Books Results */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-mono uppercase tracking-[0.16em] text-[#7B021D] font-bold">
+                      Matching Volumes
                     </span>
-                    <Link
-                      to="/books"
-                      onClick={() => setSearchModalOpen(false)}
-                      className="text-xs text-[#7B021D] hover:underline font-editorial-sans font-medium"
-                    >
-                      View All Catalog
-                    </Link>
+                    <span className="text-[11px] font-mono text-[#6B5E5E]">
+                      {filteredBooks.length} titles
+                    </span>
                   </div>
 
                   <div className="space-y-2">
@@ -569,92 +584,174 @@ export default function Navbar() {
                       const bookSlug = book.slug || book.id || book._id;
                       return (
                         <Link
-                          key={bookSlug}
+                          key={book.id || book._id}
                           to={`/books/${bookSlug}`}
                           onClick={() => setSearchModalOpen(false)}
-                          className="flex items-center justify-between p-3 rounded-2xl bg-[#F5F5DA] border border-[#E9E5C8] hover:border-[#7B021D] hover:bg-[#FFFDF3] transition-all group shadow-2xs"
+                          className="flex items-center justify-between p-3 rounded-2xl bg-[#F5F5DA]/60 border border-[#E9E5C8] hover:border-[#7B021D] hover:bg-[#F5F5DA] transition-all group"
                         >
-                          <div className="flex items-center gap-3.5">
+                          <div className="flex items-center gap-3">
                             <img
-                              src={book.coverUrl}
+                              src={book.coverImage || book.coverUrl}
                               alt={book.title}
-                              className="w-10 h-14 object-cover rounded-md bg-[#FFFDF3] shrink-0"
+                              className="w-9 h-12 rounded-lg object-cover border border-[#E9E5C8] shrink-0"
                             />
                             <div>
-                              <h4 className="font-editorial-serif text-base font-semibold text-[#211D1D] group-hover:text-[#7B021D] transition-colors line-clamp-1">
+                              <h5 className="font-editorial-serif text-base font-bold text-[#211D1D] group-hover:text-[#7B021D] transition-colors">
                                 {book.title}
-                              </h4>
-                              <p className="text-xs font-editorial-sans text-[#6B5E5E] mt-0.5">
-                                By {book.author} · <span className="font-mono text-[#7B021D]">{book.genre}</span>
+                              </h5>
+                              <p className="text-xs text-[#6B5E5E] font-sans">
+                                By {book.author} · {book.genre}
                               </p>
                             </div>
                           </div>
-                          <div className="text-right shrink-0">
-                            <span className="font-editorial-sans font-tabular text-sm font-semibold text-[#211D1D] block">
-                              {formatPrice(book.price)}
-                            </span>
-                            <span className="text-[10px] text-[#6B5E5E] font-mono">
-                              ★ {book.rating || 4.8}
-                            </span>
-                          </div>
+                          <span className="font-mono text-xs font-bold text-[#7B021D]">
+                            {formatPrice(book.price)}
+                          </span>
                         </Link>
                       );
                     })}
                   </div>
                 </div>
 
-                {/* Filtered Authors Section */}
-                <div>
-                  <span className="text-[10px] uppercase font-mono tracking-[0.16em] text-[#6B5E5E] block mb-3 font-semibold">
-                    {searchQuery ? `Matching Authors (${filteredAuthors.length})` : 'Featured Literary Authors'}
+                {/* Authors Results */}
+                <div className="space-y-3 pt-4 border-t border-[#E9E5C8]">
+                  <span className="text-[10px] font-mono uppercase tracking-[0.16em] text-[#7B021D] font-bold block">
+                    Featured Authors
                   </span>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    {filteredAuthors.map((author) => {
-                      const authorSlug =
-                        author.slug || author.id || author.name?.toLowerCase().replace(/\s+/g, '-');
-                      return (
-                        <Link
-                          key={authorSlug}
-                          to={`/authors/${authorSlug}`}
-                          onClick={() => setSearchModalOpen(false)}
-                          className="flex items-center gap-3 p-3 rounded-2xl bg-[#F5F5DA] border border-[#E9E5C8] hover:border-[#7B021D] hover:bg-[#FFFDF3] transition-all group shadow-2xs"
-                        >
-                          <img
-                            src={author.avatarUrl}
-                            alt={author.name}
-                            className="w-9 h-9 rounded-full object-cover border border-[#E9E5C8] shrink-0"
-                          />
-                          <div className="min-w-0">
-                            <h5 className="font-editorial-serif text-sm font-semibold text-[#211D1D] group-hover:text-[#7B021D] transition-colors truncate">
-                              {author.name}
-                            </h5>
-                            <span className="text-[10px] font-editorial-sans text-[#6B5E5E] truncate block">
-                              {author.role}
-                            </span>
-                          </div>
-                        </Link>
-                      );
-                    })}
+                    {filteredAuthors.map((author) => (
+                      <Link
+                        key={author.id || author._id}
+                        to="/authors"
+                        onClick={() => setSearchModalOpen(false)}
+                        className="p-3 rounded-2xl bg-[#F5F5DA]/60 border border-[#E9E5C8] hover:border-[#7B021D] transition-all flex items-center gap-3 group"
+                      >
+                        <img
+                          src={author.avatarUrl || author.image}
+                          alt={author.name}
+                          className="w-8 h-8 rounded-full object-cover border border-[#E9E5C8]"
+                        />
+                        <div className="min-w-0">
+                          <h6 className="font-editorial-serif text-sm font-bold text-[#211D1D] truncate group-hover:text-[#7B021D] transition-colors">
+                            {author.name}
+                          </h6>
+                          <p className="text-[10px] font-mono text-[#6B5E5E] truncate">
+                            {author.role || 'Author'}
+                          </p>
+                        </div>
+                      </Link>
+                    ))}
                   </div>
                 </div>
 
               </div>
 
-              {/* Search Modal Footer */}
-              <div className="px-6 py-3.5 bg-[#F5F5DA] border-t border-[#E9E5C8] flex items-center justify-between text-xs font-editorial-sans text-[#6B5E5E]">
-                <span className="flex items-center gap-1.5">
-                  <Sparkles className="w-3 h-3 text-[#7B021D]" />
-                  <span>Press <kbd className="font-mono text-[#211D1D]">↵ ENTER</kbd> to search full catalogue</span>
-                </span>
-                <button
-                  type="button"
+              {/* Modal Footer */}
+              <div className="p-4 border-t border-[#E9E5C8] bg-[#F5F5DA]/50 flex items-center justify-between text-xs font-mono text-[#6B5E5E]">
+                <span>Press ESC or click backdrop to close</span>
+                <Link
+                  to="/books"
                   onClick={() => setSearchModalOpen(false)}
-                  className="hover:text-[#211D1D] transition-colors"
+                  className="text-[#7B021D] font-bold hover:underline flex items-center gap-1"
                 >
-                  Close (ESC)
-                </button>
+                  <span>View All Books</span>
+                  <ArrowRight className="w-3 h-3" />
+                </Link>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* ── ROLE SELECTION MODAL ("Who are you joining as?") ── */}
+      <AnimatePresence>
+        {roleModalOpen && (
+          <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm select-none">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 12 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 12 }}
+              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              className="relative w-full max-w-xl bg-[#FFFDF3] text-[#211D1D] rounded-3xl p-8 sm:p-10 shadow-2xl border border-[#E9E5C8] space-y-8"
+            >
+              <button
+                type="button"
+                onClick={() => setRoleModalOpen(false)}
+                className="absolute top-5 right-5 p-2 rounded-full hover:bg-[#F5F5DA] text-[#6B5E5E] transition-colors"
+                aria-label="Close modal"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="text-center space-y-2">
+                <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#7B021D] font-bold block">
+                  Membership Portal
+                </span>
+                <h2 className="font-editorial-serif text-3xl font-bold text-[#211D1D]">
+                  Who are you joining as?
+                </h2>
+                <p className="text-xs text-[#6B5E5E] font-sans">
+                  Select your account type to proceed with registration
+                </p>
               </div>
 
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                {/* Reader Card */}
+                <motion.div
+                  whileHover={{ y: -3, borderColor: '#7B021D' }}
+                  className="p-6 rounded-2xl bg-gradient-to-br from-[#FFFDF3] via-[#FAF8F6] to-[#F4EEEA] border border-[#E9E5C8] shadow-sm space-y-4 flex flex-col justify-between group cursor-pointer"
+                  onClick={() => {
+                    setRoleModalOpen(false);
+                    navigate('/register/reader');
+                  }}
+                >
+                  <div className="space-y-3">
+                    <div className="w-12 h-12 rounded-2xl bg-[#FFFDF3] border border-[#E9E5C8] flex items-center justify-center text-[#7B021D] group-hover:bg-[#7B021D] group-hover:text-[#F5F5DA] transition-colors">
+                      <BookOpen className="w-6 h-6" />
+                    </div>
+                    <h3 className="font-editorial-serif text-xl font-bold text-[#211D1D] group-hover:text-[#7B021D] transition-colors">
+                      Reader
+                    </h3>
+                    <p className="text-xs text-[#6B5E5E] leading-relaxed">
+                      Explore curated manuscripts, build your personal library, save earmarked wishlists, and track reading progress.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    className="w-full py-2.5 rounded-full bg-[#7B021D] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider group-hover:bg-[#520014] transition-colors"
+                  >
+                    Create Reader Account →
+                  </button>
+                </motion.div>
+
+                {/* Author Card */}
+                <motion.div
+                  whileHover={{ y: -3, borderColor: '#7B021D' }}
+                  className="p-6 rounded-2xl bg-gradient-to-br from-[#FFFDF3] via-[#FAF8F6] to-[#F4EEEA] border border-[#E9E5C8] shadow-sm space-y-4 flex flex-col justify-between group cursor-pointer"
+                  onClick={() => {
+                    setRoleModalOpen(false);
+                    navigate('/register/author');
+                  }}
+                >
+                  <div className="space-y-3">
+                    <div className="w-12 h-12 rounded-2xl bg-[#FFFDF3] border border-[#E9E5C8] flex items-center justify-center text-[#7B021D] group-hover:bg-[#7B021D] group-hover:text-[#F5F5DA] transition-colors">
+                      <Feather className="w-6 h-6" />
+                    </div>
+                    <h3 className="font-editorial-serif text-xl font-bold text-[#211D1D] group-hover:text-[#7B021D] transition-colors">
+                      Author
+                    </h3>
+                    <p className="text-xs text-[#6B5E5E] leading-relaxed">
+                      Submit manuscripts for editorial evaluation, manage pen name imprints, track review status, and view reader analytics.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    className="w-full py-2.5 rounded-full bg-[#211D1D] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider group-hover:bg-[#7B021D] transition-colors"
+                  >
+                    Become an Author →
+                  </button>
+                </motion.div>
+              </div>
             </motion.div>
           </div>
         )}

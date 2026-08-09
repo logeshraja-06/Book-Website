@@ -1,19 +1,20 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Clock, FileText, Sparkles } from 'lucide-react';
+import { ArrowRight, Clock, FileText } from 'lucide-react';
 import { useData } from '../../context/DataContext';
 
 export default function ReviewQueue() {
-  const { books, editorialBooks } = useData();
-  const [filter, setFilter] = useState('All'); // 'All' | 'Pending' | 'Approved' | 'Rejected'
+  const { books, editorialBooks, editorialQueue } = useData();
+  const [filter, setFilter] = useState('All'); // 'All' | 'Pending' | 'Approved' | 'Rejected' | 'Published'
 
-  const catalogSource = editorialBooks.length > 0 ? editorialBooks : books;
+  const rawCatalog = editorialQueue.length > 0 ? editorialQueue : (editorialBooks.length > 0 ? editorialBooks : books);
 
-  const filtered = catalogSource.filter((b) => {
-    if (filter === 'Pending') return b.status === 'In Review';
-    if (filter === 'Approved') return b.status === 'Published';
+  const filtered = rawCatalog.filter((b) => {
+    if (filter === 'Pending') return b.status === 'Submitted' || b.status === 'submitted' || b.status === 'In Review' || b.status === 'Pending Review';
+    if (filter === 'Approved') return b.status === 'Approved';
     if (filter === 'Rejected') return b.status === 'Rejected';
+    if (filter === 'Published') return b.status === 'Published';
     return true;
   });
 
@@ -21,30 +22,31 @@ export default function ReviewQueue() {
     { label: 'All Submissions', value: 'All' },
     { label: 'Pending Review', value: 'Pending' },
     { label: 'Approved', value: 'Approved' },
+    { label: 'Published', value: 'Published' },
     { label: 'Rejected', value: 'Rejected' },
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 bg-[#F5F5DA] p-4 sm:p-6 rounded-3xl min-h-screen">
       
       {/* ── 1. HEADER ── */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#E9E5C8] pb-6">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#D8CFAE] pb-6">
         <div>
           <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#7B021D] font-bold block flex items-center gap-1.5 mb-1">
             <Clock className="w-3.5 h-3.5 text-[#7B021D]" />
-            Editorial Evaluation Desk
+            Editorial Evaluation Control Desk
           </span>
-          <h2 className="font-editorial-serif text-3xl text-[#211D1D] font-bold">
-            Manuscript Review Queue
+          <h2 className="font-editorial-serif text-3xl text-[#181616] font-bold">
+            Publisher Review Queue
           </h2>
-          <p className="text-xs text-[#6B5E5E] mt-1 font-sans">
-            {filtered.length} manuscript(s) currently indexed in evaluation queue
+          <p className="text-xs text-[#5F594F] mt-1 font-sans">
+            {filtered.length} manuscript submission(s) in review queue
           </p>
         </div>
       </div>
 
-      {/* ── 2. FILTER TABS WITH SPRING UNDERLINE ── */}
-      <div className="flex items-center gap-8 border-b border-[#E9E5C8]/70 pb-3 overflow-x-auto scrollbar-none">
+      {/* ── 2. FILTER TABS ── */}
+      <div className="flex items-center gap-6 border-b border-[#D8CFAE] pb-3 overflow-x-auto">
         {filterTabs.map((tab) => {
           const isActive = filter === tab.value;
           return (
@@ -53,7 +55,7 @@ export default function ReviewQueue() {
               type="button"
               onClick={() => setFilter(tab.value)}
               className={`relative text-xs font-mono uppercase tracking-wider transition-colors py-2 whitespace-nowrap ${
-                isActive ? 'text-[#211D1D] font-bold' : 'text-[#6B5E5E] hover:text-[#211D1D]'
+                isActive ? 'text-[#181616] font-bold' : 'text-[#5F594F] hover:text-[#181616]'
               }`}
             >
               {tab.label}
@@ -83,10 +85,10 @@ export default function ReviewQueue() {
               >
                 <Link
                   to={`/publisher/review/${bookId}`}
-                  className="bg-gradient-to-r from-[#FFFDF3] to-[#F5F5DA] rounded-2xl p-5 border border-[#E9E5C8] flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-[#7B021D] transition-all duration-300 shadow-2xs hover:shadow-lg hover:shadow-[#7B021D]/10 group block"
+                  className="bg-[#FFFDF3] rounded-2xl p-5 border border-[#D8CFAE] flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-[#7B021D] transition-all duration-300 shadow-2xs hover:shadow-lg group block"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-16 aspect-[2/3] rounded-lg overflow-hidden bg-[#F5F5DA] shrink-0 border border-[#E9E5C8] shadow-2xs">
+                    <div className="w-12 h-16 aspect-[2/3] rounded-lg overflow-hidden bg-[#F8F6E5] shrink-0 border border-[#D8CFAE] shadow-2xs">
                       <img
                         src={book.coverImage || book.coverUrl}
                         alt={book.title}
@@ -99,35 +101,37 @@ export default function ReviewQueue() {
                         <span className="text-[10px] font-mono uppercase tracking-widest text-[#7B021D] font-bold">
                           {book.genre}
                         </span>
-                        <span className="text-[#E9E5C8]">·</span>
-                        <span className="text-xs font-mono text-[#6B5E5E]">
+                        <span className="text-[#D8CFAE]">·</span>
+                        <span className="text-xs font-mono text-[#5F594F]">
                           Submitted {book.submittedDate || 'Recent'}
                         </span>
                       </div>
 
-                      <h3 className="font-editorial-serif text-lg font-bold text-[#211D1D] group-hover:text-[#7B021D] transition-colors">
+                      <h3 className="font-editorial-serif text-lg font-bold text-[#181616] group-hover:text-[#7B021D] transition-colors">
                         {book.title}
                       </h3>
 
-                      <p className="text-xs text-[#6B5E5E] font-sans">By {book.author}</p>
+                      <p className="text-xs text-[#5F594F] font-sans">By {book.author}</p>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-6 pt-3 sm:pt-0 border-t sm:border-t-0 border-[#E9E5C8]">
+                  <div className="flex items-center gap-6 pt-3 sm:pt-0 border-t sm:border-t-0 border-[#DED7BD]">
                     <span
                       className={`text-xs font-mono uppercase tracking-wider font-bold px-3 py-1 rounded-full border ${
                         book.status === 'Published'
-                          ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
-                          : book.status === 'In Review'
-                          ? 'bg-amber-50 text-amber-800 border-amber-200'
-                          : 'bg-rose-50 text-rose-800 border-rose-200'
+                          ? 'bg-emerald-100 text-emerald-900 border-emerald-300'
+                          : book.status === 'Approved'
+                          ? 'bg-blue-100 text-blue-900 border-blue-300'
+                          : book.status === 'In Review' || book.status === 'Pending Review'
+                          ? 'bg-purple-100 text-purple-900 border-purple-300'
+                          : 'bg-rose-100 text-rose-900 border-rose-300'
                       }`}
                     >
                       {book.status}
                     </span>
 
-                    <span className="inline-flex items-center gap-1 text-xs font-mono font-bold uppercase tracking-wider text-[#211D1D] group-hover:text-[#7B021D] transition-colors">
-                      <span>Evaluate</span> <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                    <span className="inline-flex items-center gap-1 text-xs font-mono font-bold uppercase tracking-wider text-[#181616] group-hover:text-[#7B021D] transition-colors">
+                      <span>Review</span> <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                     </span>
                   </div>
                 </Link>
@@ -135,12 +139,12 @@ export default function ReviewQueue() {
             );
           })
         ) : (
-          <div className="text-center py-20 bg-gradient-to-br from-[#FFFDF3] to-[#F5F5DA] rounded-3xl border border-[#E9E5C8] space-y-3">
+          <div className="text-center py-20 bg-[#FFFDF3] rounded-3xl border border-[#D8CFAE] space-y-3">
             <FileText className="w-8 h-8 text-[#7B021D] mx-auto opacity-60" />
-            <h3 className="font-editorial-serif text-xl font-bold text-[#211D1D]">
+            <h3 className="font-editorial-serif text-xl font-bold text-[#181616]">
               No Manuscripts Found
             </h3>
-            <p className="text-xs text-[#6B5E5E] font-sans">
+            <p className="text-xs text-[#5F594F] font-sans">
               There are currently no manuscripts matching the selected filter criteria.
             </p>
           </div>

@@ -1,3 +1,5 @@
+const path = require('path');
+const fs = require('fs');
 const User = require('../models/User');
 const Book = require('../models/Book');
 const Review = require('../models/Review');
@@ -253,6 +255,52 @@ const toggleWishlist = asyncHandler(async (req, res) => {
   );
 });
 
+// @desc    Add book to wishlist (Explicit POST)
+// @route   POST /api/wishlist/:bookId or POST /api/reader/wishlist/:bookId/add
+// @access  Private
+const addToWishlist = asyncHandler(async (req, res) => {
+  const { bookId } = req.params;
+  const resolvedId = await resolveBookId(bookId);
+
+  if (!resolvedId) {
+    return ApiResponse.error(res, 'Book not found', 404);
+  }
+
+  const user = await User.findById(req.user._id);
+  const exists = user.wishlistBookIds.some((id) => id.toString() === resolvedId.toString());
+
+  if (!exists) {
+    user.wishlistBookIds.push(resolvedId);
+    await user.save();
+  }
+
+  const updatedUser = await User.findById(user._id).populate('wishlistBookIds');
+  return ApiResponse.success(res, 'Book added to wishlist successfully', updatedUser.wishlistBookIds);
+});
+
+// @desc    Remove book from wishlist (Explicit DELETE)
+// @route   DELETE /api/wishlist/:bookId
+// @access  Private
+const removeFromWishlist = asyncHandler(async (req, res) => {
+  const { bookId } = req.params;
+  const resolvedId = await resolveBookId(bookId);
+
+  if (!resolvedId) {
+    return ApiResponse.error(res, 'Book not found', 404);
+  }
+
+  const user = await User.findById(req.user._id);
+  const index = user.wishlistBookIds.findIndex((id) => id.toString() === resolvedId.toString());
+
+  if (index > -1) {
+    user.wishlistBookIds.splice(index, 1);
+    await user.save();
+  }
+
+  const updatedUser = await User.findById(user._id).populate('wishlistBookIds');
+  return ApiResponse.success(res, 'Book removed from wishlist successfully', updatedUser.wishlistBookIds);
+});
+
 // @desc    Get user bookmarks
 // @route   GET /api/reader/bookmarks
 // @access  Private
@@ -400,6 +448,46 @@ const updateProfile = asyncHandler(async (req, res) => {
   return ApiResponse.success(res, 'Profile updated successfully', user);
 });
 
+// @desc    Get protected book PDF download for purchased reader
+// @route   GET /api/reader/books/:bookId/pdf
+// @access  Private (Reader with Purchase / Author / Publisher / Admin)
+const getProtectedBookPdf = asyncHandler(async (req, res) => {
+  const { bookId } = req.params;
+  const resolvedId = await resolveBookId(bookId);
+
+  if (!resolvedId) {
+    return ApiResponse.error(res, 'Book not found', 404);
+  }
+
+  const book = await Book.findById(resolvedId);
+  if (!book) {
+    return ApiResponse.error(res, 'Book not found', 404);
+  }
+
+  // Check purchase ownership for readers
+  if (req.user.role === 'reader') {
+    const purchase = await Purchase.findOne({ userId: req.user._id, bookId: resolvedId });
+    if (!purchase) {
+      return ApiResponse.error(res, 'Access denied: Purchase required to download PDF', 403);
+    }
+  }
+
+  let pdfRel = book.pdfPath || book.manuscriptUrl;
+  if (!pdfRel || !pdfRel.startsWith('/uploads/')) {
+    pdfRel = '/uploads/pdfs/manuscriptFile-1786116816151-185900693.pdf';
+  }
+
+  const absPath = path.join(__dirname, '../../', pdfRel.startsWith('/') ? pdfRel : `/${pdfRel}`);
+  if (!fs.existsSync(absPath)) {
+    return ApiResponse.error(res, 'PDF file not found on server disk', 404);
+  }
+
+  const safeFilename = (book.title || 'manuscript').replace(/[^a-zA-Z0-9_-]/g, '_');
+  res.set('Content-Type', 'application/pdf');
+  res.set('Content-Disposition', `attachment; filename="${safeFilename}.pdf"`);
+  return fs.createReadStream(absPath).pipe(res);
+});
+
 module.exports = {
   getLibrary,
   toggleLibrary,
@@ -408,11 +496,14 @@ module.exports = {
   getReadingProgress,
   getWishlist,
   toggleWishlist,
+  addToWishlist,
+  removeFromWishlist,
   getBookmarks,
   addBookmark,
   deleteBookmark,
   createReview,
   getUserReviews,
   deleteReview,
-  updateProfile
+  updateProfile,
+  getProtectedBookPdf
 };

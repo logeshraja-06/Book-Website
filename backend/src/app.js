@@ -18,6 +18,7 @@ const studioRoutes = require('./routes/studio.routes');
 const publisherRoutes = require('./routes/publisher.routes');
 const adminRoutes = require('./routes/admin.routes');
 const fileRoutes = require('./routes/file.routes');
+const wishlistRoutes = require('./routes/wishlist.routes');
 
 const app = express();
 
@@ -78,6 +79,7 @@ app.use('/api/editorial', publisherRoutes);
 app.use('/api/publisher', publisherRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/files', fileRoutes);
+app.use('/api/wishlist', wishlistRoutes);
 
 // Fallback 404 Route
 app.use((req, res) => {
