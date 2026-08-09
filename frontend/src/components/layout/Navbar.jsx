@@ -155,10 +155,10 @@ export default function Navbar() {
         initial={{ y: 0 }}
         animate={{
           y: hidden ? -100 : 0,
-          backgroundColor: scrolled ? 'rgba(245, 245, 218, 0.92)' : 'rgba(250, 248, 230, 0.35)',
-          backdropFilter: scrolled ? 'blur(16px)' : 'blur(10px)',
-          boxShadow: scrolled ? '0 4px 24px -2px rgba(33, 29, 29, 0.06)' : 'none',
-          borderBottomColor: scrolled ? 'rgba(233, 229, 200, 0.6)' : 'rgba(255, 255, 255, 0.18)',
+          backgroundColor: scrolled ? 'rgba(216, 207, 174, 0.96)' : 'rgba(216, 207, 174, 0.55)',
+          backdropFilter: scrolled ? 'blur(18px)' : 'blur(12px)',
+          boxShadow: scrolled ? '0 4px 24px -2px rgba(24, 30, 51, 0.18)' : 'none',
+          borderBottomColor: scrolled ? 'rgba(184, 172, 130, 0.55)' : 'rgba(245, 245, 218, 0.3)',
         }}
         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
         className="sticky top-0 z-50 border-b transition-colors duration-300"
