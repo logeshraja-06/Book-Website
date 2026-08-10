@@ -53,6 +53,8 @@ import PublisherCategories from './pages/publisher/PublisherCategories';
 import PublisherReports from './pages/publisher/PublisherReports';
 import PublisherProfileView from './pages/publisher/PublisherProfileView';
 
+import { useTranslation } from 'react-i18next';
+
 function ScrollToTop() {
   const { pathname } = useLocation();
   useEffect(() => {
@@ -62,6 +64,12 @@ function ScrollToTop() {
 }
 
 export default function App() {
+  const { i18n } = useTranslation();
+
+  useEffect(() => {
+    document.documentElement.lang = i18n.language === 'ta' ? 'ta' : 'en';
+  }, [i18n.language]);
+
   return (
     <Router>
       <ScrollToTop />

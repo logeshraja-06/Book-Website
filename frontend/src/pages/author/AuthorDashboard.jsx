@@ -115,10 +115,10 @@ export default function AuthorDashboard() {
             {t('author.dashboard.eyebrow')}
           </span>
           <h1 className="font-editorial-serif text-3xl sm:text-4xl text-[#2B2B2B] font-bold">
-            {t('author.dashboard.welcomeBack')} {currentUser?.name || 'Kalki Krishnamurthy'}
+            {t('author.dashboard.welcomeBack', { name: currentUser?.name || 'Kalki Krishnamurthy' })}
           </h1>
           <p className="text-xs text-[#6B5E5E] font-sans max-w-xl">
-            {t('author.dashboard.welcomeDesc')}
+            {t('author.dashboard.subtitle')}
           </p>
         </div>
 
@@ -201,9 +201,9 @@ export default function AuthorDashboard() {
         <div className="flex items-center justify-between border-b border-[#E7D9D3] pb-4">
           <h3 className="font-editorial-serif text-xl font-bold text-[#2B2B2B] flex items-center gap-2">
             <Activity className="w-4.5 h-4.5 text-[#212842]" />
-            {t('author.dashboard.activityTitle')}
+            {t('author.dashboard.recentActivityHeading')}
           </h3>
-          <span className="text-xs font-mono text-[#6B5E5E]">{t('author.dashboard.activityFeedNote')}</span>
+          <span className="text-xs font-mono text-[#6B5E5E]">{t('author.dashboard.liveFeedLabel')}</span>
         </div>
 
         <div className="bg-gradient-to-br from-[#FFFDF3] to-[#F4EEEA] rounded-3xl border border-[#E7D9D3] divide-y divide-[#E7D9D3] shadow-sm overflow-hidden">

@@ -1,28 +1,31 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Feather, BookOpen, Sparkles, Shield, Compass, Award } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function AboutPage() {
+  const { t } = useTranslation();
+
   const tenets = [
     {
       num: '01',
-      title: 'Editorial Primacy & Craftsmanship',
-      desc: 'We treat every manuscript as a piece of enduring craftsmanship. Layouts, typography, and optical spacing are designed to respect the cadence and voice of the author.'
+      title: t('about.tenet1Title'),
+      desc: t('about.tenet1Desc')
     },
     {
       num: '02',
-      title: 'Sovereign Author Ownership',
-      desc: 'Authors retain complete intellectual ownership and direct reader connections. We eliminate predatory DRM locks, complex rights lock-ins, and artificial marketplace barriers.'
+      title: t('about.tenet2Title'),
+      desc: t('about.tenet2Desc')
     },
     {
       num: '03',
-      title: 'Sanctuary Space for Deep Focus',
-      desc: 'No pop-up ads, no algorithmic outrage bait, no notification clutter. BookVerse Studio is a serene digital sanctuary built for contemplation, scholarship, and sustained reading.'
+      title: t('about.tenet3Title'),
+      desc: t('about.tenet3Desc')
     },
     {
       num: '04',
-      title: 'Interconnected Publishing Ecosystem',
-      desc: 'Readers, Authors, and Publishers operate in one seamless studio—creating a transparent, high-trust loop from initial draft concept to hardcover publication.'
+      title: t('about.tenet4Title'),
+      desc: t('about.tenet4Desc')
     }
   ];
 
@@ -61,7 +64,7 @@ export default function AboutPage() {
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] text-[#212842] text-xs font-mono uppercase tracking-widest font-bold shadow-2xs"
           >
             <Sparkles className="w-3.5 h-3.5 text-[#212842]" />
-            <span>The BookVerse Manifesto</span>
+            <span>{t('about.manifestoBadge')}</span>
           </motion.div>
 
           <motion.h1
@@ -70,7 +73,7 @@ export default function AboutPage() {
             transition={{ duration: 0.8, delay: 0.1 }}
             className="font-editorial-serif text-4xl sm:text-6xl lg:text-7xl text-[#211D1D] font-normal leading-[1.12] tracking-tight"
           >
-            We believe literature is an <span className="italic font-normal text-[#212842]">architect of culture</span>, not a commodity of consumption.
+            {t('about.heroTitlePart1')} <span className="italic font-normal text-[#212842]">{t('about.heroTitleItalic')}</span>{t('about.heroTitlePart2')}
           </motion.h1>
 
           <motion.p
@@ -79,7 +82,7 @@ export default function AboutPage() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-base sm:text-lg text-[#6B5E5E] max-w-2xl mx-auto leading-relaxed font-sans"
           >
-            BookVerse Studio was built to restore dignity, intentionality, and sovereign author rights to modern digital publishing.
+            {t('about.heroSubtitle')}
           </motion.p>
 
         </div>
@@ -91,35 +94,35 @@ export default function AboutPage() {
           
           <div className="max-w-3xl space-y-4">
             <span className="text-xs uppercase font-mono tracking-[0.2em] text-[#E9E5C8]/80 font-bold block">
-              Editorial Ethos
+              {t('about.ethosEyebrow')}
             </span>
             <h2 className="font-editorial-serif text-3xl sm:text-5xl text-[#F5F5DA] font-normal leading-tight">
-              Crafted for those who write with authority and read with devotion.
+              {t('about.ethosHeading')}
             </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-6 border-t border-[#FFFDF3]/15">
             <div className="space-y-2">
               <span className="font-editorial-serif text-4xl font-bold text-[#F5F5DA] block">100%</span>
-              <h4 className="text-xs uppercase font-mono tracking-wider text-[#E9E5C8] font-bold">DRM-Free Integrity</h4>
+              <h4 className="text-xs uppercase font-mono tracking-wider text-[#E9E5C8] font-bold">{t('about.statDrmTitle')}</h4>
               <p className="text-xs text-[#FFFDF3]/80 leading-relaxed font-sans">
-                Readers retain true digital ownership of their library. No revokable cloud licenses.
+                {t('about.statDrmDesc')}
               </p>
             </div>
 
             <div className="space-y-2">
               <span className="font-editorial-serif text-4xl font-bold text-[#F5F5DA] block">Zero</span>
-              <h4 className="text-xs uppercase font-mono tracking-wider text-[#E9E5C8] font-bold">Algorithmic Noise</h4>
+              <h4 className="text-xs uppercase font-mono tracking-wider text-[#E9E5C8] font-bold">{t('about.statNoiseTitle')}</h4>
               <p className="text-xs text-[#FFFDF3]/80 leading-relaxed font-sans">
-                No clickbait recommendations or ad popups. Pure narrative typography.
+                {t('about.statNoiseDesc')}
               </p>
             </div>
 
             <div className="space-y-2">
               <span className="font-editorial-serif text-4xl font-bold text-[#F5F5DA] block">14+</span>
-              <h4 className="text-xs uppercase font-mono tracking-wider text-[#E9E5C8] font-bold">Curated Imprints</h4>
+              <h4 className="text-xs uppercase font-mono tracking-wider text-[#E9E5C8] font-bold">{t('about.statImprintsTitle')}</h4>
               <p className="text-xs text-[#FFFDF3]/80 leading-relaxed font-sans">
-                Spanning classical Tamil historical epics, behavioral economics, and deep work systems.
+                {t('about.statImprintsDesc')}
               </p>
             </div>
           </div>
@@ -134,34 +137,34 @@ export default function AboutPage() {
             
             <div className="lg:col-span-5 space-y-4 lg:sticky lg:top-28">
               <span className="text-xs uppercase tracking-widest font-mono text-[#212842] font-bold block">
-                Our Origin Story
+                {t('about.originEyebrow')}
               </span>
               <h2 className="font-editorial-serif text-3xl sm:text-4xl lg:text-5xl text-[#211D1D] font-normal leading-tight">
-                Why we built a new digital publishing sanctuary.
+                {t('about.originHeading')}
               </h2>
             </div>
 
             <div className="lg:col-span-7 space-y-6 text-base text-[#6B5E5E] leading-[1.8] font-sans">
               <blockquote className="font-editorial-serif text-xl sm:text-2xl text-[#211D1D] italic border-l-2 border-[#212842] pl-6 py-1">
-                "The modern web fragmented the sacred relationship between those who write and those who read."
+                "{t('about.originQuote')}"
               </blockquote>
 
               <p>
-                In an era dominated by rapid content feeds and algorithmic engagement hacks, long-form literature was pushed into clunky e-readers and restrictive marketplace walled gardens. Authors surrendered significant royalties while readers received homogenized templates.
+                {t('about.originPara1')}
               </p>
 
               <p>
-                BookVerse Studio was created as an antidote. We reimagined the digital publishing stack from first principles: giving authors a bespoke <strong className="text-[#211D1D]">Writing Studio</strong>, empowering publishers with an <strong className="text-[#211D1D]">Editorial Workspace</strong>, and offering readers a tranquil catalog crafted with luxury editorial typography.
+                {t('about.originPara2Prefix')} <strong className="text-[#211D1D]">{t('about.originPara2Studio')}</strong>{t('about.originPara2Mid')} <strong className="text-[#211D1D]">{t('about.originPara2Workspace')}</strong>{t('about.originPara2Suffix')}
               </p>
 
               <div className="pt-6 grid grid-cols-2 gap-6 border-t border-[#E9E5C8]">
                 <div className="bg-[#FFFDF3] p-5 rounded-2xl border border-[#E9E5C8] shadow-2xs">
                   <span className="font-editorial-serif text-3xl font-bold text-[#211D1D] block">12,000+</span>
-                  <span className="text-[11px] font-mono uppercase text-[#212842] font-bold block mt-1">Archived Works</span>
+                  <span className="text-[11px] font-mono uppercase text-[#212842] font-bold block mt-1">{t('about.statArchivedWorks')}</span>
                 </div>
                 <div className="bg-[#FFFDF3] p-5 rounded-2xl border border-[#E9E5C8] shadow-2xs">
                   <span className="font-editorial-serif text-3xl font-bold text-[#211D1D] block">4.9 ★</span>
-                  <span className="text-[11px] font-mono uppercase text-[#212842] font-bold block mt-1">Reader Satisfaction</span>
+                  <span className="text-[11px] font-mono uppercase text-[#212842] font-bold block mt-1">{t('about.statReaderSatisfaction')}</span>
                 </div>
               </div>
             </div>
@@ -186,10 +189,10 @@ export default function AboutPage() {
         <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12">
           <div className="mb-16 max-w-xl">
             <span className="text-xs uppercase tracking-widest font-mono text-[#E9E5C8] font-bold block mb-2">
-              Foundational Principles
+              {t('about.tenetsEyebrow')}
             </span>
             <h2 className="font-editorial-serif text-4xl text-[#FFFDF3] font-normal">
-              The Tenets of BookVerse Studio
+              {t('about.tenetsHeading')}
             </h2>
           </div>
 
@@ -220,14 +223,14 @@ export default function AboutPage() {
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
             <div>
               <span className="text-xs uppercase tracking-widest font-mono text-[#212842] font-bold block mb-2">
-                Editorial Board
+                {t('about.boardEyebrow')}
               </span>
               <h2 className="font-editorial-serif text-4xl text-[#211D1D] font-normal">
-                Leadership & Imprint Curators
+                {t('about.boardHeading')}
               </h2>
             </div>
             <p className="text-xs font-mono text-[#6B5E5E]">
-              Guiding manuscript reviews and catalog preservation
+              {t('about.boardSubtitle')}
             </p>
           </div>
 
@@ -253,7 +256,7 @@ export default function AboutPage() {
                 </div>
 
                 <div className="pt-4 mt-6 border-t border-[#E9E5C8] text-[10px] font-mono text-[#6B5E5E] uppercase tracking-widest">
-                  Studio Editorial Board
+                  {t('about.boardFooterLabel')}
                 </div>
               </div>
             ))}
@@ -267,13 +270,13 @@ export default function AboutPage() {
         <div className="max-w-4xl mx-auto px-6 text-center space-y-8">
           <div className="space-y-3">
             <span className="text-xs uppercase tracking-widest font-mono text-[#212842] font-bold">
-              Join the Ecosystem
+              {t('about.ctaEyebrow')}
             </span>
             <h2 className="font-editorial-serif text-4xl sm:text-5xl text-[#211D1D] font-normal leading-tight">
-              Ready to publish or discover your next seminal work?
+              {t('about.ctaHeading')}
             </h2>
             <p className="text-sm text-[#6B5E5E] max-w-lg mx-auto font-sans leading-relaxed">
-              Whether you are an author seeking sovereign publication or a reader searching for uncompromised literature, your sanctuary is ready.
+              {t('about.ctaSubtitle')}
             </p>
           </div>
 
@@ -283,14 +286,14 @@ export default function AboutPage() {
               className="w-full sm:w-auto px-8 py-4 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-md flex items-center justify-center gap-2"
             >
               <BookOpen className="w-4 h-4" />
-              <span>Explore The Catalogue</span>
+              <span>{t('about.ctaExploreCatalogue')}</span>
             </Link>
             <Link
               to="/authors"
               className="w-full sm:w-auto px-8 py-4 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] text-[#211D1D] text-xs font-bold uppercase tracking-wider hover:border-[#212842] transition-colors flex items-center justify-center gap-2"
             >
               <Feather className="w-4 h-4 text-[#212842]" />
-              <span>Meet Author Guild</span>
+              <span>{t('about.ctaMeetGuild')}</span>
             </Link>
           </div>
         </div>

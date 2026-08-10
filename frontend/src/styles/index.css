@@ -274,3 +274,20 @@ html.lenis, html.lenis body {
 .badge-rotate-glow {
   animation: badgeRotateGlow 4s linear infinite;
 }
+
+/* ── Tamil Script Rendering Fix (Premium Alignment) ── */
+:lang(ta), [lang="ta"] {
+  letter-spacing: 0 !important;
+  word-break: keep-all;
+  line-height: 1.7;
+}
+:lang(ta) h1, :lang(ta) h2, :lang(ta) h3, :lang(ta) h4,
+:lang(ta) .font-editorial-serif, :lang(ta) .font-cormorant {
+  font-family: 'Noto Sans Tamil', 'Cormorant Garamond', Georgia, serif !important;
+  letter-spacing: 0 !important;
+  font-weight: 600;
+}
+:lang(ta) .font-editorial-sans, :lang(ta) .font-sans, :lang(ta) .font-mono {
+  font-family: 'Noto Sans Tamil', 'Inter', system-ui, sans-serif !important;
+  letter-spacing: 0 !important;
+}

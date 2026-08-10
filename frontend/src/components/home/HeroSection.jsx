@@ -85,6 +85,7 @@ export default function HeroSection() {
     books?.find((b) => (b.slug || b.id || b._id) === 'psychology-of-money') ||
     BOOKS?.find((b) => b.id === 'psychology-of-money') ||
     FEATURED_BOOKS?.find((b) => b.id === 'psychology-of-money') ||
+    books?.[0] ||
     FEATURED_BOOKS[0];
 
   const bookSlug = heroBook.slug || heroBook.id;

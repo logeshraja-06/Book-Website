@@ -26,11 +26,11 @@ export default function AuthorLayout() {
   };
 
   const navItems = [
-    { label: t('author.layout.tabStudio'), path: '/author/dashboard', icon: LayoutDashboard },
-    { label: t('author.layout.tabBooks'), path: '/author/books', icon: BookOpen },
-    { label: t('author.layout.tabUpload'), path: '/author/upload', icon: Upload },
-    { label: t('author.layout.tabAnalytics'), path: '/author/analytics', icon: BarChart2 },
-    { label: t('author.layout.tabProfile'), path: '/author/profile', icon: User },
+    { label: t('author.layout.navWritingStudio'), path: '/author/dashboard', icon: LayoutDashboard },
+    { label: t('author.layout.navMyBooks'), path: '/author/books', icon: BookOpen },
+    { label: t('author.layout.navUploadBook'), path: '/author/upload', icon: Upload },
+    { label: t('author.layout.navAnalytics'), path: '/author/analytics', icon: BarChart2 },
+    { label: t('author.layout.navProfile'), path: '/author/profile', icon: User },
   ];
 
   return (
@@ -50,10 +50,10 @@ export default function AuthorLayout() {
               <div>
                 <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-[#D8CFAE] font-bold block flex items-center gap-1.5">
                   <Sparkles className="w-3 h-3 text-[#212842]" />
-                  {t('author.layout.consoleEyebrow')}
+                  {t('author.layout.eyebrow')}
                 </span>
                 <h1 className="font-editorial-serif text-xl sm:text-2xl text-[#FFFDF3] font-bold">
-                  {t('author.layout.welcomeBack')} {currentUser?.name || 'Author'}
+                  {t('author.layout.welcomeBack', { name: currentUser?.name || 'Author' })}
                 </h1>
               </div>
             </div>
@@ -70,7 +70,7 @@ export default function AuthorLayout() {
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-xs"
               >
                 <LogOut className="w-3.5 h-3.5" />
-                <span>{t('author.layout.signOut')}</span>
+                <span>{t('author.layout.logOut')}</span>
               </button>
             </div>
           </div>
