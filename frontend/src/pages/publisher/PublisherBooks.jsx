@@ -9,12 +9,24 @@ import { useTranslation } from 'react-i18next';
 
 export default function PublisherBooks() {
   const { t } = useTranslation();
-  const { books = [], editorialBooks = [] } = useData();
+  const { books = [], editorialBooks = [], regenerateBookCover } = useData();
   const [searchParams] = useSearchParams();
   const authorFilterParam = searchParams.get('author');
 
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('All'); // 'All' | 'Published' | 'Pending' | 'Rejected'
+  const [regeneratingId, setRegeneratingId] = useState(null);
+
+  const handleRegenerateCover = async (bookId) => {
+    setRegeneratingId(bookId);
+    try {
+      await regenerateBookCover(bookId);
+    } catch (err) {
+      alert(`Cover regeneration failed: ${err.message}`);
+    } finally {
+      setRegeneratingId(null);
+    }
+  };
 
   const catalogSource = editorialBooks.length > 0 ? editorialBooks : books;
 
@@ -160,6 +172,16 @@ export default function PublisherBooks() {
                     >
                       {t('publisher.books.review')}
                     </Link>
+                    <button
+                      type="button"
+                      onClick={() => handleRegenerateCover(bookId)}
+                      disabled={regeneratingId === bookId}
+                      className="px-4 py-1.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-xs font-mono font-bold uppercase tracking-wider text-[#211D1D] hover:border-[#212842] hover:text-[#212842] transition-colors shadow-2xs disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5"
+                      title="Regenerate AI Cover"
+                    >
+                      <Sparkles className="w-3.5 h-3.5 text-[#212842]" />
+                      <span>{regeneratingId === bookId ? 'Generating…' : 'AI Cover'}</span>
+                    </button>
                   </div>
                 </div>
               </motion.div>

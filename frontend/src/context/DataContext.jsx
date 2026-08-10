@@ -349,6 +349,25 @@ export function DataProvider({ children }) {
     }
   }, [fetchPublicData, fetchEditorialData]);
 
+const regenerateBookCover = useCallback(async (bookId) => {
+  try {
+    const res = await apiFetch(`/editorial/books/${bookId}/regenerate-cover`, {
+      method: 'POST'
+    });
+    if (res.success && res.data) {
+      const updated = { ...res.data, id: res.data.id || res.data._id };
+      setBooks((prev) => prev.map((b) => (b.id === bookId || b._id === bookId) ? updated : b));
+      setEditorialBooks((prev) => prev.map((b) => (b.id === bookId || b._id === bookId) ? updated : b));
+      setStudioBooks((prev) => prev.map((b) => (b.id === bookId || b._id === bookId) ? updated : b));
+      return updated;
+    }
+    throw new Error(res.message || 'Failed to regenerate cover');
+  } catch (err) {
+    console.error('[regenerateBookCover Error]:', err.message);
+    throw err;
+  }
+}, []);
+
   /**
    * Reader: Toggle Wishlist with Instant Sync & Auth Prompt Modal Trigger
    */
@@ -596,6 +615,14 @@ export function DataProvider({ children }) {
     return (editorialBooks.length > 0 ? editorialBooks : books).filter((b) => b.authorId === authorId || b.authorId?._id === authorId);
   }, [editorialBooks, books]);
 
+  const getBookmarkForBook = useCallback((bookId) => {
+    if (!bookId) return null;
+    return bookmarks.find((bm) => {
+      const bId = bm.bookId?._id || bm.bookId?.id || bm.bookId;
+      return bId === bookId;
+    }) || null;
+  }, [bookmarks]);
+
   return (
     <DataContext.Provider
       value={{
@@ -618,6 +645,7 @@ export function DataProvider({ children }) {
         updateBook,
         deleteBook,
         updateBookStatus,
+        regenerateBookCover,
         toggleWishlist,
         toggleBookmark,
         purchaseBook,
@@ -633,6 +661,7 @@ export function DataProvider({ children }) {
         getAuthorById,
         getReviewsByBookId,
         getBooksByAuthorId,
+        getBookmarkForBook,
 
         activeReaderBook,
         setActiveReaderBook,

@@ -4,6 +4,7 @@ const User = require('../models/User');
 const ApiResponse = require('../utils/apiResponse');
 const asyncHandler = require('../middleware/asyncHandler');
 const slugify = require('../utils/slugify');
+const generateCoverImage = require('../utils/generateCoverImage');
 const mongoose = require('mongoose');
 
 // Helper to get or create Author profile for current user
@@ -153,6 +154,14 @@ const createStudioBook = asyncHandler(async (req, res) => {
     const file = req.files.coverImage[0];
     coverPath = `/uploads/covers/${file.filename}`;
     coverUrl = `/uploads/covers/${file.filename}`;
+  }
+
+  if ((!req.files || !req.files.coverImage || !req.files.coverImage[0]) && !req.body.coverUrl) {
+    const aiCoverPath = await generateCoverImage({ title, genre, synopsis });
+    if (aiCoverPath) {
+      coverPath = aiCoverPath;
+      coverUrl = aiCoverPath;
+    }
   }
 
   let pdfPath = '';

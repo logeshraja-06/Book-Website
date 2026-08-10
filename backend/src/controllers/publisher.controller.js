@@ -7,6 +7,7 @@ const Category = require('../models/Category');
 const Bookmark = require('../models/Bookmark');
 const ApiResponse = require('../utils/apiResponse');
 const asyncHandler = require('../middleware/asyncHandler');
+const generateCoverImage = require('../utils/generateCoverImage');
 const mongoose = require('mongoose');
 
 // Helper to check if manuscript exists on disk
@@ -405,6 +406,39 @@ const getEditorialReports = asyncHandler(async (req, res) => {
   return ApiResponse.success(res, 'Editorial reports summary fetched successfully', reports);
 });
 
+// @desc    Regenerate AI cover for an existing book (on-demand)
+// @route   POST /api/editorial/books/:id/regenerate-cover
+// @access  Private (Publisher)
+const regenerateBookCover = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const book = await resolveBook(id);
+
+  if (!book) {
+    return ApiResponse.error(res, 'Book not found', 404);
+  }
+
+  const aiCoverPath = await generateCoverImage({
+    title: book.title,
+    genre: book.genre,
+    synopsis: book.synopsis
+  });
+
+  if (!aiCoverPath) {
+    return ApiResponse.error(
+      res,
+      'AI cover generation failed.',
+      502
+    );
+  }
+
+  book.coverUrl = aiCoverPath;
+  book.coverPath = aiCoverPath;
+  book.lastEdited = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  await book.save();
+
+  return ApiResponse.success(res, 'AI cover generated and updated successfully', book);
+});
+
 module.exports = {
   getReviewQueue,
   getEditorialBookById,
@@ -420,5 +454,6 @@ module.exports = {
   deleteCategory,
   getPublisherDashboard,
   getPublisherAnalytics,
-  getEditorialReports
+  getEditorialReports,
+  regenerateBookCover
 };

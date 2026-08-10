@@ -39,6 +39,7 @@ export default function BookDetails() {
     isBookInWishlist,
     isBookBookmarked,
     isBookPurchased,
+    getBookmarkForBook,
     toggleWishlist,
     toggleBookmark,
     purchaseBook,
@@ -53,6 +54,7 @@ export default function BookDetails() {
   const wishlisted = isBookInWishlist(book);
   const bookmarked = isBookBookmarked(book);
   const purchased = isBookPurchased(book);
+  const savedBookmark = getBookmarkForBook(book?.id || book?._id);
 
   // Modals & Toast State
   const [purchaseModalOpen, setPurchaseModalOpen] = useState(false);
@@ -91,6 +93,9 @@ export default function BookDetails() {
       await purchaseBook(book, book.price);
       setPurchaseModalOpen(false);
       showToast(t('detail.book.purchaseSuccess'));
+      setTimeout(() => {
+        navigate('/my-shelf');
+      }, 1200);
     } catch (err) {
       showToast(`Purchase completed: ${err.message}`);
       setPurchaseModalOpen(false);
@@ -219,30 +224,42 @@ export default function BookDetails() {
             </div>
 
             {/* Read Now / Purchase + PDF Download Buttons */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+            <div className="pt-2">
               {purchased ? (
                 <>
-                  <Button
-                    variant="primary"
-                    size="lg"
-                    onClick={() => setActiveReaderBook(book)}
-                    className="w-full shadow-md justify-center"
-                    icon={BookOpen}
-                  >
-                    {t('detail.book.readNow')}
-                  </Button>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <Button
+                      variant="primary"
+                      size="lg"
+                      onClick={() => setActiveReaderBook(savedBookmark ? { ...book, __resumePage: savedBookmark.pageNumber } : book)}
+                      className="w-full shadow-md justify-center"
+                      icon={BookOpen}
+                    >
+                      {t('detail.book.readNow')}
+                    </Button>
 
-                  <button
-                    type="button"
-                    onClick={handleDownloadPdf}
-                    className="w-full px-5 py-3.5 rounded-full border-2 border-[#212842] bg-[#F8F6E5] text-[#212842] hover:bg-[#212842] hover:text-[#F5F5DA] transition-all font-mono text-xs uppercase tracking-wider font-bold flex items-center justify-center gap-2 shadow-2xs"
-                  >
-                    <Download className="w-4 h-4" />
-                    <span>{t('detail.book.downloadPdf')}</span>
-                  </button>
+                    <button
+                      type="button"
+                      onClick={handleDownloadPdf}
+                      className="w-full px-5 py-3.5 rounded-full border-2 border-[#212842] bg-[#F8F6E5] text-[#212842] hover:bg-[#212842] hover:text-[#F5F5DA] transition-all font-mono text-xs uppercase tracking-wider font-bold flex items-center justify-center gap-2 shadow-2xs"
+                    >
+                      <Download className="w-4 h-4" />
+                      <span>{t('detail.book.downloadPdf')}</span>
+                    </button>
+                  </div>
+
+                  {savedBookmark && (
+                    <div className="mt-3 px-4 py-2.5 rounded-2xl bg-[#F8F6E5] border border-[#D8CFAE] flex items-center gap-2 text-xs font-mono text-[#5F594F]">
+                      <Bookmark className="w-3.5 h-3.5 text-[#212842] fill-[#212842] shrink-0" />
+                      <span>
+                        Bookmarked at {savedBookmark.pageRef || `Page ${savedBookmark.pageNumber}`}
+                        {savedBookmark.chapterTitle ? ` · ${savedBookmark.chapterTitle}` : ''}
+                      </span>
+                    </div>
+                  )}
                 </>
               ) : (
-                <>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <Button
                     variant="primary"
                     size="lg"
@@ -261,7 +278,7 @@ export default function BookDetails() {
                     <Download className="w-4 h-4 text-[#212842]" />
                     <span>{t('detail.book.pdfEdition')}</span>
                   </button>
-                </>
+                </div>
               )}
             </div>
           </motion.div>
@@ -565,7 +582,7 @@ export default function BookDetails() {
           isOpen={Boolean(activeReaderBook)}
           onClose={() => setActiveReaderBook(null)}
           book={activeReaderBook}
-          initialPage={activeReaderBook.currentPage || 1}
+          initialPage={activeReaderBook.__resumePage || activeReaderBook.currentPage || 1}
         />
       )}
 
