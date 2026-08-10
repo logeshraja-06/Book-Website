@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import { LogOut, Sparkles, BookOpen, Flame } from 'lucide-react';
 import Button from '../common/Button';
+import { handleImgError, DEFAULT_AVATAR } from '../../utils/imageFallback';
 
 export default function ReaderLayout() {
   const location = useLocation();
@@ -11,7 +12,7 @@ export default function ReaderLayout() {
 
   const user = currentUser || {
     name: 'Reader',
-    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'
+    avatarUrl: DEFAULT_AVATAR
   };
 
   const navTabs = [
@@ -39,8 +40,9 @@ export default function ReaderLayout() {
             <div className="flex items-center gap-4">
               <div className="p-1 rounded-full bg-gradient-to-tr from-[#212842] to-[#D8CFAE] shadow-md shrink-0">
                 <img
-                  src={user.avatarUrl}
+                  src={user.avatarUrl || DEFAULT_AVATAR}
                   alt={user.name}
+                  onError={(e) => handleImgError(e, DEFAULT_AVATAR)}
                   className="w-14 h-14 rounded-full object-cover border-2 border-[#FFFDF3] bg-[#F8F6E5]"
                 />
               </div>

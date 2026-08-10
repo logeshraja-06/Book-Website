@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { useData } from '../../context/DataContext';
 import { formatPrice } from '../../utils/format';
 import DigitalReaderModal from '../../components/book/DigitalReaderModal';
+import { handleImgError, DEFAULT_BOOK_COVER } from '../../utils/imageFallback';
 
 export default function MyLibraryView() {
   const { libraryBookState, wishlistBooks, isBookPurchased, isBookInWishlist, toggleWishlist, toggleLibrary, activeReaderBook, setActiveReaderBook, fetchModuleData } = useData();
@@ -129,8 +130,9 @@ export default function MyLibraryView() {
                     {/* Book Cover */}
                     <div className="w-full sm:w-36 aspect-[3/4] rounded-2xl overflow-hidden bg-[#F8F6E5] shrink-0 shadow-md border border-[#D8CFAE] relative">
                       <img
-                        src={book.coverImage || book.coverUrl}
+                        src={book.coverImage || book.coverUrl || DEFAULT_BOOK_COVER}
                         alt={book.title}
+                        onError={(e) => handleImgError(e, DEFAULT_BOOK_COVER)}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                       <motion.button

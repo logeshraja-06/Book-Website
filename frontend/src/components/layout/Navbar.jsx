@@ -148,6 +148,9 @@ export default function Navbar() {
     ? '/publisher'
     : '/my-shelf';
 
+  const isHome = location.pathname === '/';
+  const showTransparent = isHome && !scrolled;
+
   return (
     <>
       {/* ── MAIN NAVBAR ── */}
@@ -155,14 +158,23 @@ export default function Navbar() {
         initial={{ y: 0 }}
         animate={{
           y: hidden ? -100 : 0,
-          backgroundColor: scrolled ? 'rgba(216, 207, 174, 0.96)' : 'rgba(216, 207, 174, 0.55)',
-          backdropFilter: scrolled ? 'blur(18px)' : 'blur(12px)',
-          boxShadow: scrolled ? '0 4px 24px -2px rgba(24, 30, 51, 0.18)' : 'none',
-          borderBottomColor: scrolled ? 'rgba(184, 172, 130, 0.55)' : 'rgba(245, 245, 218, 0.3)',
+          backgroundColor: showTransparent ? 'rgba(245, 245, 218, 0)' : '#F5F5DA',
+          backdropFilter: showTransparent ? 'blur(0px)' : 'blur(20px)',
+          boxShadow: scrolled ? '0 4px 24px -2px rgba(33, 29, 29, 0.08)' : 'none',
+          borderBottomColor: showTransparent ? 'transparent' : '#E9E5C8',
         }}
         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-        className="sticky top-0 z-50 border-b transition-colors duration-300"
+        className="sticky top-0 z-50 border-b transition-colors duration-300 relative"
       >
+        {/* Subtle 1px inner highlight at the very top when scrolled */}
+        {scrolled && (
+          <div
+            className="absolute top-0 left-0 right-0 h-[1px] pointer-events-none z-10"
+            style={{
+              background: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.4) 50%, transparent 100%)',
+            }}
+          />
+        )}
         <div className="w-full px-6 sm:px-8 lg:px-10 xl:px-12 h-20 sm:h-22 flex items-center justify-between gap-6">
           
           {/* ── LEFT: REFINED BOOKVERSE WORDMARK ── */}
@@ -197,14 +209,20 @@ export default function Navbar() {
                 <Link
                   key={link.name}
                   to={link.path}
-                  className={`relative py-2 transition-colors duration-250 hover:text-[#211D1D] ${
+                  className={`relative py-2 px-3 rounded-full transition-colors duration-250 hover:text-[#211D1D] group ${
                     isActive ? 'text-[#211D1D] font-bold' : ''
                   }`}
                 >
+                  {/* Soft animated background pill on hover for inactive links */}
+                  {!isActive && (
+                    <motion.span
+                      className="absolute inset-0 rounded-full bg-[#212842]/[0.06] opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200"
+                    />
+                  )}
                   <motion.span
                     whileHover={{ y: -1 }}
                     transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                    className="block"
+                    className="relative z-10 block"
                   >
                     {link.name}
                   </motion.span>
@@ -212,8 +230,11 @@ export default function Navbar() {
                   {isActive && (
                     <motion.div
                       layoutId="navbarActiveUnderline"
-                      className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#212842] rounded-full"
-                      transition={{ type: 'spring', stiffness: 350, damping: 30 }}
+                      className="absolute bottom-0 left-2 right-2 h-[2px] rounded-full"
+                      style={{
+                        background: 'linear-gradient(90deg, transparent 0%, #212842 50%, transparent 100%)',
+                      }}
+                      transition={{ type: 'spring', stiffness: 420, damping: 32 }}
                     />
                   )}
                 </Link>
@@ -224,24 +245,28 @@ export default function Navbar() {
           {/* ── RIGHT: SEARCH, BOOKMARKS, PUBLISHER ACCESS & AUTH ── */}
           <div className="hidden md:flex items-center gap-4 xl:gap-5">
             
-            {/* Search Trigger Button with Keyboard Shortcut Badge */}
+            {/* Search Trigger Button with Keyboard Shortcut Badge & Inner Glow */}
             <motion.button
               type="button"
               onClick={() => setSearchModalOpen(true)}
-              whileHover={{ y: -1, borderColor: '#212842' }}
-              whileTap={{ y: 0 }}
+              whileHover={{ y: -1, borderColor: '#212842', boxShadow: '0 0 0 3px rgba(33,40,66,0.08)' }}
+              whileTap={{ scale: 0.96 }}
               transition={{ duration: 0.2 }}
               className="flex items-center gap-3 px-4 py-2.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-[#6B5E5E] hover:text-[#211D1D] transition-all text-xs font-editorial-sans font-medium shadow-xs"
               title="Search Catalogue (⌘K)"
             >
               <Search className="w-3.5 h-3.5 text-[#212842]" />
               <span className="hidden xl:inline text-[13px]">Search catalogue…</span>
-              <kbd className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-[#F5F5DA] border border-[#E9E5C8] text-[10px] font-mono text-[#212842]">
+              <motion.kbd
+                animate={{ opacity: [0.7, 1, 0.7] }}
+                transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-[#F5F5DA] border border-[#E9E5C8] text-[10px] font-mono text-[#212842]"
+              >
                 <Command className="w-2.5 h-2.5" />K
-              </kbd>
+              </motion.kbd>
             </motion.button>
 
-            {/* Bookmarks / Saved Shelf Shortcut */}
+            {/* Bookmarks / Saved Shelf Shortcut with Spring Scale Pop Badge */}
             <Link
               to={currentUser ? "/my-shelf/wishlist" : "/login"}
               className="relative p-2.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-[#6B5E5E] hover:text-[#211D1D] hover:border-[#212842] transition-all duration-200"
@@ -249,9 +274,15 @@ export default function Navbar() {
             >
               <Bookmark className="w-4 h-4 text-[#212842]" />
               {wishlistBooks.length > 0 && (
-                <span className="absolute -top-1 -right-1 w-4.5 h-4.5 rounded-full bg-[#212842] text-[#F5F5DA] text-[9px] font-mono font-bold flex items-center justify-center shadow-xs">
+                <motion.span
+                  key={wishlistBooks.length}
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: 'spring', stiffness: 450, damping: 25 }}
+                  className="absolute -top-1 -right-1 w-4.5 h-4.5 rounded-full bg-[#212842] text-[#F5F5DA] text-[9px] font-mono font-bold flex items-center justify-center shadow-xs"
+                >
                   {wishlistBooks.length}
-                </span>
+                </motion.span>
               )}
             </Link>
 
@@ -337,23 +368,31 @@ export default function Navbar() {
               </div>
             ) : (
               <div className="flex items-center gap-2.5">
-                <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.95 }} transition={{ duration: 0.15 }}>
                   <Link
                     to="/login"
-                    className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-[#211D1D] text-xs font-mono font-bold uppercase tracking-[0.1em] hover:border-[#212842] hover:bg-[#F5F5DA] transition-all duration-300 shadow-2xs"
+                    className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-[#211D1D] text-xs font-mono font-bold uppercase tracking-[0.1em] hover:border-[#212842] hover:bg-[#F5F5DA] transition-all duration-250 shadow-2xs"
                   >
                     <span>LOGIN</span>
                   </Link>
                 </motion.div>
 
-                <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.95 }} transition={{ duration: 0.15 }}>
                   <button
                     type="button"
                     onClick={() => setRoleModalOpen(true)}
-                    className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-[0.1em] hover:bg-[#181E33] transition-all duration-300 shadow-md whitespace-nowrap"
+                    className="relative group overflow-hidden inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-[0.1em] hover:bg-[#181E33] transition-all duration-250 shadow-md whitespace-nowrap"
                   >
-                    <User className="w-3.5 h-3.5 text-[#F5F5DA]" />
-                    <span>SIGN IN</span>
+                    {/* Shimmer sheen sweep on hover */}
+                    <div
+                      className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100"
+                      style={{
+                        background: 'linear-gradient(75deg, transparent 40%, rgba(255,255,255,0.22) 50%, transparent 60%)',
+                        animation: 'heroShimmerSheen 1.1s ease-in-out',
+                      }}
+                    />
+                    <User className="w-3.5 h-3.5 text-[#F5F5DA] relative z-10" />
+                    <span className="relative z-10">SIGN IN</span>
                   </button>
                 </motion.div>
               </div>
@@ -501,7 +540,7 @@ export default function Navbar() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.25 }}
               onClick={() => setSearchModalOpen(false)}
-              className="fixed inset-0 bg-[#2B2B2B]/40 backdrop-blur-md"
+              className="fixed inset-0 bg-gradient-to-b from-[#181E33]/50 to-[#2B2B2B]/40 backdrop-blur-lg"
             />
 
             {/* Modal Container */}
@@ -510,10 +549,10 @@ export default function Navbar() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: -10 }}
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="relative w-full max-w-2xl rounded-3xl bg-[#FFFDF3] border border-[#E9E5C8] shadow-2xl overflow-hidden z-10"
+              className="relative w-full max-w-2xl rounded-3xl bg-[#FFFDF3] border border-[#E9E5C8] shadow-[0_24px_64px_-12px_rgba(24,30,51,0.35),0_0_0_1px_rgba(33,40,66,0.15)] overflow-hidden z-10"
             >
               {/* Search Header Input */}
-              <div className="relative p-5 border-b border-[#E9E5C8] bg-[#F5F5DA] flex items-center gap-3.5">
+              <div className="relative p-5 border-b border-[#E9E5C8] bg-[#F5F5DA] flex items-center gap-3.5 group/input">
                 <Search className="w-5 h-5 text-[#212842] shrink-0" />
                 <input
                   ref={searchInputRef}
@@ -523,6 +562,9 @@ export default function Navbar() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full bg-transparent text-sm font-editorial-sans text-[#211D1D] focus:outline-none placeholder:text-[#6B5E5E]"
                 />
+                {/* Center-expanding focus underline bar */}
+                <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#212842] scale-x-0 group-focus-within/input:scale-x-100 transition-transform duration-300 origin-center" />
+
                 {searchQuery && (
                   <button
                     type="button"
@@ -583,31 +625,32 @@ export default function Navbar() {
                     {filteredBooks.map((book) => {
                       const bookSlug = book.slug || book.id || book._id;
                       return (
-                        <Link
-                          key={book.id || book._id}
-                          to={`/books/${bookSlug}`}
-                          onClick={() => setSearchModalOpen(false)}
-                          className="flex items-center justify-between p-3 rounded-2xl bg-[#F5F5DA]/60 border border-[#E9E5C8] hover:border-[#212842] hover:bg-[#F5F5DA] transition-all group"
-                        >
-                          <div className="flex items-center gap-3">
-                            <img
-                              src={book.coverImage || book.coverUrl}
-                              alt={book.title}
-                              className="w-9 h-12 rounded-lg object-cover border border-[#E9E5C8] shrink-0"
-                            />
-                            <div>
-                              <h5 className="font-editorial-serif text-base font-bold text-[#211D1D] group-hover:text-[#212842] transition-colors">
-                                {book.title}
-                              </h5>
-                              <p className="text-xs text-[#6B5E5E] font-sans">
-                                By {book.author} · {book.genre}
-                              </p>
+                        <motion.div key={book.id || book._id} whileHover={{ x: 4 }} transition={{ duration: 0.15 }}>
+                          <Link
+                            to={`/books/${bookSlug}`}
+                            onClick={() => setSearchModalOpen(false)}
+                            className="flex items-center justify-between p-3 rounded-2xl bg-[#F5F5DA]/60 border border-[#E9E5C8] hover:border-[#212842] hover:bg-[#F5F5DA] transition-all group"
+                          >
+                            <div className="flex items-center gap-3">
+                              <img
+                                src={book.coverImage || book.coverUrl}
+                                alt={book.title}
+                                className="w-9 h-12 rounded-lg object-cover border border-[#E9E5C8] shrink-0"
+                              />
+                              <div>
+                                <h5 className="font-editorial-serif text-base font-bold text-[#211D1D] group-hover:text-[#212842] transition-colors">
+                                  {book.title}
+                                </h5>
+                                <p className="text-xs text-[#6B5E5E] font-sans">
+                                  By {book.author} · {book.genre}
+                                </p>
+                              </div>
                             </div>
-                          </div>
-                          <span className="font-mono text-xs font-bold text-[#212842]">
-                            {formatPrice(book.price)}
-                          </span>
-                        </Link>
+                            <span className="font-mono text-xs font-bold text-[#212842]">
+                              {formatPrice(book.price)}
+                            </span>
+                          </Link>
+                        </motion.div>
                       );
                     })}
                   </div>
@@ -620,26 +663,27 @@ export default function Navbar() {
                   </span>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     {filteredAuthors.map((author) => (
-                      <Link
-                        key={author.id || author._id}
-                        to="/authors"
-                        onClick={() => setSearchModalOpen(false)}
-                        className="p-3 rounded-2xl bg-[#F5F5DA]/60 border border-[#E9E5C8] hover:border-[#212842] transition-all flex items-center gap-3 group"
-                      >
-                        <img
-                          src={author.avatarUrl || author.image}
-                          alt={author.name}
-                          className="w-8 h-8 rounded-full object-cover border border-[#E9E5C8]"
-                        />
-                        <div className="min-w-0">
-                          <h6 className="font-editorial-serif text-sm font-bold text-[#211D1D] truncate group-hover:text-[#212842] transition-colors">
-                            {author.name}
-                          </h6>
-                          <p className="text-[10px] font-mono text-[#6B5E5E] truncate">
-                            {author.role || 'Author'}
-                          </p>
-                        </div>
-                      </Link>
+                      <motion.div key={author.id || author._id} whileHover={{ x: 3 }} transition={{ duration: 0.15 }}>
+                        <Link
+                          to="/authors"
+                          onClick={() => setSearchModalOpen(false)}
+                          className="p-3 rounded-2xl bg-[#F5F5DA]/60 border border-[#E9E5C8] hover:border-[#212842] transition-all flex items-center gap-3 group"
+                        >
+                          <img
+                            src={author.avatarUrl || author.image}
+                            alt={author.name}
+                            className="w-8 h-8 rounded-full object-cover border border-[#E9E5C8]"
+                          />
+                          <div className="min-w-0">
+                            <h6 className="font-editorial-serif text-sm font-bold text-[#211D1D] truncate group-hover:text-[#212842] transition-colors">
+                              {author.name}
+                            </h6>
+                            <p className="text-[10px] font-mono text-[#6B5E5E] truncate">
+                              {author.role || 'Author'}
+                            </p>
+                          </div>
+                        </Link>
+                      </motion.div>
                     ))}
                   </div>
                 </div>

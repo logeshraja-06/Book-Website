@@ -8,6 +8,7 @@ import SkeletonCard from '../../components/ui/SkeletonCard';
 import EmptyState from '../../components/common/EmptyState';
 import BookCover from '../../components/book/BookCover';
 import { AuthorBookCard } from '../../components/book/BookCardComponents';
+import { handleImgError, DEFAULT_AVATAR } from '../../utils/imageFallback';
 
 export default function AuthorProfile() {
   const { id: slug } = useParams();
@@ -81,8 +82,9 @@ export default function AuthorProfile() {
           >
             <div className="relative w-full max-w-md aspect-[4/5] rounded-3xl overflow-hidden shadow-xl border-4 border-[#FFFDF3] bg-[#FFFDF3]">
               <img
-                src={author.avatarUrl || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80'}
+                src={author.avatarUrl || DEFAULT_AVATAR}
                 alt={author.name}
+                onError={(e) => handleImgError(e, DEFAULT_AVATAR)}
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#211D1D]/70 via-transparent to-transparent pointer-events-none" />

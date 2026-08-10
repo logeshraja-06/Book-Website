@@ -15,6 +15,7 @@ import { Link } from 'react-router-dom';
 import { useData } from '../../context/DataContext';
 import { BOOKS, FEATURED_BOOKS } from '../../data/booksData';
 import { formatPrice } from '../../utils/format';
+import { handleImgError, DEFAULT_BOOK_COVER } from '../../utils/imageFallback';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -327,7 +328,7 @@ export default function HeroSection() {
               </motion.div>
             </div>
 
-            {/* ── RIGHT COLUMN: SPOTLIGHT FLOATING BOOK (unchanged parallax logic) ── */}
+            {/* ── RIGHT COLUMN: SPOTLIGHT FLOATING BOOK (premium 3D product showcase) ── */}
             <motion.div
               initial={{ opacity: 0, scale: 0.94, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -338,63 +339,100 @@ export default function HeroSection() {
                 style={{ x: bookX, y: bookY, rotateX: bookRotateX, rotateY: bookRotateY }}
                 className="book-container relative w-full max-w-sm"
               >
+                {/* 1. Ambient Light-Cast Glow Layer (Apple Product Style) */}
+                <div
+                  className="absolute -inset-4 rounded-3xl pointer-events-none hero-spotlight-breathe overflow-hidden"
+                  style={{
+                    backgroundImage: `url(${heroBook.coverImage || heroBook.coverUrl})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    filter: 'blur(40px)',
+                    zIndex: 0,
+                  }}
+                />
+
+                {/* 2. Upgraded "Featured Hardcover" Badge with Animated Conic-Gradient Border */}
                 <motion.div
                   style={{ x: badgeX, y: badgeY }}
-                  animate={{
-                    boxShadow: [
-                      '0 4px 14px -2px rgba(0,0,0,0.2)',
-                      '0 10px 32px -4px rgba(216,207,174,0.35)',
-                      '0 4px 14px -2px rgba(0,0,0,0.2)'
-                    ]
-                  }}
-                  transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
-                  className="absolute -top-3 -right-3 z-30 px-3.5 py-1.5 rounded-full bg-[#FFFDF3]/95 backdrop-blur-md border border-[#E9E5C8] text-[10px] font-editorial-sans uppercase tracking-[0.16em] text-[#212842] font-bold shadow-md flex items-center gap-1.5"
+                  className="absolute -top-3 -right-3 z-30 p-[1.5px] rounded-full overflow-hidden shadow-lg"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#212842] animate-pulse" />
-                  <span>Featured Hardcover</span>
+                  <div
+                    className="absolute inset-0 badge-rotate-glow pointer-events-none"
+                    style={{
+                      background: 'conic-gradient(from 0deg, #212842 0%, #D8CFAE 40%, #FFFDF3 70%, #212842 100%)',
+                    }}
+                  />
+                  <div className="relative px-3.5 py-1.5 rounded-full bg-[#FFFDF3]/95 backdrop-blur-md text-[10px] font-editorial-sans uppercase tracking-[0.16em] text-[#212842] font-bold flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#212842] animate-pulse" />
+                    <span>Featured Hardcover</span>
+                  </div>
                 </motion.div>
 
-                <div className="space-y-4">
+                <div className="relative z-10 space-y-4">
+                  {/* 3. Spotlight Book with Gilded Edge Accent & Paper Edge Detail */}
                   <Link
                     to={`/books/${bookSlug}`}
-                    className="book-card-3d relative block aspect-[3/4] rounded-r-2xl rounded-l-sm overflow-hidden bg-[#F5F5DA] border border-white/20 shadow-2xl group cursor-pointer"
+                    className="relative block rounded-r-2xl rounded-l-sm p-[2px] bg-gradient-to-br from-[#F5F5DA]/70 via-[#E9E5C8]/40 to-[#212842]/40 shadow-2xl group cursor-pointer"
                   >
-                    <div className="book-spine-depth" />
-                    <img
-                      src={heroBook.coverImage || heroBook.coverUrl}
-                      alt={heroBook.title}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#211D1D]/75 via-transparent to-transparent opacity-85 pointer-events-none" />
+                    <div className="book-card-3d relative block aspect-[3/4] rounded-r-xl rounded-l-xs overflow-hidden bg-[#F5F5DA]">
+                      <div className="book-spine-depth" />
 
-                    <div
-                      className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100"
-                      style={{
-                        background: 'linear-gradient(75deg, transparent 40%, rgba(255,255,255,0.22) 50%, transparent 60%)',
-                        animation: 'heroShimmerSheen 1.1s ease-in-out',
-                      }}
-                    />
+                      {/* Floating paper page-edge detail */}
+                      <div className="absolute top-3 bottom-3 right-1.5 z-20 flex flex-col justify-between pointer-events-none opacity-40 space-y-1">
+                        <div className="w-[2px] h-full bg-[#FFFDF3] rounded-full shadow-xs" />
+                        <div className="w-[2px] h-[85%] bg-[#F5F5DA] rounded-full shadow-xs" />
+                        <div className="w-[2px] h-[70%] bg-[#FFFDF3] rounded-full shadow-xs" />
+                      </div>
 
-                    <div className="absolute bottom-5 left-5 right-5 text-[#F5F5DA] pointer-events-none">
-                      <span className="text-[11px] font-mono uppercase tracking-[0.16em] text-[#E9E5C8] block mb-1 font-semibold">
-                        {heroBook.genre}
-                      </span>
-                      <h3 className="font-editorial-serif text-2xl sm:text-3xl font-bold leading-tight tracking-tight">
-                        {heroBook.title}
-                      </h3>
+                      <img
+                        src={heroBook.coverImage || heroBook.coverUrl}
+                        alt={heroBook.title}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#211D1D]/75 via-transparent to-transparent opacity-85 pointer-events-none" />
+
+                      <div
+                        className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100"
+                        style={{
+                          background: 'linear-gradient(75deg, transparent 40%, rgba(255,255,255,0.22) 50%, transparent 60%)',
+                          animation: 'heroShimmerSheen 1.1s ease-in-out',
+                        }}
+                      />
+
+                      <div className="absolute bottom-5 left-5 right-5 text-[#F5F5DA] pointer-events-none">
+                        <span className="text-[11px] font-mono uppercase tracking-[0.16em] text-[#E9E5C8] block mb-1 font-semibold">
+                          {heroBook.genre}
+                        </span>
+                        <h3 className="font-editorial-serif text-2xl sm:text-3xl font-bold leading-tight tracking-tight">
+                          {heroBook.title}
+                        </h3>
+                      </div>
                     </div>
                   </Link>
 
-                  <div className="bg-[#FFFDF3]/95 backdrop-blur-md border border-[#E9E5C8] rounded-2xl p-4 shadow-xl flex items-center justify-between">
+                  {/* 4. Upgraded Price/Rating Info Card with Dark Glass-Morphism & Light Text Tones */}
+                  <div
+                    className="relative bg-[#0F1424]/55 backdrop-blur-xl border border-white/10 rounded-2xl p-4 flex items-center justify-between overflow-hidden"
+                    style={{
+                      boxShadow: '0 24px 48px -12px rgba(15,20,36,0.5), 0 2px 6px -1px rgba(15,20,36,0.3)',
+                    }}
+                  >
+                    {/* Top 1px inner highlight line */}
+                    <div
+                      className="absolute top-0 left-0 right-0 h-[1px] pointer-events-none"
+                      style={{
+                        background: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.25) 50%, transparent 100%)',
+                      }}
+                    />
                     <div>
-                      <p className="text-xs font-sans text-[#6B5E5E]">By <span className="font-semibold text-[#211D1D]">{heroBook.author}</span></p>
-                      <p className="font-editorial-sans font-tabular text-lg font-bold tracking-tight text-[#211D1D] mt-0.5">
+                      <p className="text-xs font-sans text-[#E9E5C8]/80">By <span className="font-semibold text-[#F5F5DA]">{heroBook.author}</span></p>
+                      <p className="font-editorial-sans font-tabular text-lg font-bold tracking-tight text-[#F5F5DA] mt-0.5">
                         {formatPrice(heroBook.price)}
                       </p>
                     </div>
                     <div className="text-right">
-                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#F5F5DA] border border-[#E9E5C8] text-[#212842] text-xs font-editorial-sans font-bold font-tabular">
-                        <Star className="w-3.5 h-3.5 fill-[#212842]" />
+                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[#F5F5DA] text-xs font-editorial-sans font-bold font-tabular shadow-2xs">
+                        <Star className="w-3.5 h-3.5 fill-[#D8CFAE] text-[#D8CFAE]" />
                         <span>{heroBook.rating} ({heroBook.reviewsCount})</span>
                       </span>
                     </div>
@@ -470,7 +508,13 @@ export default function HeroSection() {
                     style={{ transform: `rotate(${rotate}deg)`, animationDelay: `${idx * 0.4}s` }}
                   >
                     <div className="w-24 sm:w-28 lg:w-32 aspect-[2/3] rounded-r-lg rounded-l-sm overflow-hidden shadow-2xl border border-[#F5F5DA]/10 bg-[#211D1D]">
-                      <img src={book.coverImage || book.coverUrl} alt={book.title} className="w-full h-full object-cover" loading="lazy" />
+                      <img
+                        src={book.coverImage || book.coverUrl || DEFAULT_BOOK_COVER}
+                        alt={book.title}
+                        onError={(e) => handleImgError(e, DEFAULT_BOOK_COVER)}
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
                     </div>
                     <div
                       className="w-24 sm:w-28 lg:w-32 aspect-[2/3] rounded-r-lg rounded-l-sm overflow-hidden mt-1 opacity-25"
@@ -480,7 +524,13 @@ export default function HeroSection() {
                         WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,0.5), transparent 70%)',
                       }}
                     >
-                      <img src={book.coverImage || book.coverUrl} alt="" className="w-full h-full object-cover" aria-hidden="true" />
+                      <img
+                        src={book.coverImage || book.coverUrl || DEFAULT_BOOK_COVER}
+                        alt=""
+                        onError={(e) => handleImgError(e, DEFAULT_BOOK_COVER)}
+                        className="w-full h-full object-cover"
+                        aria-hidden="true"
+                      />
                     </div>
                   </Link>
                 </div>

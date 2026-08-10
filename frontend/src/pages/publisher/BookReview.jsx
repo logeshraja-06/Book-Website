@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { useData } from '../../context/DataContext';
 import { apiFetch } from '../../context/AuthContext';
+import { handleImgError, DEFAULT_BOOK_COVER } from '../../utils/imageFallback';
 
 export default function BookReview() {
   const { id } = useParams();
@@ -139,7 +140,12 @@ export default function BookReview() {
         {/* LEFT COLUMN: Book Metadata (3 Cols) */}
         <div className="lg:col-span-3 space-y-6 bg-[#FFFDF3] rounded-3xl p-6 border border-[#D8CFAE] shadow-md">
           <div className="aspect-[3/4] rounded-2xl overflow-hidden bg-[#F8F6E5] shadow-md border border-[#D8CFAE]">
-            <img src={book.coverImage || book.coverUrl} alt={book.title} className="w-full h-full object-cover" />
+            <img
+              src={book.coverImage || book.coverUrl || DEFAULT_BOOK_COVER}
+              alt={book.title}
+              onError={(e) => handleImgError(e, DEFAULT_BOOK_COVER)}
+              className="w-full h-full object-cover"
+            />
           </div>
 
           <div className="space-y-2">

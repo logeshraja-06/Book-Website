@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Search, Eye, BookOpen, Sparkles } from 'lucide-react';
 import { useData } from '../../context/DataContext';
 import { formatPrice } from '../../utils/format';
+import { handleImgError, DEFAULT_BOOK_COVER } from '../../utils/imageFallback';
 
 export default function PublisherBooks() {
   const { books = [], editorialBooks = [] } = useData();
@@ -111,7 +112,12 @@ export default function PublisherBooks() {
               >
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-14 rounded overflow-hidden bg-[#F5F5DA] shrink-0 border border-[#E9E5C8] shadow-2xs">
-                    <img src={book.coverImage || book.coverUrl} alt={book.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <img
+                      src={book.coverImage || book.coverUrl || DEFAULT_BOOK_COVER}
+                      alt={book.title}
+                      onError={(e) => handleImgError(e, DEFAULT_BOOK_COVER)}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
                   </div>
 
                   <div>

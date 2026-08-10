@@ -5,6 +5,7 @@ import { Search, Plus, Edit3, Trash2, Eye, BookOpen, CheckCircle2, AlertCircle, 
 import { useData } from '../../context/DataContext';
 import { useAuth } from '../../context/AuthContext';
 import { formatPrice } from '../../utils/format';
+import { handleImgError, DEFAULT_BOOK_COVER } from '../../utils/imageFallback';
 
 export default function AuthorBooksView() {
   const { books = [], studioBooks = [], deleteBook } = useData();
@@ -16,22 +17,8 @@ export default function AuthorBooksView() {
   const [deleteTargetId, setDeleteTargetId] = useState(null);
   const [toastMessage, setToastMessage] = useState(null);
 
-  // Combine studioBooks & books for logged-in author
-  const allAuthorBooks = (studioBooks.length > 0 ? studioBooks : books).filter((b) => {
-    if (!currentUser) return false;
-    const currentIdStr = String(currentUser.id || currentUser._id || '');
-    const currentName = currentUser.name || currentUser.penName || '';
-
-    const bookAuthorIdStr = String(b.authorId?._id || b.authorId || '');
-    const bookAuthorName = b.author || '';
-
-    return (
-      (bookAuthorIdStr && bookAuthorIdStr === currentIdStr) ||
-      (bookAuthorName && currentName && bookAuthorName.toLowerCase() === currentName.toLowerCase()) ||
-      b.legacyId === currentIdStr ||
-      (currentName.toLowerCase().includes('kalki') && bookAuthorName.toLowerCase().includes('kalki'))
-    );
-  });
+  // Use studioBooks directly as it is already scoped server-side to the logged-in author via GET /api/studio/books
+  const allAuthorBooks = studioBooks.length > 0 ? studioBooks : (books || []);
 
   const filteredBooks = allAuthorBooks.filter((book) => {
     const matchesSearch =
@@ -141,8 +128,9 @@ export default function AuthorBooksView() {
               {/* Cover & Status Badge */}
               <div className="relative aspect-[3/4] overflow-hidden bg-[#F8F6E5]">
                 <img
-                  src={book.coverImage || book.coverUrl}
+                  src={book.coverImage || book.coverUrl || DEFAULT_BOOK_COVER}
                   alt={book.title}
+                  onError={(e) => handleImgError(e, DEFAULT_BOOK_COVER)}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
 

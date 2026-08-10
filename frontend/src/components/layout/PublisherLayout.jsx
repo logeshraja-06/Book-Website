@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useData } from '../../context/DataContext';
 import { Layers, ShieldCheck, LogOut, Sparkles } from 'lucide-react';
 import Button from '../../components/common/Button';
+import { handleImgError, DEFAULT_AVATAR } from '../../utils/imageFallback';
 
 export default function PublisherLayout() {
   const location = useLocation();
@@ -20,7 +21,7 @@ export default function PublisherLayout() {
 
   const user = currentUser || {
     name: 'Editorial Control Desk',
-    avatarUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&q=80'
+    avatarUrl: DEFAULT_AVATAR
   };
 
   const publisherTabs = [
@@ -51,8 +52,9 @@ export default function PublisherLayout() {
             <div className="flex items-center gap-4">
               <div className="relative">
                 <img
-                  src={user.avatarUrl}
+                  src={user.avatarUrl || DEFAULT_AVATAR}
                   alt={user.name}
+                  onError={(e) => handleImgError(e, DEFAULT_AVATAR)}
                   className="w-12 h-12 rounded-full object-cover border-2 border-[#212842] shadow-md"
                 />
                 <span className="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-[#211D1D]" />

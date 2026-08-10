@@ -255,3 +255,22 @@ html.lenis, html.lenis body {
   animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
   animation-iteration-count: infinite;
 }
+
+/* ── Hero Spotlight Premium Redesign Keyframes ── */
+@keyframes heroSpotlightBreathe {
+  0%, 100% { transform: scale(1); opacity: 0.35; }
+  50% { transform: scale(1.025); opacity: 0.45; }
+}
+
+@keyframes badgeRotateGlow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.hero-spotlight-breathe {
+  animation: heroSpotlightBreathe 6s ease-in-out infinite;
+}
+
+.badge-rotate-glow {
+  animation: badgeRotateGlow 4s linear infinite;
+}

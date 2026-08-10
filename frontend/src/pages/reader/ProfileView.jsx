@@ -18,6 +18,7 @@ import { useAuth, apiFetch } from '../../context/AuthContext';
 import { useData } from '../../context/DataContext';
 import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
+import { handleImgError, DEFAULT_AVATAR } from '../../utils/imageFallback';
 
 function StatCounter({ target, prefix = '', suffix = '', decimals = 0 }) {
   const ref = useRef(null);
@@ -218,12 +219,19 @@ export default function ProfileView() {
                 key={t.id}
                 type="button"
                 onClick={() => setActiveTab(t.id)}
-                className={`relative flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-mono font-semibold transition-all whitespace-nowrap ${
-                  isActive ? 'text-[#F5F5DA] bg-[#212842] shadow-sm' : 'text-[#5F594F] hover:text-[#181616] hover:bg-[#F8F6E5]'
+                className={`relative flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-mono font-semibold transition-colors whitespace-nowrap ${
+                  isActive ? 'text-[#F5F5DA]' : 'text-[#5F594F] hover:text-[#181616] hover:bg-[#F8F6E5]'
                 }`}
               >
-                <Icon className="w-3.5 h-3.5" />
-                <span>{t.label}</span>
+                {isActive && (
+                  <motion.div
+                    layoutId="readerProfileTabPill"
+                    className="absolute inset-0 bg-[#212842] rounded-xl shadow-sm z-0"
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                  />
+                )}
+                <Icon className="w-3.5 h-3.5 relative z-10" />
+                <span className="relative z-10">{t.label}</span>
               </button>
             );
           })}
@@ -245,7 +253,12 @@ export default function ProfileView() {
               >
                 <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-[#FFFDF3] bg-[#F8F6E5]">
                   {avatar ? (
-                    <img src={avatar} alt={name} className="w-full h-full object-cover" />
+                    <img
+                      src={avatar || DEFAULT_AVATAR}
+                      alt={name}
+                      onError={(e) => handleImgError(e, DEFAULT_AVATAR)}
+                      className="w-full h-full object-cover"
+                    />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
                       <User className="w-8 h-8 text-[#212842]" />

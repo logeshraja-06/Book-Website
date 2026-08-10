@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { handleImgError, DEFAULT_AVATAR } from '../../utils/imageFallback';
 
 export default function AuthorGalleryTile({ author, index = 0 }) {
   if (!author) return null;
@@ -19,8 +20,9 @@ export default function AuthorGalleryTile({ author, index = 0 }) {
         <div className="relative aspect-[4/5] overflow-hidden bg-[#E9E5C8] rounded-xs select-none">
           {/* Author Portrait Image (Grayscale by default, color + scale on hover) */}
           <img
-            src={author.avatarUrl || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80'}
+            src={author.avatarUrl || DEFAULT_AVATAR}
             alt={author.name}
+            onError={(e) => handleImgError(e, DEFAULT_AVATAR)}
             className="w-full h-full object-cover grayscale contrast-110 group-hover:grayscale-0 group-hover:scale-[1.04] transition-all duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
           />
 

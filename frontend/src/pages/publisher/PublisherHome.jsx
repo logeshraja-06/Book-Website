@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion, useInView, useMotionValue, animate } from 'framer-motion';
 import { Layers, ArrowRight, BookOpen, Clock, ShieldCheck, Tag, Sparkles, BookCheck, Users } from 'lucide-react';
 import { useData } from '../../context/DataContext';
+import { handleImgError, DEFAULT_BOOK_COVER } from '../../utils/imageFallback';
 
 function StatCounter({ target, prefix = '', suffix = '', decimals = 0 }) {
   const ref = useRef(null);
@@ -178,7 +179,12 @@ export default function PublisherHome() {
               >
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-14 rounded overflow-hidden bg-[#F5F5DA] shrink-0 border border-[#E9E5C8] shadow-2xs">
-                    <img src={book.coverImage || book.coverUrl} alt={book.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                    <img
+                      src={book.coverImage || book.coverUrl || DEFAULT_BOOK_COVER}
+                      alt={book.title}
+                      onError={(e) => handleImgError(e, DEFAULT_BOOK_COVER)}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                    />
                   </div>
                   <div>
                     <h4 className="font-editorial-serif text-base font-bold text-[#211D1D] group-hover:text-[#212842] transition-colors">

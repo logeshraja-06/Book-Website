@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Feather, ArrowUpRight, Star } from 'lucide-react';
 import { useData } from '../../context/DataContext';
 import { formatPrice } from '../../utils/format';
+import { handleImgError, DEFAULT_BOOK_COVER } from '../../utils/imageFallback';
 
 export default function IndianBookshelf() {
   const { books = [] } = useData();
@@ -53,8 +54,9 @@ export default function IndianBookshelf() {
                 <div>
                   <Link to={`/books/${bookSlug}`} className="block relative aspect-[3/4] rounded-2xl overflow-hidden mb-4 shadow-md bg-[#F5F5DA]">
                     <img
-                      src={book.coverImage || book.coverUrl}
+                      src={book.coverImage || book.coverUrl || DEFAULT_BOOK_COVER}
                       alt={book.title}
+                      onError={(e) => handleImgError(e, DEFAULT_BOOK_COVER)}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-[#FFFDF3]/90 backdrop-blur-sm text-[10px] font-mono uppercase tracking-wider text-[#212842] font-bold border border-[#E9E5C8]">

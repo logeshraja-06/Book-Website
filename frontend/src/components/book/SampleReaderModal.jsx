@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight, BookOpen, ShoppingBag } from 'lucide-react';
+import { handleImgError, DEFAULT_BOOK_COVER } from '../../utils/imageFallback';
 
 export default function SampleReaderModal({ isOpen, onClose, book, onPurchaseClick }) {
   const [currentPage, setCurrentPage] = useState(0);
@@ -98,7 +99,12 @@ export default function SampleReaderModal({ isOpen, onClose, book, onPurchaseCli
             <header className="h-16 px-6 flex items-center justify-between border-b border-[#E9E5C8] bg-[#F5F5DA] shrink-0">
               <div className="flex items-center gap-3.5 min-w-0">
                 <div className="w-8 h-11 rounded overflow-hidden shrink-0 border border-[#E9E5C8] shadow-xs">
-                  <img src={book.coverImage || book.coverUrl} alt={book.title} className="w-full h-full object-cover" />
+                  <img
+                    src={book.coverImage || book.coverUrl || DEFAULT_BOOK_COVER}
+                    alt={book.title}
+                    onError={(e) => handleImgError(e, DEFAULT_BOOK_COVER)}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <div className="min-w-0">
                   <h4 className="font-editorial-serif text-sm font-bold truncate text-[#211D1D]">

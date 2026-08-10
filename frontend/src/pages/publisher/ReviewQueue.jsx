@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, Clock, FileText } from 'lucide-react';
 import { useData } from '../../context/DataContext';
+import { handleImgError, DEFAULT_BOOK_COVER } from '../../utils/imageFallback';
 
 export default function ReviewQueue() {
   const { books, editorialBooks, editorialQueue } = useData();
@@ -90,8 +91,9 @@ export default function ReviewQueue() {
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-16 aspect-[2/3] rounded-lg overflow-hidden bg-[#F8F6E5] shrink-0 border border-[#D8CFAE] shadow-2xs">
                       <img
-                        src={book.coverImage || book.coverUrl}
+                        src={book.coverImage || book.coverUrl || DEFAULT_BOOK_COVER}
                         alt={book.title}
+                        onError={(e) => handleImgError(e, DEFAULT_BOOK_COVER)}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                     </div>

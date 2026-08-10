@@ -17,6 +17,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useData } from '../../context/DataContext';
 import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
+import { handleImgError, DEFAULT_AVATAR } from '../../utils/imageFallback';
 
 function StatCounter({ target, prefix = '', suffix = '', decimals = 0 }) {
   const ref = useRef(null);
@@ -187,249 +188,304 @@ export default function PublisherProfileView() {
                 key={t.id}
                 type="button"
                 onClick={() => setActiveTab(t.id)}
-                className={`relative flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-mono font-semibold transition-all whitespace-nowrap ${
-                  isActive ? 'text-[#F5F5DA] bg-[#212842] shadow-sm' : 'text-[#5F594F] hover:text-[#181616] hover:bg-[#F8F6E5]'
+                className={`relative flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-mono font-semibold transition-colors whitespace-nowrap ${
+                  isActive ? 'text-[#F5F5DA]' : 'text-[#5F594F] hover:text-[#181616] hover:bg-[#F8F6E5]'
                 }`}
               >
-                <Icon className="w-3.5 h-3.5" />
-                <span>{t.label}</span>
+                {isActive && (
+                  <motion.div
+                    layoutId="publisherProfileTabPill"
+                    className="absolute inset-0 bg-[#212842] rounded-xl shadow-sm z-0"
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                  />
+                )}
+                <Icon className="w-3.5 h-3.5 relative z-10" />
+                <span className="relative z-10">{t.label}</span>
               </button>
             );
           })}
         </div>
       </motion.div>
 
-      {/* ── 2. PUBLISHER PROFILE TAB ── */}
-      {activeTab === 'profile' && (
-        <motion.div variants={itemVariants} className="space-y-8">
-          <div className="p-8 sm:p-10 rounded-3xl bg-[#FFFDF3] border border-[#D8CFAE] shadow-md space-y-8 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-72 h-72 bg-[#212842]/5 blur-3xl rounded-full pointer-events-none" />
+      {/* ── 2. TAB CONTENT PANELS WITH ANIMATEPRESENCE ENTRANCE ── */}
+      <AnimatePresence mode="wait">
+        {activeTab === 'profile' && (
+          <motion.div
+            key="profile"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className="space-y-8"
+          >
+            <div className="p-8 sm:p-10 rounded-3xl bg-[#FFFDF3] border border-[#D8CFAE] shadow-md space-y-8 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-72 h-72 bg-[#212842]/5 blur-3xl rounded-full pointer-events-none" />
 
-            <div className="flex flex-col sm:flex-row items-center gap-6 border-b border-[#DED7BD] pb-8 relative z-10">
-              <div className="relative p-1 rounded-full bg-gradient-to-tr from-[#212842] to-[#D8CFAE] shadow-lg shrink-0">
-                <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-[#FFFDF3] bg-[#F8F6E5]">
-                  <img src={formData.avatarUrl} alt={formData.name} className="w-full h-full object-cover" />
+              <div className="flex flex-col sm:flex-row items-center gap-6 border-b border-[#DED7BD] pb-8 relative z-10">
+                <motion.div
+                  whileHover={{ scale: 1.04, boxShadow: '0 0 0 4px rgba(33,40,66,0.12)' }}
+                  transition={{ duration: 0.2 }}
+                  className="relative p-1 rounded-full bg-gradient-to-tr from-[#212842] to-[#D8CFAE] shadow-lg shrink-0 cursor-pointer"
+                >
+                  <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-[#FFFDF3] bg-[#F8F6E5]">
+                    <img
+                      src={formData.avatarUrl || DEFAULT_AVATAR}
+                      alt={formData.name}
+                      onError={(e) => handleImgError(e, DEFAULT_AVATAR)}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </motion.div>
+
+                <div className="space-y-2 text-center sm:text-left flex-1">
+                  <div className="flex items-center justify-center sm:justify-start gap-2 flex-wrap">
+                    <h3 className="font-editorial-serif text-2xl font-bold text-[#181616]">
+                      {formData.name}
+                    </h3>
+                    <span className="inline-flex items-center gap-1 px-3 py-0.5 rounded-full bg-[#F1EED2] border border-[#D8CFAE] text-[10px] font-mono text-[#212842] font-bold">
+                      <ShieldCheck className="w-3 h-3 text-[#212842]" />
+                      Verified Publisher Registrar
+                    </span>
+                  </div>
+                  <p className="text-xs font-mono text-[#5F594F]">{formData.email}</p>
+                  <p className="text-xs text-[#5F594F] font-sans italic max-w-xl">
+                    "{formData.bio}"
+                  </p>
                 </div>
               </div>
 
-              <div className="space-y-2 text-center sm:text-left flex-1">
-                <div className="flex items-center justify-center sm:justify-start gap-2 flex-wrap">
-                  <h3 className="font-editorial-serif text-2xl font-bold text-[#181616]">
-                    {formData.name}
-                  </h3>
-                  <span className="inline-flex items-center gap-1 px-3 py-0.5 rounded-full bg-[#F1EED2] border border-[#D8CFAE] text-[10px] font-mono text-[#212842] font-bold">
-                    <ShieldCheck className="w-3 h-3 text-[#212842]" />
-                    Verified Publisher Registrar
+              {/* OVERVIEW STATS WITH TACTILE LIFT */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 py-6 border-y border-[#DED7BD] bg-[#F8F6E5] rounded-2xl px-6">
+                <motion.div whileHover={{ y: -4 }} transition={{ type: 'spring', stiffness: 300, damping: 22 }} className="space-y-1">
+                  <span className="text-[10px] uppercase font-mono tracking-widest text-[#827A6D] font-bold block flex items-center gap-1">
+                    <BookOpen className="w-3 h-3 text-[#212842]" /> Catalog
                   </span>
+                  <StatCounter target={books.length || 12} />
+                  <span className="text-[11px] text-[#5F594F] font-sans block">Published titles</span>
+                </motion.div>
+
+                <motion.div whileHover={{ y: -4 }} transition={{ type: 'spring', stiffness: 300, damping: 22 }} className="space-y-1">
+                  <span className="text-[10px] uppercase font-mono tracking-widest text-[#827A6D] font-bold block flex items-center gap-1">
+                    <FileCheck className="w-3 h-3 text-[#212842]" /> Queue
+                  </span>
+                  <StatCounter target={editorialQueue.length || 4} />
+                  <span className="text-[11px] text-[#5F594F] font-sans block">Under evaluation</span>
+                </motion.div>
+
+                <motion.div whileHover={{ y: -4 }} transition={{ type: 'spring', stiffness: 300, damping: 22 }} className="space-y-1">
+                  <span className="text-[10px] uppercase font-mono tracking-widest text-[#827A6D] font-bold block flex items-center gap-1">
+                    <Users className="w-3 h-3 text-[#212842]" /> Imprint Authors
+                  </span>
+                  <StatCounter target={85} />
+                  <span className="text-[11px] text-[#5F594F] font-sans block">Verified writers</span>
+                </motion.div>
+
+                <motion.div whileHover={{ y: -4 }} transition={{ type: 'spring', stiffness: 300, damping: 22 }} className="space-y-1">
+                  <span className="text-[10px] uppercase font-mono tracking-widest text-[#827A6D] font-bold block flex items-center gap-1">
+                    <CheckSquare className="w-3 h-3 text-[#212842]" /> Approved
+                  </span>
+                  <StatCounter target={142} />
+                  <span className="text-[11px] text-[#5F594F] font-sans block">Approved editions</span>
+                </motion.div>
+              </div>
+
+              {/* PROFILE FORM */}
+              <form onSubmit={handleSave} className="space-y-6 pt-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <Input
+                    label="Publisher Title / Chief Name"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    required
+                  />
+                  <Input
+                    label="Avatar Image URL"
+                    value={formData.avatarUrl}
+                    onChange={(e) => setFormData({ ...formData, avatarUrl: e.target.value })}
+                  />
                 </div>
-                <p className="text-xs font-mono text-[#5F594F]">{formData.email}</p>
-                <p className="text-xs text-[#5F594F] font-sans italic max-w-xl">
-                  "{formData.bio}"
-                </p>
+
+                <Input
+                  label="Editorial Directive & House Bio"
+                  type="textarea"
+                  rows={3}
+                  value={formData.bio}
+                  onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+                />
+
+                <div className="flex justify-end pt-4 border-t border-[#DED7BD]">
+                  <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+                    <Button type="submit" size="md" disabled={isLoading}>
+                      <Save className="w-4 h-4 mr-2" />
+                      <span>{isLoading ? 'Saving Credentials...' : 'Save Publisher Credentials'}</span>
+                    </Button>
+                  </motion.div>
+                </div>
+              </form>
+            </div>
+          </motion.div>
+        )}
+
+        {/* ── 3. HOUSE IMPRINT TAB ── */}
+        {activeTab === 'imprint' && (
+          <motion.div
+            key="imprint"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className="p-8 sm:p-10 rounded-3xl bg-[#FFFDF3] border border-[#D8CFAE] shadow-md space-y-8"
+          >
+            <div>
+              <h3 className="font-editorial-serif text-2xl font-bold text-[#181616]">
+                House Imprint & Identity
+              </h3>
+              <p className="text-xs text-[#5F594F] font-sans mt-1">
+                Manage house publication title, imprint branding, and editorial contact info
+              </p>
+            </div>
+
+            <div className="space-y-6">
+              <Input
+                label="House Imprint Name"
+                value={formData.imprintName}
+                onChange={(e) => setFormData({ ...formData, imprintName: e.target.value })}
+              />
+
+              <Input
+                label="Administrative Contact Email"
+                value={formData.email}
+                disabled
+              />
+
+              <div className="p-4 rounded-2xl bg-[#F8F6E5] border border-[#D8CFAE] space-y-1">
+                <span className="text-xs font-mono font-bold text-[#181616] block">Editorial Clearance Level</span>
+                <span className="text-[11px] text-[#5F594F] font-sans block">Master Rights & Catalog Distribution Authority</span>
               </div>
             </div>
 
-            {/* OVERVIEW STATS */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 py-6 border-y border-[#DED7BD] bg-[#F8F6E5] rounded-2xl px-6">
-              <div className="space-y-1">
-                <span className="text-[10px] uppercase font-mono tracking-widest text-[#827A6D] font-bold block flex items-center gap-1">
-                  <BookOpen className="w-3 h-3 text-[#212842]" /> Catalog
-                </span>
-                <StatCounter target={books.length || 12} />
-                <span className="text-[11px] text-[#5F594F] font-sans block">Published titles</span>
-              </div>
+            <div className="pt-6 border-t border-[#DED7BD] flex justify-end">
+              <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+                <Button size="md" onClick={() => showToast('success', 'House imprint identity updated')}>
+                  Save House Imprint
+                </Button>
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
 
-              <div className="space-y-1">
-                <span className="text-[10px] uppercase font-mono tracking-widest text-[#827A6D] font-bold block flex items-center gap-1">
-                  <FileCheck className="w-3 h-3 text-[#212842]" /> Queue
-                </span>
-                <StatCounter target={editorialQueue.length || 4} />
-                <span className="text-[11px] text-[#5F594F] font-sans block">Under evaluation</span>
-              </div>
-
-              <div className="space-y-1">
-                <span className="text-[10px] uppercase font-mono tracking-widest text-[#827A6D] font-bold block flex items-center gap-1">
-                  <Users className="w-3 h-3 text-[#212842]" /> Imprint Authors
-                </span>
-                <StatCounter target={85} />
-                <span className="text-[11px] text-[#5F594F] font-sans block">Verified writers</span>
-              </div>
-
-              <div className="space-y-1">
-                <span className="text-[10px] uppercase font-mono tracking-widest text-[#827A6D] font-bold block flex items-center gap-1">
-                  <CheckSquare className="w-3 h-3 text-[#212842]" /> Approved
-                </span>
-                <StatCounter target={142} />
-                <span className="text-[11px] text-[#5F594F] font-sans block">Approved editions</span>
-              </div>
+        {/* ── 4. REVIEW QUEUE PREFERENCES TAB ── */}
+        {activeTab === 'queue' && (
+          <motion.div
+            key="queue"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className="p-8 sm:p-10 rounded-3xl bg-[#FFFDF3] border border-[#D8CFAE] shadow-md space-y-8"
+          >
+            <div>
+              <h3 className="font-editorial-serif text-2xl font-bold text-[#181616]">
+                Review Queue Preferences
+              </h3>
+              <p className="text-xs text-[#5F594F] font-sans mt-1">
+                Set evaluation criteria for manuscript approval and automated review assignments
+              </p>
             </div>
 
-            {/* PROFILE FORM */}
-            <form onSubmit={handleSave} className="space-y-6 pt-2">
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <label className="text-[10px] uppercase font-mono tracking-widest text-[#212842] block font-bold">
+                  Manuscript Evaluation Rating Threshold
+                </label>
+                <select
+                  value={formData.reviewThreshold}
+                  onChange={(e) => setFormData({ ...formData, reviewThreshold: e.target.value })}
+                  className="w-full px-4 py-3 rounded-2xl bg-[#FFFDF3] border border-[#D8CFAE] text-xs font-mono text-[#181616] focus:outline-none focus:border-[#212842]"
+                >
+                  <option value="3.5">Rating ≥ 3.5 Stars (Permissive)</option>
+                  <option value="4.0">Rating ≥ 4.0 Stars (Standard Quality)</option>
+                  <option value="4.5">Rating ≥ 4.5 Stars (Strict Excellence)</option>
+                </select>
+              </div>
+
+              <label className="flex items-center justify-between p-4 rounded-2xl bg-[#F8F6E5] border border-[#D8CFAE] cursor-pointer">
+                <div>
+                  <span className="text-xs font-mono font-bold text-[#181616] block">Automated Editorial Assignment</span>
+                  <span className="text-[11px] text-[#5F594F] font-sans block">Auto-route incoming submissions to category specialists</span>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={formData.autoAssign}
+                  onChange={(e) => setFormData({ ...formData, autoAssign: e.target.checked })}
+                  className="w-4 h-4 accent-[#212842]"
+                />
+              </label>
+            </div>
+
+            <div className="pt-6 border-t border-[#DED7BD] flex justify-end">
+              <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+                <Button size="md" onClick={() => showToast('success', 'Review queue preferences updated')}>
+                  Save Queue Preferences
+                </Button>
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* ── 5. SECURITY TAB ── */}
+        {activeTab === 'security' && (
+          <motion.form
+            key="security"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            onSubmit={handleSecuritySave}
+            className="p-8 sm:p-10 rounded-3xl bg-[#FFFDF3] border border-[#D8CFAE] shadow-md space-y-8"
+          >
+            <div>
+              <h3 className="font-editorial-serif text-2xl font-bold text-[#181616]">
+                Publisher Security Credentials
+              </h3>
+              <p className="text-xs text-[#5F594F] font-sans mt-1">
+                Update password, manage administrative tokens, and review security clearance
+              </p>
+            </div>
+
+            <div className="space-y-6">
+              <Input
+                label="Publisher Registrar Email"
+                value={formData.email}
+                disabled
+              />
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <Input
-                  label="Publisher Title / Chief Name"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  required
+                  label="New Password"
+                  type="password"
+                  value={securityData.newPassword}
+                  onChange={(e) => setSecurityData({ ...securityData, newPassword: e.target.value })}
                 />
                 <Input
-                  label="Avatar Image URL"
-                  value={formData.avatarUrl}
-                  onChange={(e) => setFormData({ ...formData, avatarUrl: e.target.value })}
+                  label="Confirm New Password"
+                  type="password"
+                  value={securityData.confirmPassword}
+                  onChange={(e) => setSecurityData({ ...securityData, confirmPassword: e.target.value })}
                 />
               </div>
+            </div>
 
-              <Input
-                label="Editorial Directive & House Bio"
-                type="textarea"
-                rows={3}
-                value={formData.bio}
-                onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-              />
-
-              <div className="flex justify-end pt-4 border-t border-[#DED7BD]">
-                <Button type="submit" size="md" disabled={isLoading}>
-                  <Save className="w-4 h-4 mr-2" />
-                  <span>{isLoading ? 'Saving Credentials...' : 'Save Publisher Credentials'}</span>
+            <div className="pt-6 border-t border-[#DED7BD] flex justify-end">
+              <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+                <Button type="submit" size="md">
+                  Update Publisher Security Credentials
                 </Button>
-              </div>
-            </form>
-          </div>
-        </motion.div>
-      )}
-
-      {/* ── 3. HOUSE IMPRINT TAB ── */}
-      {activeTab === 'imprint' && (
-        <motion.div variants={itemVariants} className="p-8 sm:p-10 rounded-3xl bg-[#FFFDF3] border border-[#D8CFAE] shadow-md space-y-8">
-          <div>
-            <h3 className="font-editorial-serif text-2xl font-bold text-[#181616]">
-              House Imprint & Identity
-            </h3>
-            <p className="text-xs text-[#5F594F] font-sans mt-1">
-              Manage house publication title, imprint branding, and editorial contact info
-            </p>
-          </div>
-
-          <div className="space-y-6">
-            <Input
-              label="House Imprint Name"
-              value={formData.imprintName}
-              onChange={(e) => setFormData({ ...formData, imprintName: e.target.value })}
-            />
-
-            <Input
-              label="Administrative Contact Email"
-              value={formData.email}
-              disabled
-            />
-
-            <div className="p-4 rounded-2xl bg-[#F8F6E5] border border-[#D8CFAE] space-y-1">
-              <span className="text-xs font-mono font-bold text-[#181616] block">Editorial Clearance Level</span>
-              <span className="text-[11px] text-[#5F594F] font-sans block">Master Rights & Catalog Distribution Authority</span>
+              </motion.div>
             </div>
-          </div>
-
-          <div className="pt-6 border-t border-[#DED7BD] flex justify-end">
-            <Button size="md" onClick={() => showToast('success', 'House imprint identity updated')}>
-              Save House Imprint
-            </Button>
-          </div>
-        </motion.div>
-      )}
-
-      {/* ── 4. REVIEW QUEUE PREFERENCES TAB ── */}
-      {activeTab === 'queue' && (
-        <motion.div variants={itemVariants} className="p-8 sm:p-10 rounded-3xl bg-[#FFFDF3] border border-[#D8CFAE] shadow-md space-y-8">
-          <div>
-            <h3 className="font-editorial-serif text-2xl font-bold text-[#181616]">
-              Review Queue Preferences
-            </h3>
-            <p className="text-xs text-[#5F594F] font-sans mt-1">
-              Set evaluation criteria for manuscript approval and automated review assignments
-            </p>
-          </div>
-
-          <div className="space-y-6">
-            <div className="space-y-2">
-              <label className="text-[10px] uppercase font-mono tracking-widest text-[#212842] block font-bold">
-                Manuscript Evaluation Rating Threshold
-              </label>
-              <select
-                value={formData.reviewThreshold}
-                onChange={(e) => setFormData({ ...formData, reviewThreshold: e.target.value })}
-                className="w-full px-4 py-3 rounded-2xl bg-[#FFFDF3] border border-[#D8CFAE] text-xs font-mono text-[#181616] focus:outline-none focus:border-[#212842]"
-              >
-                <option value="3.5">Rating ≥ 3.5 Stars (Permissive)</option>
-                <option value="4.0">Rating ≥ 4.0 Stars (Standard Quality)</option>
-                <option value="4.5">Rating ≥ 4.5 Stars (Strict Excellence)</option>
-              </select>
-            </div>
-
-            <label className="flex items-center justify-between p-4 rounded-2xl bg-[#F8F6E5] border border-[#D8CFAE] cursor-pointer">
-              <div>
-                <span className="text-xs font-mono font-bold text-[#181616] block">Automated Editorial Assignment</span>
-                <span className="text-[11px] text-[#5F594F] font-sans block">Auto-route incoming submissions to category specialists</span>
-              </div>
-              <input
-                type="checkbox"
-                checked={formData.autoAssign}
-                onChange={(e) => setFormData({ ...formData, autoAssign: e.target.checked })}
-                className="w-4 h-4 accent-[#212842]"
-              />
-            </label>
-          </div>
-
-          <div className="pt-6 border-t border-[#DED7BD] flex justify-end">
-            <Button size="md" onClick={() => showToast('success', 'Review queue preferences updated')}>
-              Save Queue Preferences
-            </Button>
-          </div>
-        </motion.div>
-      )}
-
-      {/* ── 5. SECURITY TAB ── */}
-      {activeTab === 'security' && (
-        <motion.form variants={itemVariants} onSubmit={handleSecuritySave} className="p-8 sm:p-10 rounded-3xl bg-[#FFFDF3] border border-[#D8CFAE] shadow-md space-y-8">
-          <div>
-            <h3 className="font-editorial-serif text-2xl font-bold text-[#181616]">
-              Publisher Security Credentials
-            </h3>
-            <p className="text-xs text-[#5F594F] font-sans mt-1">
-              Update password, manage administrative tokens, and review security clearance
-            </p>
-          </div>
-
-          <div className="space-y-6">
-            <Input
-              label="Publisher Registrar Email"
-              value={formData.email}
-              disabled
-            />
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <Input
-                label="New Password"
-                type="password"
-                value={securityData.newPassword}
-                onChange={(e) => setSecurityData({ ...securityData, newPassword: e.target.value })}
-              />
-              <Input
-                label="Confirm New Password"
-                type="password"
-                value={securityData.confirmPassword}
-                onChange={(e) => setSecurityData({ ...securityData, confirmPassword: e.target.value })}
-              />
-            </div>
-          </div>
-
-          <div className="pt-6 border-t border-[#DED7BD] flex justify-end">
-            <Button type="submit" size="md">
-              Update Publisher Security Credentials
-            </Button>
-          </div>
-        </motion.form>
-      )}
+          </motion.form>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }

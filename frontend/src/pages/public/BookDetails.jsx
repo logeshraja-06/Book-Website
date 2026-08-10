@@ -23,6 +23,7 @@ import Button from '../../components/common/Button';
 import BookCover from '../../components/book/BookCover';
 import DigitalReaderModal from '../../components/book/DigitalReaderModal';
 import { RelatedBookCard } from '../../components/book/BookCardComponents';
+import { handleImgError, DEFAULT_AVATAR } from '../../utils/imageFallback';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -393,13 +394,14 @@ export default function BookDetails() {
 
       {/* About Author Section */}
       {author && (
-        <section className="bg-[#FFFDF3] border-y border-[#D8CFAE] py-16">
+        <section className="bg-gradient-to-b from-[#FFFDF3] to-[#F5F5DA] border-y border-[#E9E5C8] py-16">
           <div className="max-w-7xl mx-auto px-6 lg:px-12">
             <div className="flex flex-col md:flex-row items-start md:items-center gap-8 max-w-3xl">
               <Link to={`/authors/${authorSlug}`} className="w-24 h-24 rounded-full overflow-hidden border-2 border-[#D8CFAE] shrink-0">
                 <img
-                  src={author.avatarUrl}
+                  src={author.avatarUrl || DEFAULT_AVATAR}
                   alt={author.name}
+                  onError={(e) => handleImgError(e, DEFAULT_AVATAR)}
                   className="w-full h-full object-cover"
                 />
               </Link>
