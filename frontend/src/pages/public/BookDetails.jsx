@@ -24,10 +24,12 @@ import BookCover from '../../components/book/BookCover';
 import DigitalReaderModal from '../../components/book/DigitalReaderModal';
 import { RelatedBookCard } from '../../components/book/BookCardComponents';
 import { handleImgError, DEFAULT_AVATAR } from '../../utils/imageFallback';
+import { useTranslation } from 'react-i18next';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function BookDetails() {
+  const { t } = useTranslation();
   const { id: slugOrId } = useParams();
   const navigate = useNavigate();
   const {
@@ -88,7 +90,7 @@ export default function BookDetails() {
     try {
       await purchaseBook(book, book.price);
       setPurchaseModalOpen(false);
-      showToast('✓ Purchase confirmed — added to My Shelf');
+      showToast(t('detail.book.purchaseSuccess'));
     } catch (err) {
       showToast(`Purchase completed: ${err.message}`);
       setPurchaseModalOpen(false);
@@ -99,7 +101,7 @@ export default function BookDetails() {
 
   const handleDownloadPdf = () => {
     if (!purchased) {
-      showToast('Purchase required to download PDF', 'info');
+      showToast(t('detail.book.purchaseRequiredForPdf'), 'info');
       setPurchaseModalOpen(true);
       return;
     }
@@ -114,14 +116,14 @@ export default function BookDetails() {
           <div className="w-16 h-16 rounded-full bg-[#FFFDF3] border border-[#D8CFAE] flex items-center justify-center mx-auto">
             <BookOpen className="w-7 h-7 text-[#212842]" />
           </div>
-          <h2 className="font-editorial-serif text-2xl text-[#181616]">Book not found</h2>
-          <p className="text-sm text-[#5F594F]">The title you're looking for doesn't exist in our catalog.</p>
+          <h2 className="font-editorial-serif text-2xl text-[#181616]">{t('detail.book.notFoundTitle')}</h2>
+          <p className="text-sm text-[#5F594F]">{t('detail.book.notFoundDesc')}</p>
           <Link
             to="/books"
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Catalog
+            {t('detail.book.backToCatalog')}
           </Link>
         </div>
       </div>
@@ -139,13 +141,13 @@ export default function BookDetails() {
 
   // Specifications key-value pairs
   const bookSpecs = [
-    { label: 'Catalog ID', value: book.bookCode || `BVS-2026-${String(book.id || '000001').slice(-6).toUpperCase()}` },
-    { label: 'ISBN', value: book.isbn || 'BV-978-INTERNAL' },
-    { label: 'Pages', value: `${book.pages || 350} pages` },
-    { label: 'Format', value: 'Hardcover Editorial Edition' },
-    { label: 'Language', value: book.language || 'English' },
-    { label: 'Publisher', value: book.publisher || 'BookVerse Studio Imprint' },
-    { label: 'Publication Year', value: book.publishYear || 2026 },
+    { label: t('detail.book.specCatalogId'), value: book.bookCode || `BVS-2026-${String(book.id || '000001').slice(-6).toUpperCase()}` },
+    { label: t('detail.book.specIsbn'), value: book.isbn || 'BV-978-INTERNAL' },
+    { label: t('detail.book.specPages'), value: `${book.pages || 350} ${t('detail.book.specPages').toLowerCase()}` },
+    { label: t('detail.book.specFormat'), value: t('detail.book.specFormatValue') },
+    { label: t('detail.book.specLanguage'), value: book.language || 'English' },
+    { label: t('detail.book.specPublisher'), value: book.publisher || 'BookVerse Studio Imprint' },
+    { label: t('detail.book.specYear'), value: book.publishYear || 2026 },
   ];
 
   const renderStars = (rating) => {
@@ -168,11 +170,11 @@ export default function BookDetails() {
       <div className="max-w-7xl mx-auto px-6 lg:px-12 pt-8 pb-4">
         <nav className="flex items-center gap-2 text-xs text-[#5F594F]">
           <Link to="/" className="hover:text-[#181616] transition-colors">
-            Home
+            {t('detail.book.breadcrumbHome')}
           </Link>
           <ChevronRight className="w-3 h-3 text-[#D8CFAE]" />
           <Link to="/books" className="hover:text-[#181616] transition-colors">
-            Books
+            {t('detail.book.breadcrumbBooks')}
           </Link>
           <ChevronRight className="w-3 h-3 text-[#D8CFAE]" />
           <span className="text-[#181616] font-medium truncate max-w-xs">{book.title}</span>
@@ -205,7 +207,7 @@ export default function BookDetails() {
               <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                 <span className="px-4 py-2 rounded-full bg-[#FFFDF3]/90 backdrop-blur-sm text-xs font-mono font-bold uppercase tracking-wider text-[#181616] flex items-center gap-1.5 shadow-lg">
                   <Maximize2 className="w-3.5 h-3.5 text-[#212842]" />
-                  View Cover
+                  {t('detail.book.viewCover')}
                 </span>
               </div>
 
@@ -227,7 +229,7 @@ export default function BookDetails() {
                     className="w-full shadow-md justify-center"
                     icon={BookOpen}
                   >
-                    Read Now
+                    {t('detail.book.readNow')}
                   </Button>
 
                   <button
@@ -236,7 +238,7 @@ export default function BookDetails() {
                     className="w-full px-5 py-3.5 rounded-full border-2 border-[#212842] bg-[#F8F6E5] text-[#212842] hover:bg-[#212842] hover:text-[#F5F5DA] transition-all font-mono text-xs uppercase tracking-wider font-bold flex items-center justify-center gap-2 shadow-2xs"
                   >
                     <Download className="w-4 h-4" />
-                    <span>Download PDF</span>
+                    <span>{t('detail.book.downloadPdf')}</span>
                   </button>
                 </>
               ) : (
@@ -248,7 +250,7 @@ export default function BookDetails() {
                     className="w-full shadow-md justify-center"
                     icon={ShoppingBag}
                   >
-                    Purchase — {formatPrice(book.price)}
+                    {t('detail.book.purchasePrefix')} {formatPrice(book.price)}
                   </Button>
 
                   <button
@@ -257,7 +259,7 @@ export default function BookDetails() {
                     className="w-full px-5 py-3.5 rounded-full border-2 border-[#D8CFAE] bg-[#F8F6E5] text-[#181616] hover:border-[#212842] hover:text-[#212842] transition-all font-mono text-xs uppercase tracking-wider font-bold flex items-center justify-center gap-2 shadow-2xs"
                   >
                     <Download className="w-4 h-4 text-[#212842]" />
-                    <span>PDF Edition</span>
+                    <span>{t('detail.book.pdfEdition')}</span>
                   </button>
                 </>
               )}
@@ -324,7 +326,7 @@ export default function BookDetails() {
 
             <div className="space-y-3">
               <h3 className="text-xs uppercase tracking-widest font-mono text-[#212842] font-bold">
-                About This Book
+                {t('detail.book.aboutBook')}
               </h3>
               <p className="text-base text-[#181616] leading-[1.8]">
                 {book.synopsis}
@@ -333,7 +335,7 @@ export default function BookDetails() {
 
             <div className="space-y-4 pt-6 border-t border-[#DED7BD]">
               <h3 className="text-xs uppercase tracking-widest font-mono text-[#181616] font-bold">
-                Book Specifications
+                {t('detail.book.specifications')}
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 py-4 text-xs font-mono">
                 {bookSpecs.map((spec) => (
@@ -348,7 +350,7 @@ export default function BookDetails() {
             {/* Action Bar: Wishlist & Bookmark */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pt-4 border-t border-[#DED7BD]">
               <div>
-                <span className="text-xs text-[#5F594F] block mb-1">Price</span>
+                <span className="text-xs text-[#5F594F] block mb-1">{t('detail.book.price')}</span>
                 <span className="font-editorial-sans font-tabular text-3xl font-bold tracking-tight text-[#181616]">
                   {formatPrice(book.price)}
                 </span>
@@ -368,7 +370,7 @@ export default function BookDetails() {
                   }`}
                 >
                   <Bookmark className={`w-4 h-4 ${wishlisted ? 'fill-[#F5F5DA] text-[#F5F5DA]' : 'text-[#212842]'}`} />
-                  <span>{wishlisted ? 'Wishlisted' : 'Add to Wishlist'}</span>
+                  <span>{wishlisted ? t('detail.book.wishlisted') : t('detail.book.addToWishlist')}</span>
                 </motion.button>
 
                 {/* Bookmark Button */}
@@ -384,7 +386,7 @@ export default function BookDetails() {
                   }`}
                 >
                   <Bookmark className={`w-4 h-4 ${bookmarked ? 'fill-[#F5F5DA] text-[#F5F5DA]' : ''}`} />
-                  <span>{bookmarked ? 'Bookmarked' : 'Bookmark'}</span>
+                  <span>{bookmarked ? t('detail.book.bookmarked') : t('detail.book.bookmark')}</span>
                 </motion.button>
               </div>
             </div>
@@ -407,7 +409,7 @@ export default function BookDetails() {
               </Link>
               <div className="space-y-3">
                 <span className="text-xs uppercase tracking-widest font-mono text-[#212842] font-bold">
-                  About the Author
+                  {t('detail.book.aboutAuthor')}
                 </span>
                 <Link to={`/authors/${authorSlug}`}>
                   <h3 className="font-editorial-serif text-2xl text-[#181616] font-normal hover:text-[#212842] transition-colors">
@@ -424,7 +426,7 @@ export default function BookDetails() {
                   to={`/authors/${authorSlug}`}
                   className="inline-flex items-center gap-1 text-xs font-mono text-[#212842] hover:underline font-bold"
                 >
-                  <span>Explore Author's Catalogue</span>
+                  <span>{t('detail.book.exploreAuthorCatalogue')}</span>
                   <ArrowUpRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
@@ -438,13 +440,13 @@ export default function BookDetails() {
         <section className="py-20 max-w-7xl mx-auto px-6 lg:px-12 border-t border-[#D8CFAE]">
           <div className="flex items-center justify-between mb-8">
             <h2 className="font-editorial-serif text-2xl sm:text-3xl text-[#181616]">
-              Related Works in {book.genre}
+              {t('detail.book.relatedWorksIn')} {book.genre}
             </h2>
             <Link
               to="/books"
               className="text-xs uppercase tracking-wider font-mono text-[#212842] hover:underline"
             >
-              Browse All →
+              {t('detail.book.browseAll')}
             </Link>
           </div>
 
@@ -513,22 +515,22 @@ export default function BookDetails() {
 
               <div className="space-y-2">
                 <span className="text-[11px] font-mono uppercase tracking-widest text-[#212842] font-bold">
-                  Order Summary
+                  {t('detail.book.purchaseModalEyebrow')}
                 </span>
                 <h3 className="font-editorial-serif text-2xl font-bold">
-                  Purchase {book.title}
+                  {t('detail.book.purchaseModalTitle')} {book.title}
                 </h3>
                 <div className="p-4 rounded-2xl bg-[#F8F6E5] border border-[#D8CFAE] text-left text-xs space-y-1.5 font-mono">
                   <div className="flex justify-between">
-                    <span className="text-[#5F594F]">Item:</span>
+                    <span className="text-[#5F594F]">{t('detail.book.purchaseItem')}</span>
                     <span className="font-bold text-[#181616] truncate max-w-[200px]">{book.title}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-[#5F594F]">Format:</span>
-                    <span className="text-[#181616]">Full PDF & Reading Edition</span>
+                    <span className="text-[#5F594F]">{t('detail.book.purchaseFormat')}</span>
+                    <span className="text-[#181616]">{t('detail.book.purchaseFormatValue')}</span>
                   </div>
                   <div className="flex justify-between border-t border-[#DED7BD] pt-1.5 font-bold">
-                    <span>Total Amount:</span>
+                    <span>{t('detail.book.purchaseTotal')}</span>
                     <span className="text-[#212842]">{formatPrice(book.price)}</span>
                   </div>
                 </div>
@@ -542,14 +544,14 @@ export default function BookDetails() {
                   className="w-full py-3.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-md flex items-center justify-center gap-2"
                 >
                   <ShoppingBag className="w-4 h-4 text-[#F5F5DA]" />
-                  <span>{isPurchasing ? 'Processing...' : `Confirm Purchase (${formatPrice(book.price)})`}</span>
+                  <span>{isPurchasing ? t('detail.book.processing') : `${t('detail.book.confirmPurchase')} (${formatPrice(book.price)})`}</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setPurchaseModalOpen(false)}
                   className="w-full py-3 rounded-full border border-[#D8CFAE] text-xs font-mono uppercase tracking-wider hover:bg-[#F8F6E5] transition-colors text-[#5F594F]"
                 >
-                  Cancel
+                  {t('detail.book.cancel')}
                 </button>
               </div>
             </motion.div>

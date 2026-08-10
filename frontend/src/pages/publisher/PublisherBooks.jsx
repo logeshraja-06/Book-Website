@@ -5,8 +5,10 @@ import { Search, Eye, BookOpen, Sparkles } from 'lucide-react';
 import { useData } from '../../context/DataContext';
 import { formatPrice } from '../../utils/format';
 import { handleImgError, DEFAULT_BOOK_COVER } from '../../utils/imageFallback';
+import { useTranslation } from 'react-i18next';
 
 export default function PublisherBooks() {
+  const { t } = useTranslation();
   const { books = [], editorialBooks = [] } = useData();
   const [searchParams] = useSearchParams();
   const authorFilterParam = searchParams.get('author');
@@ -35,10 +37,10 @@ export default function PublisherBooks() {
   });
 
   const filterTabs = [
-    { label: 'All Catalog Books', value: 'All' },
-    { label: 'Published', value: 'Published' },
-    { label: 'Pending Review', value: 'Pending' },
-    { label: 'Rejected', value: 'Rejected' },
+    { label: t('publisher.books.filterAll'), value: 'All' },
+    { label: t('publisher.books.filterPublished'), value: 'Published' },
+    { label: t('publisher.books.filterPending'), value: 'Pending' },
+    { label: t('publisher.books.filterRejected'), value: 'Rejected' },
   ];
 
   return (
@@ -49,13 +51,13 @@ export default function PublisherBooks() {
         <div>
           <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#212842] font-bold block flex items-center gap-1.5 mb-1">
             <BookOpen className="w-3.5 h-3.5 text-[#212842]" />
-            Catalog Console
+            {t('publisher.books.eyebrow')}
           </span>
           <h2 className="font-editorial-serif text-3xl text-[#211D1D] font-bold">
-            Platform Books Management
+            {t('publisher.books.title')}
           </h2>
           <p className="text-xs text-[#6B5E5E] mt-1 font-sans">
-            {filtered.length} manuscript(s) indexed in platform catalog
+            {filtered.length} {t('publisher.books.subtitleCount', { count: filtered.length })}
           </p>
         </div>
 
@@ -63,7 +65,7 @@ export default function PublisherBooks() {
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B5E5E]" />
           <input
             type="text"
-            placeholder="Search catalog titles, authors, genres…"
+            placeholder={t('publisher.books.searchPlaceholder')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-9 pr-4 py-2.5 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] text-xs text-[#211D1D] placeholder-[#6B5E5E]/60 focus:outline-none focus:border-[#212842] transition-colors font-mono"
@@ -148,7 +150,7 @@ export default function PublisherBooks() {
                     <Link
                       to={`/books/${book.slug || bookId}`}
                       className="p-2 rounded-full hover:bg-[#F5F5DA] text-[#211D1D] transition-colors"
-                      title="View Public Details"
+                      title={t('publisher.books.viewPublicDetails')}
                     >
                       <Eye className="w-4 h-4 text-[#212842]" />
                     </Link>
@@ -156,7 +158,7 @@ export default function PublisherBooks() {
                       to={`/publisher/review/${bookId}`}
                       className="px-4 py-1.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-xs font-mono font-bold uppercase tracking-wider text-[#211D1D] hover:border-[#212842] hover:text-[#212842] transition-colors shadow-2xs"
                     >
-                      Review
+                      {t('publisher.books.review')}
                     </Link>
                   </div>
                 </div>
@@ -167,10 +169,10 @@ export default function PublisherBooks() {
           <div className="text-center py-20 space-y-3">
             <BookOpen className="w-8 h-8 text-[#212842] mx-auto opacity-60" />
             <h3 className="font-editorial-serif text-xl font-bold text-[#211D1D]">
-              No Catalog Books Found
+              {t('publisher.books.emptyTitle')}
             </h3>
             <p className="text-xs text-[#6B5E5E] font-sans">
-              Try adjusting your search query or status filter.
+              {t('publisher.books.emptyDesc')}
             </p>
           </div>
         )}

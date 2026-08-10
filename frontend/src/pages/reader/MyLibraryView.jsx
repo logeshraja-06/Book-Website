@@ -6,8 +6,10 @@ import { useData } from '../../context/DataContext';
 import { formatPrice } from '../../utils/format';
 import DigitalReaderModal from '../../components/book/DigitalReaderModal';
 import { handleImgError, DEFAULT_BOOK_COVER } from '../../utils/imageFallback';
+import { useTranslation } from 'react-i18next';
 
 export default function MyLibraryView() {
+  const { t } = useTranslation();
   const { libraryBookState, wishlistBooks, isBookPurchased, isBookInWishlist, toggleWishlist, toggleLibrary, activeReaderBook, setActiveReaderBook, fetchModuleData } = useData();
 
   const [activeTab, setActiveTab] = useState('currently_reading'); // 'currently_reading' | 'purchased' | 'completed' | 'wishlist'
@@ -70,23 +72,23 @@ export default function MyLibraryView() {
         <div>
           <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#212842] font-bold block flex items-center gap-1.5 mb-1">
             <BookmarkCheck className="w-3.5 h-3.5 text-[#212842]" />
-            Personal Reader Sanctuary & Digital Shelf
+            {t('reader.library.eyebrow')}
           </span>
           <h2 className="font-editorial-serif text-3xl sm:text-4xl text-[#181616] font-bold">
-            My Shelf
+            {t('reader.library.title')}
           </h2>
           <p className="text-xs text-[#5F594F] mt-1 font-sans">
-            Your personal digital library with active reading progress and owned editions
+            {t('reader.library.subtitle')}
           </p>
         </div>
 
         {/* Tab Navigation */}
         <div className="flex items-center gap-1 bg-[#F1EED2] p-1.5 rounded-2xl border border-[#D8CFAE] overflow-x-auto self-start sm:self-auto">
           {[
-            { id: 'currently_reading', label: `Currently Reading (${currentlyReading.length})` },
-            { id: 'purchased', label: `Purchased (${purchased.length || libraryBookState.length})` },
-            { id: 'completed', label: `Completed (${completed.length})` },
-            { id: 'wishlist', label: `Saved Wishlist (${wishlistBooks.length})` }
+            { id: 'currently_reading', label: `${t('reader.library.tabCurrentlyReading')} (${currentlyReading.length})` },
+            { id: 'purchased', label: `${t('reader.library.tabPurchased')} (${purchased.length || libraryBookState.length})` },
+            { id: 'completed', label: `${t('reader.library.tabCompleted')} (${completed.length})` },
+            { id: 'wishlist', label: `${t('reader.library.tabWishlist')} (${wishlistBooks.length})` }
           ].map((tab) => (
             <button
               key={tab.id}
@@ -166,11 +168,11 @@ export default function MyLibraryView() {
                           {/* Status Badge: COMPLETED or CONTINUE FROM PAGE X */}
                           {isCompleted ? (
                             <span className="px-2 py-0.5 rounded-full bg-[#212842] text-[#F5F5DA] text-[9px] font-mono font-bold uppercase tracking-wider">
-                              COMPLETED
+                              {t('reader.library.completed')}
                             </span>
                           ) : (book.currentPage || 1) > 1 ? (
                             <span className="px-2 py-0.5 rounded-full bg-[#F1EED2] border border-[#D8CFAE] text-[#212842] text-[9px] font-mono font-bold uppercase tracking-wider">
-                              Continue from p. {book.currentPage}
+                              {t('reader.library.continueFromPage')} {book.currentPage}
                             </span>
                           ) : null}
                         </div>
@@ -185,10 +187,10 @@ export default function MyLibraryView() {
                       <div className="space-y-2 pt-2 border-t border-[#DED7BD]">
                         <div className="flex items-center justify-between text-xs font-mono">
                           <span className="text-[#5F594F]">
-                            Page {book.currentPage || 1} of {book.totalPages || 20}
+                            {t('reader.library.pageOf')} {book.currentPage || 1} {t('reader.library.of')} {book.totalPages || 20}
                           </span>
                           <span className="font-bold text-[#212842]">
-                            {book.progress || 0}% read
+                            {book.progress || 0}{t('reader.library.percentRead')}
                           </span>
                         </div>
 
@@ -215,7 +217,7 @@ export default function MyLibraryView() {
                             whileTap={{ scale: 0.95 }}
                             onClick={() => handleDownloadPdf(book)}
                             className="p-2.5 rounded-full border border-[#D8CFAE] bg-[#F8F6E5] text-[#181616] hover:text-[#212842] hover:border-[#212842] transition-colors shadow-2xs"
-                            title="Download PDF Edition"
+                            title={t('reader.library.downloadPdf')}
                           >
                             <Download className="w-4 h-4" />
                           </motion.button>
@@ -229,7 +231,7 @@ export default function MyLibraryView() {
                           >
                             <BookOpen className="w-3.5 h-3.5" />
                             <span>
-                              {isCompleted ? 'Re-read' : (book.progress || 0) > 0 ? 'Continue Reading' : 'Read Now'}
+                              {isCompleted ? t('reader.library.reread') : (book.progress || 0) > 0 ? t('reader.library.continueReading') : t('reader.library.readNow')}
                             </span>
                           </motion.button>
                         </div>
@@ -254,10 +256,10 @@ export default function MyLibraryView() {
 
             <div className="space-y-1 max-w-md">
               <h3 className="font-editorial-serif text-2xl font-bold text-[#181616]">
-                Your library is waiting.
+                {t('reader.library.emptyTitle')}
               </h3>
               <p className="text-xs text-[#5F594F] font-sans leading-relaxed">
-                Explore our published catalog to add books to your personal shelf and start reading.
+                {t('reader.library.emptyDesc')}
               </p>
             </div>
 
@@ -266,7 +268,7 @@ export default function MyLibraryView() {
                 to="/books"
                 className="px-6 py-3 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-md inline-flex items-center gap-2"
               >
-                <span>Explore Books</span>
+                <span>{t('reader.library.exploreBooks')}</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </motion.div>

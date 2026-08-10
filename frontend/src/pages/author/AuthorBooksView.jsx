@@ -6,8 +6,10 @@ import { useData } from '../../context/DataContext';
 import { useAuth } from '../../context/AuthContext';
 import { formatPrice } from '../../utils/format';
 import { handleImgError, DEFAULT_BOOK_COVER } from '../../utils/imageFallback';
+import { useTranslation } from 'react-i18next';
 
 export default function AuthorBooksView() {
+  const { t } = useTranslation();
   const { books = [], studioBooks = [], deleteBook } = useData();
   const { currentUser } = useAuth();
   const navigate = useNavigate();
@@ -33,6 +35,15 @@ export default function AuthorBooksView() {
     return matchesSearch;
   });
 
+  const filterLabels = {
+    all: t('author.books.filterAll'),
+    published: t('author.books.filterPublished'),
+    approved: t('author.books.filterApproved'),
+    in_review: t('author.books.filterInReview'),
+    rejected: t('author.books.filterRejected'),
+    draft: t('author.books.filterDraft'),
+  };
+
   const showToast = (msg) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3000);
@@ -42,7 +53,7 @@ export default function AuthorBooksView() {
     if (deleteTargetId) {
       deleteBook(deleteTargetId);
       setDeleteTargetId(null);
-      showToast('Book removed from author catalog');
+      showToast(t('author.books.toastDeleted'));
     }
   };
 
@@ -54,13 +65,13 @@ export default function AuthorBooksView() {
         <div>
           <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#212842] font-bold flex items-center gap-1.5 mb-1">
             <BookOpen className="w-3.5 h-3.5 text-[#212842]" />
-            Author Manuscript Studio Catalog
+            {t('author.books.eyebrow')}
           </span>
           <h1 className="font-editorial-serif text-3xl sm:text-4xl text-[#181616] font-bold">
-            My Submissions & Published Works
+            {t('author.books.title')}
           </h1>
           <p className="text-xs font-sans text-[#5F594F] pt-0.5">
-            Manage your manuscript lifecycle, edit submissions, review publisher notes, and publish new works.
+            {t('author.books.subtitle')}
           </p>
         </div>
 
@@ -70,7 +81,7 @@ export default function AuthorBooksView() {
             className="px-6 py-3 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-md flex items-center gap-2"
           >
             <Plus className="w-4 h-4 text-[#F5F5DA]" />
-            <span>Submit New Manuscript</span>
+            <span>{t('author.books.submitNew')}</span>
           </Link>
         </motion.div>
       </div>
@@ -82,7 +93,7 @@ export default function AuthorBooksView() {
           <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-[#5F594F]" />
           <input
             type="text"
-            placeholder="Search by title or genre…"
+            placeholder={t('author.books.searchPlaceholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-11 pr-4 py-2.5 rounded-full border border-[#D8CFAE] bg-[#FFFDF3] text-xs font-mono text-[#181616] focus:outline-none focus:border-[#212842] transition-colors shadow-2xs"
@@ -100,7 +111,7 @@ export default function AuthorBooksView() {
                 filterStatus === st ? 'bg-[#212842] text-[#F5F5DA] shadow-xs' : 'text-[#5F594F] hover:text-[#181616]'
               }`}
             >
-              {st.replace('_', ' ')}
+              {filterLabels[st] || st.replace('_', ' ')}
             </button>
           ))}
         </div>
@@ -157,7 +168,7 @@ export default function AuthorBooksView() {
                     <Link
                       to={`/books/${book.slug || bookId}`}
                       className="p-3 rounded-full bg-[#FFFDF3] text-[#181616] hover:bg-[#212842] hover:text-[#F5F5DA] transition-colors shadow-md"
-                      title="View Public Details Page"
+                      title={t('author.books.viewPublicDetails')}
                     >
                       <Eye className="w-4 h-4" />
                     </Link>
@@ -166,7 +177,7 @@ export default function AuthorBooksView() {
                   <Link
                     to={`/author/books/${bookId}/edit`}
                     className="p-3 rounded-full bg-[#FFFDF3] text-[#181616] hover:bg-[#212842] hover:text-[#F5F5DA] transition-colors shadow-md"
-                    title="Edit Manuscript Details"
+                    title={t('author.books.editManuscript')}
                   >
                     <Edit3 className="w-4 h-4" />
                   </Link>
@@ -175,7 +186,7 @@ export default function AuthorBooksView() {
                     type="button"
                     onClick={() => setDeleteTargetId(bookId)}
                     className="p-3 rounded-full bg-[#FFFDF3] text-rose-600 hover:bg-rose-600 hover:text-white transition-colors shadow-md"
-                    title="Delete Manuscript"
+                    title={t('author.books.deleteManuscript')}
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -196,7 +207,7 @@ export default function AuthorBooksView() {
                   {isRejected && (book.rejectionReason || book.editorialNotes) && (
                     <div className="p-3 rounded-2xl bg-rose-50 border border-rose-200 text-rose-900 text-xs font-mono space-y-1">
                       <span className="font-bold flex items-center gap-1 text-rose-700">
-                        <AlertCircle className="w-3.5 h-3.5" /> Publisher Notes:
+                        <AlertCircle className="w-3.5 h-3.5" /> {t('author.books.publisherNotes')}
                       </span>
                       <p className="text-[11px] leading-tight font-sans italic text-rose-800">
                         "{book.rejectionReason || book.editorialNotes}"
@@ -218,7 +229,7 @@ export default function AuthorBooksView() {
                       className="w-full py-2.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors flex items-center justify-center gap-1.5 shadow-xs"
                     >
                       <RotateCcw className="w-3.5 h-3.5" />
-                      <span>Edit & Resubmit</span>
+                      <span>{t('author.books.editAndResubmit')}</span>
                     </Link>
                   )}
 
@@ -228,7 +239,7 @@ export default function AuthorBooksView() {
                       className="w-full py-2.5 rounded-full bg-[#F1EED2] border border-[#D8CFAE] text-xs font-mono font-bold uppercase tracking-wider text-[#181616] hover:border-[#212842] hover:text-[#212842] transition-colors flex items-center justify-center gap-1.5"
                     >
                       <Edit3 className="w-3.5 h-3.5" />
-                      <span>Edit & Submit</span>
+                      <span>{t('author.books.editAndSubmit')}</span>
                     </Link>
                   )}
 
@@ -237,7 +248,7 @@ export default function AuthorBooksView() {
                       to={`/books/${book.slug || bookId}`}
                       className="w-full py-2 rounded-full bg-[#F8F6E5] border border-[#D8CFAE] text-xs font-mono font-bold text-[#181616] hover:text-[#212842] transition-colors flex items-center justify-center gap-1"
                     >
-                      <span>View Published Book</span>
+                      <span>{t('author.books.viewPublishedBook')}</span>
                     </Link>
                   )}
                 </div>
@@ -263,9 +274,9 @@ export default function AuthorBooksView() {
               </div>
 
               <div className="space-y-2">
-                <h3 className="font-editorial-serif text-2xl font-bold">Delete Title?</h3>
+                <h3 className="font-editorial-serif text-2xl font-bold">{t('author.books.deleteModalTitle')}</h3>
                 <p className="text-xs text-[#5F594F] font-sans leading-relaxed">
-                  Are you sure you want to remove this manuscript from your author catalog? This action cannot be undone.
+                  {t('author.books.deleteModalDesc')}
                 </p>
               </div>
 
@@ -277,14 +288,14 @@ export default function AuthorBooksView() {
                   onClick={handleDeleteConfirm}
                   className="px-6 py-3 rounded-full bg-rose-600 text-white text-xs font-mono font-bold uppercase tracking-wider hover:bg-rose-700 transition-colors shadow-md"
                 >
-                  Confirm Delete
+                  {t('author.books.confirmDelete')}
                 </motion.button>
                 <button
                   type="button"
                   onClick={() => setDeleteTargetId(null)}
                   className="px-6 py-3 rounded-full border border-[#D8CFAE] text-xs font-mono uppercase tracking-wider text-[#5F594F] hover:bg-[#F1EED2] transition-colors"
                 >
-                  Cancel
+                  {t('author.books.cancel')}
                 </button>
               </div>
             </motion.div>

@@ -4,8 +4,10 @@ import { useAuth } from '../../context/AuthContext';
 import { LogOut, Sparkles, BookOpen, Flame } from 'lucide-react';
 import Button from '../common/Button';
 import { handleImgError, DEFAULT_AVATAR } from '../../utils/imageFallback';
+import { useTranslation } from 'react-i18next';
 
 export default function ReaderLayout() {
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const { currentUser, logout } = useAuth();
@@ -16,11 +18,11 @@ export default function ReaderLayout() {
   };
 
   const navTabs = [
-    { name: 'My Shelf', path: '/my-shelf' },
-    { name: 'Wishlist', path: '/my-shelf/wishlist' },
-    { name: 'Bookmarks', path: '/my-shelf/bookmarks' },
-    { name: 'Reviews', path: '/my-shelf/reviews' },
-    { name: 'Profile', path: '/my-shelf/profile' },
+    { name: t('reader.layout.tabShelf'), path: '/my-shelf' },
+    { name: t('reader.layout.tabWishlist'), path: '/my-shelf/wishlist' },
+    { name: t('reader.layout.tabBookmarks'), path: '/my-shelf/bookmarks' },
+    { name: t('reader.layout.tabReviews'), path: '/my-shelf/reviews' },
+    { name: t('reader.layout.tabProfile'), path: '/my-shelf/profile' },
   ];
 
   const handleLogout = () => {
@@ -49,7 +51,7 @@ export default function ReaderLayout() {
               <div>
                 <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-[#212842] font-bold block flex items-center gap-1.5 mb-0.5">
                   <Sparkles className="w-3.5 h-3.5 text-[#212842]" />
-                  Personal Reader Sanctuary
+                  {t('reader.layout.sanctuaryEyebrow')}
                 </span>
                 <h1 className="font-editorial-serif text-2xl sm:text-3xl text-[#181616] font-bold">
                   {user.name}
@@ -61,12 +63,12 @@ export default function ReaderLayout() {
               <div className="hidden sm:inline-flex items-center gap-3 px-4 py-2 rounded-full bg-[#FFFDF3] border border-[#D8CFAE] text-xs font-mono text-[#5F594F] shadow-2xs">
                 <span className="flex items-center gap-1 font-bold text-[#181616]">
                   <BookOpen className="w-3.5 h-3.5 text-[#212842]" />
-                  {user.stats?.booksRead || '14'} Books Read
+                  {user.stats?.booksRead || '14'} {t('reader.layout.booksRead')}
                 </span>
                 <span className="h-3 w-px bg-[#D8CFAE]" />
                 <span className="flex items-center gap-1 font-bold text-[#212842]">
                   <Flame className="w-3.5 h-3.5 text-[#212842]" />
-                  {user.stats?.currentStreak || '18 Days'} Streak
+                  {user.stats?.currentStreak || '18 Days'} {t('reader.layout.streak')}
                 </span>
               </div>
 
@@ -78,7 +80,7 @@ export default function ReaderLayout() {
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#FFFDF3] border border-[#D8CFAE] text-xs font-mono font-bold uppercase tracking-wider text-[#181616] hover:border-[#212842] hover:text-[#212842] transition-colors shadow-2xs"
               >
                 <LogOut className="w-3.5 h-3.5 text-[#212842]" />
-                <span>Sign Out</span>
+                <span>{t('reader.layout.signOut')}</span>
               </motion.button>
             </div>
           </div>

@@ -2,8 +2,10 @@ import { useState, useMemo } from 'react';
 import { Search, BookOpen } from 'lucide-react';
 import { useData } from '../../context/DataContext';
 import AuthorGalleryTile from '../../components/author/AuthorGalleryTile';
+import { useTranslation } from 'react-i18next';
 
 export default function AuthorsListing() {
+  const { t } = useTranslation();
   const { authors: AUTHORS } = useData();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRole, setSelectedRole] = useState('All');
@@ -37,13 +39,13 @@ export default function AuthorsListing() {
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div className="space-y-3">
               <span className="text-xs uppercase tracking-widest font-mono text-[#212842] font-bold block">
-                The Contributor Index
+                {t('listing.authors.eyebrow')}
               </span>
               <h1 className="font-editorial-serif text-4xl sm:text-5xl lg:text-6xl text-[#211D1D] font-normal tracking-tight">
-                Authors & Voices
+                {t('listing.authors.title')}
               </h1>
               <p className="text-sm text-[#6B5E5E] max-w-xl leading-relaxed font-sans">
-                An index of storytellers, historians, essayists, and scientists publishing through the BookVerse Studio ecosystem.
+                {t('listing.authors.subtitle')}
               </p>
             </div>
 
@@ -51,7 +53,7 @@ export default function AuthorsListing() {
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B5E5E]" />
               <input
                 type="text"
-                placeholder="Search by author or discipline…"
+                placeholder={t('listing.authors.searchPlaceholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-11 pr-4 py-3 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] text-sm text-[#211D1D] placeholder-[#6B5E5E]/60 focus:outline-none focus:border-[#212842] transition-colors"
@@ -68,7 +70,7 @@ export default function AuthorsListing() {
                   selectedRole === role ? 'text-[#211D1D] font-bold border-b-2 border-[#212842]' : 'text-[#6B5E5E] hover:text-[#211D1D]'
                 }`}
               >
-                {role === 'All' ? 'All Disciplines' : role}
+                {role === 'All' ? t('listing.authors.allDisciplines') : role}
               </button>
             ))}
           </div>
@@ -81,7 +83,7 @@ export default function AuthorsListing() {
           <span className="font-editorial-serif text-lg font-bold text-[#211D1D] font-tabular">
             {filteredAuthors.length}
           </span>{' '}
-          {filteredAuthors.length === 1 ? 'author' : 'authors'} in the guild
+          {t('listing.authors.authorCount', { count: filteredAuthors.length })}
         </span>
       </div>
 
@@ -100,8 +102,8 @@ export default function AuthorsListing() {
         ) : (
           <div className="text-center py-24 space-y-3">
             <BookOpen className="w-8 h-8 text-[#212842] mx-auto" />
-            <h3 className="font-editorial-serif text-2xl text-[#211D1D]">No Authors Found</h3>
-            <p className="text-xs text-[#6B5E5E]">Try clearing search parameters to browse the full guild.</p>
+            <h3 className="font-editorial-serif text-2xl text-[#211D1D]">{t('listing.authors.emptyTitle')}</h3>
+            <p className="text-xs text-[#6B5E5E]">{t('listing.authors.emptyDesc')}</p>
           </div>
         )}
       </section>

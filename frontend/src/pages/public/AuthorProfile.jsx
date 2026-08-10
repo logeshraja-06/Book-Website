@@ -9,8 +9,10 @@ import EmptyState from '../../components/common/EmptyState';
 import BookCover from '../../components/book/BookCover';
 import { AuthorBookCard } from '../../components/book/BookCardComponents';
 import { handleImgError, DEFAULT_AVATAR } from '../../utils/imageFallback';
+import { useTranslation } from 'react-i18next';
 
 export default function AuthorProfile() {
+  const { t } = useTranslation();
   const { id: slug } = useParams();
   const { authors = [], books: allCatalogBooks = [], loading } = useData();
 
@@ -39,9 +41,9 @@ export default function AuthorProfile() {
       <div className="min-h-screen bg-[#F5F5DA] py-20">
         <EmptyState
           icon={BookOpen}
-          title="Author Profile Not Found"
-          description="The requested author profile does not exist in our catalog registry."
-          actionText="Back to Author Directory"
+          title={t('detail.author.notFoundTitle')}
+          description={t('detail.author.notFoundDesc')}
+          actionText={t('detail.author.backToDirectory')}
           actionLink="/authors"
         />
       </div>
@@ -66,7 +68,7 @@ export default function AuthorProfile() {
           className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#6B5E5E] hover:text-[#211D1D] transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Back to Author Index</span>
+          <span>{t('detail.author.backToIndex')}</span>
         </Link>
       </div>
 
@@ -91,7 +93,7 @@ export default function AuthorProfile() {
 
               <div className="absolute bottom-6 left-6 right-6 text-[#F5F5DA]">
                 <span className="px-3 py-1 rounded-full bg-[#FFFDF3]/25 backdrop-blur-md text-[10px] uppercase font-mono tracking-widest text-[#F5F5DA] border border-[#FFFDF3]/30 inline-block mb-2 font-bold">
-                  Verified Literary Byline
+                  {t('detail.author.verifiedByline')}
                 </span>
                 <p className="text-xs font-mono text-[#E9E5C8]">
                   {author.name} · {author.joinDate || 'BookVerse Contributor'}
@@ -119,15 +121,15 @@ export default function AuthorProfile() {
             {/* Metrics Ribbon */}
             <div className="py-4 border-y border-[#E9E5C8] flex flex-wrap items-center gap-x-6 gap-y-2 text-xs font-mono font-tabular text-[#6B5E5E]">
               <span>
-                <strong className="text-[#211D1D] font-bold">{books.length}</strong> Works in Catalog
+                <strong className="text-[#211D1D] font-bold">{books.length}</strong> {t('detail.author.worksInCatalog')}
               </span>
               <span className="text-[#E9E5C8]">·</span>
               <span>
-                <strong className="text-[#211D1D] font-bold">{author.avgRating || '4.8 ★'}</strong> Average Rating
+                <strong className="text-[#211D1D] font-bold">{author.avgRating || '4.8 ★'}</strong> {t('detail.author.averageRating')}
               </span>
               <span className="text-[#E9E5C8]">·</span>
               <span>
-                <strong className="text-[#211D1D] font-bold">{author.stats?.totalReads || '120k'}</strong> Total Reads
+                <strong className="text-[#211D1D] font-bold">{author.stats?.totalReads || '120k'}</strong> {t('detail.author.totalReads')}
               </span>
             </div>
 
@@ -142,7 +144,7 @@ export default function AuthorProfile() {
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-sm"
               >
                 <Feather className="w-3.5 h-3.5" />
-                <span>Explore Works ({books.length})</span>
+                <span>{t('detail.author.exploreWorks')} ({books.length})</span>
               </Link>
             </div>
           </motion.div>
@@ -155,20 +157,20 @@ export default function AuthorProfile() {
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-4">
             <div>
               <span className="text-xs uppercase tracking-widest font-mono text-[#212842] font-bold block mb-1">
-                Catalog Bibliography
+                {t('detail.author.bibliographyEyebrow')}
               </span>
               <h2 className="font-editorial-serif text-3xl sm:text-4xl text-[#211D1D] font-normal">
-                Published Titles by {author.name}
+                {t('detail.author.publishedTitlesBy')} {author.name}
               </h2>
             </div>
             <p className="text-xs text-[#6B5E5E] font-mono">
-              Showing {books.length} title(s) in BookVerse Studio
+              {t('detail.author.showingTitles')} {books.length} {t('detail.author.titlesInPlatform')}
             </p>
           </div>
 
           {books.length === 0 ? (
             <div className="bg-[#FFFDF3] rounded-2xl p-8 text-center text-xs font-mono text-[#6B5E5E] border border-[#E9E5C8]">
-              No published titles in the catalog yet for this author.
+              {t('detail.author.noPublishedTitles')}
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">

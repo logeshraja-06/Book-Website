@@ -16,6 +16,7 @@ import { useData } from '../../context/DataContext';
 import { BOOKS, FEATURED_BOOKS } from '../../data/booksData';
 import { formatPrice } from '../../utils/format';
 import { handleImgError, DEFAULT_BOOK_COVER } from '../../utils/imageFallback';
+import { useTranslation } from 'react-i18next';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -77,6 +78,7 @@ function FlipBookDecor({ coverUrl, className = '', delay = 0, duration = 7 }) {
 }
 
 export default function HeroSection() {
+  const { t } = useTranslation();
   const { books } = useData();
 
   const heroBook =
@@ -247,7 +249,7 @@ export default function HeroSection() {
                     transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
                     className="block"
                   >
-                    Stories worth
+                    {t('home.hero.titleLine1')}
                   </motion.span>
                   <motion.span
                     initial={{ opacity: 0, filter: 'blur(8px)', y: 20 }}
@@ -255,7 +257,7 @@ export default function HeroSection() {
                     transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
                     className="block"
                   >
-                    reading.
+                    {t('home.hero.titleLine2')}
                   </motion.span>
                   <motion.span
                     initial={{ opacity: 0, filter: 'blur(8px)', y: 20 }}
@@ -263,7 +265,7 @@ export default function HeroSection() {
                     transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
                     className="italic font-light text-[#D8CFAE] block pt-1"
                   >
-                    Books worth remembering.
+                    {t('home.hero.titleLine3')}
                   </motion.span>
                 </h1>
               </div>
@@ -274,7 +276,7 @@ export default function HeroSection() {
                 transition={{ duration: 0.7, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
                 className="text-base sm:text-lg text-[#E9E5C8]/85 leading-[1.75] max-w-xl font-normal font-sans"
               >
-                BookVerse Studio is an interconnected ecosystem where authors craft enduring manuscripts, independent publishers curate authoritative imprints, and discerning readers discover literary treasures.
+                {t('home.hero.subtitle')}
               </motion.p>
 
               <motion.div
@@ -288,7 +290,7 @@ export default function HeroSection() {
                     to="/books"
                     className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-[#FFFDF3] text-[#181616] text-[14px] font-editorial-sans font-bold tracking-[0.04em] hover:bg-[#F5F5DA] transition-colors duration-300 shadow-lg hover:shadow-xl group min-h-[48px] w-full sm:w-auto"
                   >
-                    <span>Explore Books</span>
+                    <span>{t('home.hero.exploreBooks')}</span>
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </motion.div>
@@ -300,7 +302,7 @@ export default function HeroSection() {
                     style={{ backgroundColor: 'rgba(255,255,255,0.06)', borderColor: 'rgba(245,245,218,0.25)', backdropFilter: 'blur(8px)' }}
                   >
                     <Compass className="w-4 h-4 text-[#D8CFAE]" />
-                    <span>Meet the Authors</span>
+                    <span>{t('home.hero.meetAuthors')}</span>
                   </a>
                 </motion.div>
               </motion.div>
@@ -313,17 +315,17 @@ export default function HeroSection() {
               >
                 <div>
                   <StatCounter target={12} suffix="K+" />
-                  <span className="text-[#D8CFAE] font-medium">Curated Works</span>
+                  <span className="text-[#D8CFAE] font-medium">{t('home.hero.statCuratedWorks')}</span>
                 </div>
                 <div className="h-8 w-px bg-white/15" />
                 <div>
                   <StatCounter target={85} suffix="+" />
-                  <span className="text-[#D8CFAE] font-medium">Global Editions</span>
+                  <span className="text-[#D8CFAE] font-medium">{t('home.hero.statGlobalEditions')}</span>
                 </div>
                 <div className="h-8 w-px bg-white/15" />
                 <div>
                   <StatCounter target={4.9} decimals={1} suffix=" ★" />
-                  <span className="text-[#D8CFAE] font-medium">Reader Rating</span>
+                  <span className="text-[#D8CFAE] font-medium">{t('home.hero.statReaderRating')}</span>
                 </div>
               </motion.div>
             </div>
@@ -364,7 +366,7 @@ export default function HeroSection() {
                   />
                   <div className="relative px-3.5 py-1.5 rounded-full bg-[#FFFDF3]/95 backdrop-blur-md text-[10px] font-editorial-sans uppercase tracking-[0.16em] text-[#212842] font-bold flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#212842] animate-pulse" />
-                    <span>Featured Hardcover</span>
+                    <span>{t('home.hero.featuredBadge')}</span>
                   </div>
                 </motion.div>
 
@@ -487,11 +489,11 @@ export default function HeroSection() {
             <div className="flex items-center gap-3">
               <Sparkles className="w-4 h-4 text-[#D8CFAE]" />
               <span className="text-xs uppercase tracking-[0.2em] font-mono text-[#D8CFAE] font-bold">
-                From the Editorial Shelf
+                {t('home.hero.shelfLabel')}
               </span>
             </div>
             <span className="text-xs font-mono text-[#F5F5DA]/60">
-              {shelfBooks.length} hand-picked volumes
+              {shelfBooks.length} {t('home.hero.shelfCountSuffix')}
             </span>
           </motion.div>
 

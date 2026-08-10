@@ -4,8 +4,10 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Clock, FileText } from 'lucide-react';
 import { useData } from '../../context/DataContext';
 import { handleImgError, DEFAULT_BOOK_COVER } from '../../utils/imageFallback';
+import { useTranslation } from 'react-i18next';
 
 export default function ReviewQueue() {
+  const { t } = useTranslation();
   const { books, editorialBooks, editorialQueue } = useData();
   const [filter, setFilter] = useState('All'); // 'All' | 'Pending' | 'Approved' | 'Rejected' | 'Published'
 
@@ -20,11 +22,11 @@ export default function ReviewQueue() {
   });
 
   const filterTabs = [
-    { label: 'All Submissions', value: 'All' },
-    { label: 'Pending Review', value: 'Pending' },
-    { label: 'Approved', value: 'Approved' },
-    { label: 'Published', value: 'Published' },
-    { label: 'Rejected', value: 'Rejected' },
+    { label: t('publisher.queue.filterAll'), value: 'All' },
+    { label: t('publisher.queue.filterPending'), value: 'Pending' },
+    { label: t('publisher.queue.filterApproved'), value: 'Approved' },
+    { label: t('publisher.queue.filterPublished'), value: 'Published' },
+    { label: t('publisher.queue.filterRejected'), value: 'Rejected' },
   ];
 
   return (
@@ -35,13 +37,13 @@ export default function ReviewQueue() {
         <div>
           <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#212842] font-bold block flex items-center gap-1.5 mb-1">
             <Clock className="w-3.5 h-3.5 text-[#212842]" />
-            Editorial Evaluation Control Desk
+            {t('publisher.queue.eyebrow')}
           </span>
           <h2 className="font-editorial-serif text-3xl text-[#181616] font-bold">
-            Publisher Review Queue
+            {t('publisher.queue.title')}
           </h2>
           <p className="text-xs text-[#5F594F] mt-1 font-sans">
-            {filtered.length} manuscript submission(s) in review queue
+            {filtered.length} {t('publisher.queue.subtitleCount', { count: filtered.length })}
           </p>
         </div>
       </div>
@@ -105,7 +107,7 @@ export default function ReviewQueue() {
                         </span>
                         <span className="text-[#D8CFAE]">·</span>
                         <span className="text-xs font-mono text-[#5F594F]">
-                          Submitted {book.submittedDate || 'Recent'}
+                          {t('publisher.queue.submitted')} {book.submittedDate || 'Recent'}
                         </span>
                       </div>
 
@@ -133,7 +135,7 @@ export default function ReviewQueue() {
                     </span>
 
                     <span className="inline-flex items-center gap-1 text-xs font-mono font-bold uppercase tracking-wider text-[#181616] group-hover:text-[#212842] transition-colors">
-                      <span>Review</span> <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                      <span>{t('publisher.queue.review')}</span> <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                     </span>
                   </div>
                 </Link>
@@ -144,10 +146,10 @@ export default function ReviewQueue() {
           <div className="text-center py-20 bg-[#FFFDF3] rounded-3xl border border-[#D8CFAE] space-y-3">
             <FileText className="w-8 h-8 text-[#212842] mx-auto opacity-60" />
             <h3 className="font-editorial-serif text-xl font-bold text-[#181616]">
-              No Manuscripts Found
+              {t('publisher.queue.emptyTitle')}
             </h3>
             <p className="text-xs text-[#5F594F] font-sans">
-              There are currently no manuscripts matching the selected filter criteria.
+              {t('publisher.queue.emptyDesc')}
             </p>
           </div>
         )}

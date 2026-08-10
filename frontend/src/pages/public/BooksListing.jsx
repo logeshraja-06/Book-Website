@@ -17,6 +17,7 @@ import { useData } from '../../context/DataContext';
 import { formatPrice } from '../../utils/format';
 import { CompactCatalogueRow, BookCoverFloatCard } from '../../components/ui/EditorialCards';
 import BookTiltCard from '../../components/book/BookTiltCard';
+import { useTranslation } from 'react-i18next';
 
 const SORT_OPTIONS = [
   { value: 'relevance', label: 'Relevance' },
@@ -29,6 +30,18 @@ const SORT_OPTIONS = [
 ];
 
 export default function BooksListing() {
+  const { t } = useTranslation();
+
+  const sortOptionLabels = {
+    relevance: t('listing.books.sortOptions.relevance'),
+    'price-asc': t('listing.books.sortOptions.priceAsc'),
+    'price-desc': t('listing.books.sortOptions.priceDesc'),
+    rating: t('listing.books.sortOptions.rating'),
+    'year-desc': t('listing.books.sortOptions.yearDesc'),
+    'year-asc': t('listing.books.sortOptions.yearAsc'),
+    alpha: t('listing.books.sortOptions.alpha'),
+  };
+
   const { books: catalogBooks } = useData();
   const publishedBooks = useMemo(
     () => catalogBooks.filter((b) => b.status === 'Published'),
@@ -107,13 +120,13 @@ export default function BooksListing() {
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <div className="max-w-3xl space-y-4">
             <span className="text-xs uppercase tracking-widest font-mono text-[#212842] font-bold block">
-              The Complete Archive
+              {t('listing.books.eyebrow')}
             </span>
             <h1 className="font-editorial-serif text-5xl sm:text-6xl text-[#211D1D] font-normal tracking-tight">
-              Curated Catalogue
+              {t('listing.books.title')}
             </h1>
             <p className="text-base text-[#6B5E5E] leading-relaxed font-sans">
-              Explore our exhaustive index of historical sagas, behavioral finance treatises, performance psychology manuscripts, and rare Tamil literature.
+              {t('listing.books.subtitle')}
             </p>
           </div>
         </div>
@@ -130,7 +143,7 @@ export default function BooksListing() {
                 <span className="font-editorial-serif text-lg font-bold text-[#211D1D] font-tabular">
                   {filteredBooks.length}
                 </span>{' '}
-                {filteredBooks.length === 1 ? 'volume' : 'volumes'} found
+                {t('listing.books.volumeFound', { count: filteredBooks.length })}
               </span>
 
               {hasActiveFilters && (
@@ -139,7 +152,7 @@ export default function BooksListing() {
                   className="text-xs text-[#212842] hover:text-[#181E33] font-bold flex items-center gap-1 transition-colors"
                 >
                   <X className="w-3 h-3" />
-                  Clear filters
+                  {t('listing.books.clearFilters')}
                 </button>
               )}
             </div>
@@ -148,21 +161,21 @@ export default function BooksListing() {
             <div className="flex items-center gap-4">
               <div className="hidden md:flex items-center gap-6">
                 <FilterSelect
-                  label="Genre"
+                  label={t('listing.books.genre')}
                   value={selectedGenre}
                   onChange={setSelectedGenre}
                   options={['All', ...ALL_GENRES]}
                 />
 
                 <FilterSelect
-                  label="Language"
+                  label={t('listing.books.language')}
                   value={selectedLanguage}
                   onChange={setSelectedLanguage}
                   options={['All', ...ALL_LANGUAGES]}
                 />
 
                 <div className="flex items-center gap-2 text-sm relative">
-                  <span className="text-[#6B5E5E] text-xs uppercase tracking-wider font-mono">Sort</span>
+                  <span className="text-[#6B5E5E] text-xs uppercase tracking-wider font-mono">{t('listing.books.sort')}</span>
                   <div className="relative inline-block">
                     <select
                       value={sortBy}
@@ -171,7 +184,7 @@ export default function BooksListing() {
                     >
                       {SORT_OPTIONS.map((opt) => (
                         <option key={opt.value} value={opt.value}>
-                          {opt.label}
+                          {sortOptionLabels[opt.value] || opt.label}
                         </option>
                       ))}
                     </select>
@@ -214,7 +227,7 @@ export default function BooksListing() {
                 className="md:hidden p-2 rounded-xl border border-[#E9E5C8] text-[#211D1D] flex items-center gap-1.5 text-xs font-medium"
               >
                 <SlidersHorizontal className="w-3.5 h-3.5 text-[#212842]" />
-                <span>Filters</span>
+                <span>{t('listing.books.filters')}</span>
               </button>
             </div>
 
@@ -232,21 +245,21 @@ export default function BooksListing() {
             className="md:hidden bg-[#F5F5DA] border-b border-[#E9E5C8] px-6 py-5 space-y-4 overflow-hidden"
           >
             <FilterSelect
-              label="Genre"
+              label={t('listing.books.genre')}
               value={selectedGenre}
               onChange={setSelectedGenre}
               options={['All', ...ALL_GENRES]}
               fullWidth
             />
             <FilterSelect
-              label="Language"
+              label={t('listing.books.language')}
               value={selectedLanguage}
               onChange={setSelectedLanguage}
               options={['All', ...ALL_LANGUAGES]}
               fullWidth
             />
             <div className="space-y-1">
-              <span className="text-[#6B5E5E] text-xs uppercase tracking-wider font-mono block">Sort by</span>
+              <span className="text-[#6B5E5E] text-xs uppercase tracking-wider font-mono block">{t('listing.books.sortBy')}</span>
               <div className="relative">
                 <select
                   value={sortBy}
@@ -255,7 +268,7 @@ export default function BooksListing() {
                 >
                   {SORT_OPTIONS.map((opt) => (
                     <option key={opt.value} value={opt.value}>
-                      {opt.label}
+                      {sortOptionLabels[opt.value] || opt.label}
                     </option>
                   ))}
                 </select>
@@ -313,6 +326,7 @@ export default function BooksListing() {
 }
 
 function FilterSelect({ label, value, onChange, options, fullWidth }) {
+  const { t } = useTranslation();
   return (
     <div className={`flex items-center gap-2 text-sm ${fullWidth ? 'w-full justify-between' : ''}`}>
       <span className="text-[#6B5E5E] text-xs uppercase tracking-wider font-mono min-w-fit">
@@ -326,7 +340,7 @@ function FilterSelect({ label, value, onChange, options, fullWidth }) {
         >
           {options.map((opt) => (
             <option key={opt} value={opt}>
-              {opt}
+              {opt === 'All' ? t('listing.books.all') : opt}
             </option>
           ))}
         </select>
@@ -337,6 +351,7 @@ function FilterSelect({ label, value, onChange, options, fullWidth }) {
 }
 
 function EmptyState({ onClear }) {
+  const { t } = useTranslation();
   return (
     <motion.div
       key="empty"
@@ -349,16 +364,16 @@ function EmptyState({ onClear }) {
         <BookOpen className="w-8 h-8 text-[#212842]" />
       </div>
       <h3 className="font-editorial-serif text-2xl text-[#211D1D] mb-2">
-        No titles match your criteria
+        {t('listing.books.emptyTitle')}
       </h3>
       <p className="text-sm text-[#6B5E5E] max-w-sm mb-6 leading-relaxed font-sans">
-        Try broadening your filters or resetting your search to explore other manuscripts in our catalog.
+        {t('listing.books.emptyDesc')}
       </p>
       <button
         onClick={onClear}
         className="px-6 py-2.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-editorial-sans uppercase tracking-wider font-semibold hover:bg-[#181E33] transition-colors"
       >
-        Clear All Filters
+        {t('listing.books.emptyClearAll')}
       </button>
     </motion.div>
   );

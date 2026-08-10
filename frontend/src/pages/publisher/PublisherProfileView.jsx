@@ -18,6 +18,7 @@ import { useData } from '../../context/DataContext';
 import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
 import { handleImgError, DEFAULT_AVATAR } from '../../utils/imageFallback';
+import { useTranslation } from 'react-i18next';
 
 function StatCounter({ target, prefix = '', suffix = '', decimals = 0 }) {
   const ref = useRef(null);
@@ -50,6 +51,7 @@ function StatCounter({ target, prefix = '', suffix = '', decimals = 0 }) {
 }
 
 export default function PublisherProfileView() {
+  const { t } = useTranslation();
   const { currentUser, updateCurrentUser } = useAuth();
   const { books = [], editorialQueue = [] } = useData();
 
@@ -100,9 +102,9 @@ export default function PublisherProfileView() {
         bio: formData.bio,
         avatarUrl: formData.avatarUrl
       });
-      showToast('success', 'Publisher control desk credentials updated successfully');
+      showToast('success', t('publisher.profile.toastCredentialsUpdated'));
     } catch (err) {
-      showToast('error', `Failed to update credentials: ${err.message}`);
+      showToast('error', `${t('publisher.profile.toastCredentialsFailed')} ${err.message}`);
     } finally {
       setIsLoading(false);
     }
@@ -111,10 +113,10 @@ export default function PublisherProfileView() {
   const handleSecuritySave = (e) => {
     e.preventDefault();
     if (securityData.newPassword !== securityData.confirmPassword) {
-      showToast('error', 'New passwords do not match');
+      showToast('error', t('publisher.profile.toastPasswordMismatch'));
       return;
     }
-    showToast('success', 'Publisher security credentials updated successfully');
+    showToast('success', t('publisher.profile.toastSecurityUpdated'));
     setSecurityData({ currentPassword: '', newPassword: '', confirmPassword: '' });
   };
 
@@ -129,10 +131,10 @@ export default function PublisherProfileView() {
   };
 
   const tabs = [
-    { id: 'profile', label: 'Publisher Profile', icon: ShieldCheck },
-    { id: 'imprint', label: 'House Imprint & Identity', icon: Building2 },
-    { id: 'queue', label: 'Review Queue Preferences', icon: Sliders },
-    { id: 'security', label: 'Security Credentials', icon: Key }
+    { id: 'profile', label: t('publisher.profile.tabProfile'), icon: ShieldCheck },
+    { id: 'imprint', label: t('publisher.profile.tabImprint'), icon: Building2 },
+    { id: 'queue', label: t('publisher.profile.tabQueue'), icon: Sliders },
+    { id: 'security', label: t('publisher.profile.tabSecurity'), icon: Key }
   ];
 
   return (
@@ -168,13 +170,13 @@ export default function PublisherProfileView() {
         <div>
           <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#212842] font-bold flex items-center gap-1.5 mb-1">
             <ShieldCheck className="w-3.5 h-3.5 text-[#212842]" />
-            Editorial Authority & Administrative Clearance
+            {t('publisher.profile.authorityEyebrow')}
           </span>
           <h1 className="font-editorial-serif text-3xl sm:text-4xl font-bold text-[#181616]">
-            Publisher Settings & Profile
+            {t('publisher.profile.title')}
           </h1>
           <p className="text-xs text-[#5F594F] font-sans mt-0.5">
-            Configure house imprint credentials, manuscript review queue parameters, and administrative access
+            {t('publisher.profile.subtitle')}
           </p>
         </div>
 
@@ -244,7 +246,7 @@ export default function PublisherProfileView() {
                     </h3>
                     <span className="inline-flex items-center gap-1 px-3 py-0.5 rounded-full bg-[#F1EED2] border border-[#D8CFAE] text-[10px] font-mono text-[#212842] font-bold">
                       <ShieldCheck className="w-3 h-3 text-[#212842]" />
-                      Verified Publisher Registrar
+                      {t('publisher.profile.verifiedRegistrar')}
                     </span>
                   </div>
                   <p className="text-xs font-mono text-[#5F594F]">{formData.email}</p>
@@ -258,34 +260,34 @@ export default function PublisherProfileView() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 py-6 border-y border-[#DED7BD] bg-[#F8F6E5] rounded-2xl px-6">
                 <motion.div whileHover={{ y: -4 }} transition={{ type: 'spring', stiffness: 300, damping: 22 }} className="space-y-1">
                   <span className="text-[10px] uppercase font-mono tracking-widest text-[#827A6D] font-bold block flex items-center gap-1">
-                    <BookOpen className="w-3 h-3 text-[#212842]" /> Catalog
+                    <BookOpen className="w-3 h-3 text-[#212842]" /> {t('publisher.profile.statCatalog')}
                   </span>
                   <StatCounter target={books.length || 12} />
-                  <span className="text-[11px] text-[#5F594F] font-sans block">Published titles</span>
+                  <span className="text-[11px] text-[#5F594F] font-sans block">{t('publisher.profile.statCatalogSub')}</span>
                 </motion.div>
 
                 <motion.div whileHover={{ y: -4 }} transition={{ type: 'spring', stiffness: 300, damping: 22 }} className="space-y-1">
                   <span className="text-[10px] uppercase font-mono tracking-widest text-[#827A6D] font-bold block flex items-center gap-1">
-                    <FileCheck className="w-3 h-3 text-[#212842]" /> Queue
+                    <FileCheck className="w-3 h-3 text-[#212842]" /> {t('publisher.profile.statQueue')}
                   </span>
                   <StatCounter target={editorialQueue.length || 4} />
-                  <span className="text-[11px] text-[#5F594F] font-sans block">Under evaluation</span>
+                  <span className="text-[11px] text-[#5F594F] font-sans block">{t('publisher.profile.statQueueSub')}</span>
                 </motion.div>
 
                 <motion.div whileHover={{ y: -4 }} transition={{ type: 'spring', stiffness: 300, damping: 22 }} className="space-y-1">
                   <span className="text-[10px] uppercase font-mono tracking-widest text-[#827A6D] font-bold block flex items-center gap-1">
-                    <Users className="w-3 h-3 text-[#212842]" /> Imprint Authors
+                    <Users className="w-3 h-3 text-[#212842]" /> {t('publisher.profile.statImprintAuthors')}
                   </span>
                   <StatCounter target={85} />
-                  <span className="text-[11px] text-[#5F594F] font-sans block">Verified writers</span>
+                  <span className="text-[11px] text-[#5F594F] font-sans block">{t('publisher.profile.statImprintAuthorsSub')}</span>
                 </motion.div>
 
                 <motion.div whileHover={{ y: -4 }} transition={{ type: 'spring', stiffness: 300, damping: 22 }} className="space-y-1">
                   <span className="text-[10px] uppercase font-mono tracking-widest text-[#827A6D] font-bold block flex items-center gap-1">
-                    <CheckSquare className="w-3 h-3 text-[#212842]" /> Approved
+                    <CheckSquare className="w-3 h-3 text-[#212842]" /> {t('publisher.profile.statApproved')}
                   </span>
                   <StatCounter target={142} />
-                  <span className="text-[11px] text-[#5F594F] font-sans block">Approved editions</span>
+                  <span className="text-[11px] text-[#5F594F] font-sans block">{t('publisher.profile.statApprovedSub')}</span>
                 </motion.div>
               </div>
 
@@ -293,20 +295,20 @@ export default function PublisherProfileView() {
               <form onSubmit={handleSave} className="space-y-6 pt-2">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <Input
-                    label="Publisher Title / Chief Name"
+                    label={t('publisher.profile.publisherTitleName')}
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     required
                   />
                   <Input
-                    label="Avatar Image URL"
+                    label={t('publisher.profile.avatarUrl')}
                     value={formData.avatarUrl}
                     onChange={(e) => setFormData({ ...formData, avatarUrl: e.target.value })}
                   />
                 </div>
 
                 <Input
-                  label="Editorial Directive & House Bio"
+                  label={t('publisher.profile.editorialBio')}
                   type="textarea"
                   rows={3}
                   value={formData.bio}
@@ -317,7 +319,7 @@ export default function PublisherProfileView() {
                   <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
                     <Button type="submit" size="md" disabled={isLoading}>
                       <Save className="w-4 h-4 mr-2" />
-                      <span>{isLoading ? 'Saving Credentials...' : 'Save Publisher Credentials'}</span>
+                      <span>{isLoading ? t('publisher.profile.savingCredentials') : t('publisher.profile.savePublisherCredentials')}</span>
                     </Button>
                   </motion.div>
                 </div>
@@ -338,36 +340,36 @@ export default function PublisherProfileView() {
           >
             <div>
               <h3 className="font-editorial-serif text-2xl font-bold text-[#181616]">
-                House Imprint & Identity
+                {t('publisher.profile.imprintTitle')}
               </h3>
               <p className="text-xs text-[#5F594F] font-sans mt-1">
-                Manage house publication title, imprint branding, and editorial contact info
+                {t('publisher.profile.imprintSubtitle')}
               </p>
             </div>
 
             <div className="space-y-6">
               <Input
-                label="House Imprint Name"
+                label={t('publisher.profile.houseImprintName')}
                 value={formData.imprintName}
                 onChange={(e) => setFormData({ ...formData, imprintName: e.target.value })}
               />
 
               <Input
-                label="Administrative Contact Email"
+                label={t('publisher.profile.adminContactEmail')}
                 value={formData.email}
                 disabled
               />
 
               <div className="p-4 rounded-2xl bg-[#F8F6E5] border border-[#D8CFAE] space-y-1">
-                <span className="text-xs font-mono font-bold text-[#181616] block">Editorial Clearance Level</span>
-                <span className="text-[11px] text-[#5F594F] font-sans block">Master Rights & Catalog Distribution Authority</span>
+                <span className="text-xs font-mono font-bold text-[#181616] block">{t('publisher.profile.clearanceLevel')}</span>
+                <span className="text-[11px] text-[#5F594F] font-sans block">{t('publisher.profile.clearanceLevelDesc')}</span>
               </div>
             </div>
 
             <div className="pt-6 border-t border-[#DED7BD] flex justify-end">
               <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-                <Button size="md" onClick={() => showToast('success', 'House imprint identity updated')}>
-                  Save House Imprint
+                <Button size="md" onClick={() => showToast('success', t('publisher.profile.toastImprintUpdated'))}>
+                  {t('publisher.profile.saveHouseImprint')}
                 </Button>
               </motion.div>
             </div>
@@ -386,17 +388,17 @@ export default function PublisherProfileView() {
           >
             <div>
               <h3 className="font-editorial-serif text-2xl font-bold text-[#181616]">
-                Review Queue Preferences
+                {t('publisher.profile.queuePrefsTitle')}
               </h3>
               <p className="text-xs text-[#5F594F] font-sans mt-1">
-                Set evaluation criteria for manuscript approval and automated review assignments
+                {t('publisher.profile.queuePrefsSubtitle')}
               </p>
             </div>
 
             <div className="space-y-6">
               <div className="space-y-2">
                 <label className="text-[10px] uppercase font-mono tracking-widest text-[#212842] block font-bold">
-                  Manuscript Evaluation Rating Threshold
+                  {t('publisher.profile.ratingThreshold')}
                 </label>
                 <select
                   value={formData.reviewThreshold}
@@ -411,8 +413,8 @@ export default function PublisherProfileView() {
 
               <label className="flex items-center justify-between p-4 rounded-2xl bg-[#F8F6E5] border border-[#D8CFAE] cursor-pointer">
                 <div>
-                  <span className="text-xs font-mono font-bold text-[#181616] block">Automated Editorial Assignment</span>
-                  <span className="text-[11px] text-[#5F594F] font-sans block">Auto-route incoming submissions to category specialists</span>
+                  <span className="text-xs font-mono font-bold text-[#181616] block">{t('publisher.profile.autoAssignTitle')}</span>
+                  <span className="text-[11px] text-[#5F594F] font-sans block">{t('publisher.profile.autoAssignDesc')}</span>
                 </div>
                 <input
                   type="checkbox"
@@ -425,8 +427,8 @@ export default function PublisherProfileView() {
 
             <div className="pt-6 border-t border-[#DED7BD] flex justify-end">
               <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-                <Button size="md" onClick={() => showToast('success', 'Review queue preferences updated')}>
-                  Save Queue Preferences
+                <Button size="md" onClick={() => showToast('success', t('publisher.profile.toastQueueUpdated'))}>
+                  {t('publisher.profile.saveQueuePreferences')}
                 </Button>
               </motion.div>
             </div>
@@ -446,29 +448,29 @@ export default function PublisherProfileView() {
           >
             <div>
               <h3 className="font-editorial-serif text-2xl font-bold text-[#181616]">
-                Publisher Security Credentials
+                {t('publisher.profile.securityTitle')}
               </h3>
               <p className="text-xs text-[#5F594F] font-sans mt-1">
-                Update password, manage administrative tokens, and review security clearance
+                {t('publisher.profile.securitySubtitle')}
               </p>
             </div>
 
             <div className="space-y-6">
               <Input
-                label="Publisher Registrar Email"
+                label={t('publisher.profile.registrarEmail')}
                 value={formData.email}
                 disabled
               />
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <Input
-                  label="New Password"
+                  label={t('publisher.profile.newPassword')}
                   type="password"
                   value={securityData.newPassword}
                   onChange={(e) => setSecurityData({ ...securityData, newPassword: e.target.value })}
                 />
                 <Input
-                  label="Confirm New Password"
+                  label={t('publisher.profile.confirmNewPassword')}
                   type="password"
                   value={securityData.confirmPassword}
                   onChange={(e) => setSecurityData({ ...securityData, confirmPassword: e.target.value })}
@@ -479,7 +481,7 @@ export default function PublisherProfileView() {
             <div className="pt-6 border-t border-[#DED7BD] flex justify-end">
               <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
                 <Button type="submit" size="md">
-                  Update Publisher Security Credentials
+                  {t('publisher.profile.updateSecurityCredentials')}
                 </Button>
               </motion.div>
             </div>

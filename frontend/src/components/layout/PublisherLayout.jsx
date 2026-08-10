@@ -6,8 +6,10 @@ import { useData } from '../../context/DataContext';
 import { Layers, ShieldCheck, LogOut, Sparkles } from 'lucide-react';
 import Button from '../../components/common/Button';
 import { handleImgError, DEFAULT_AVATAR } from '../../utils/imageFallback';
+import { useTranslation } from 'react-i18next';
 
 export default function PublisherLayout() {
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const { currentUser, logout } = useAuth();
@@ -25,13 +27,13 @@ export default function PublisherLayout() {
   };
 
   const publisherTabs = [
-    { name: 'Publisher Workspace', path: '/publisher' },
-    { name: 'Submission Queue', path: '/publisher/queue' },
-    { name: 'Authors', path: '/publisher/authors' },
-    { name: 'Books', path: '/publisher/books' },
-    { name: 'Categories', path: '/publisher/categories' },
-    { name: 'Reports', path: '/publisher/reports' },
-    { name: 'Profile & Settings', path: '/publisher/profile' },
+    { name: t('publisher.layout.tabWorkspace'), path: '/publisher' },
+    { name: t('publisher.layout.tabQueue'), path: '/publisher/queue' },
+    { name: t('publisher.layout.tabAuthors'), path: '/publisher/authors' },
+    { name: t('publisher.layout.tabBooks'), path: '/publisher/books' },
+    { name: t('publisher.layout.tabCategories'), path: '/publisher/categories' },
+    { name: t('publisher.layout.tabReports'), path: '/publisher/reports' },
+    { name: t('publisher.layout.tabProfile'), path: '/publisher/profile' },
   ];
 
   const handleLogout = () => {
@@ -62,7 +64,7 @@ export default function PublisherLayout() {
               <div>
                 <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-[#E9E5C8] font-bold block flex items-center gap-1.5">
                   <Sparkles className="w-3 h-3 text-[#212842]" />
-                  Publisher Console & Editorial Control Desk
+                  {t('publisher.layout.consoleEyebrow')}
                 </span>
                 <h1 className="font-editorial-serif text-2xl sm:text-3xl text-[#FFFDF3] font-bold">
                   {user.name}
@@ -73,7 +75,7 @@ export default function PublisherLayout() {
             <div className="flex items-center gap-3">
               <div className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#181E33]/60 border border-[#E9E5C8]/30 text-xs font-mono text-[#E9E5C8]">
                 <ShieldCheck className="w-4 h-4 text-[#E9E5C8]" />
-                <span>Authorized Registrar</span>
+                <span>{t('publisher.layout.authorizedRegistrar')}</span>
               </div>
               <button
                 type="button"
@@ -81,7 +83,7 @@ export default function PublisherLayout() {
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-xs"
               >
                 <LogOut className="w-3.5 h-3.5" />
-                <span>Sign Out</span>
+                <span>{t('publisher.layout.signOut')}</span>
               </button>
             </div>
           </div>

@@ -3,8 +3,10 @@ import { motion } from 'framer-motion';
 import { Users, BookOpen, ArrowRight, ExternalLink } from 'lucide-react';
 import { useData } from '../../context/DataContext';
 import { handleImgError, DEFAULT_AVATAR } from '../../utils/imageFallback';
+import { useTranslation } from 'react-i18next';
 
 export default function PublisherAuthors() {
+  const { t } = useTranslation();
   const { authors = [], books = [], editorialBooks = [] } = useData();
 
   const catalogSource = editorialBooks.length > 0 ? editorialBooks : books;
@@ -17,13 +19,13 @@ export default function PublisherAuthors() {
         <div>
           <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#212842] font-bold block flex items-center gap-1.5 mb-1">
             <Users className="w-3.5 h-3.5 text-[#212842]" />
-            Author Guild Directory
+            {t('publisher.authors.eyebrow')}
           </span>
           <h2 className="font-editorial-serif text-3xl text-[#211D1D] font-bold">
-            Registered Catalog Authors
+            {t('publisher.authors.title')}
           </h2>
           <p className="text-xs text-[#6B5E5E] mt-1 font-sans">
-            {authors.length} author(s) enrolled in the BookVerse Studio platform
+            {authors.length} {t('publisher.authors.subtitleCount', { count: authors.length })}
           </p>
         </div>
       </div>
@@ -62,22 +64,22 @@ export default function PublisherAuthors() {
                       {author.name}
                     </h4>
                     <p className="text-xs text-[#6B5E5E] font-sans">
-                      {author.role || author.genre || 'Contributing Author'} · {authorBookCount} Published Works
+                      {author.role || author.genre || t('publisher.authors.contributingAuthor')} · {authorBookCount} {t('publisher.authors.publishedWorks')}
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between sm:justify-end gap-6 pt-3 sm:pt-0 border-t sm:border-t-0 border-[#E9E5C8]">
                   <span className="text-xs font-mono text-[#6B5E5E]">
-                    {author.followers || 0} Readers
+                    {author.followers || 0} {t('publisher.authors.readers')}
                   </span>
                   <span className="text-xs font-mono uppercase font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
-                    Active
+                    {t('publisher.authors.active')}
                   </span>
 
                   <div className="flex items-center gap-4 text-xs font-mono">
                     <span className="font-bold uppercase tracking-wider text-[#212842] group-hover:underline inline-flex items-center gap-1">
-                      <span>Profile</span>
+                      <span>{t('publisher.authors.profile')}</span>
                       <ExternalLink className="w-3 h-3" />
                     </span>
                     <Link
@@ -85,7 +87,7 @@ export default function PublisherAuthors() {
                       onClick={(e) => e.stopPropagation()}
                       className="font-bold uppercase tracking-wider text-[#211D1D] hover:text-[#212842] transition-colors hover:underline"
                     >
-                      Catalog Books
+                      {t('publisher.authors.catalogBooks')}
                     </Link>
                   </div>
                 </div>

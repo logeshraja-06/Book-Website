@@ -3,6 +3,7 @@ import { motion, useInView, useMotionValue, animate } from 'framer-motion';
 import { BarChart3, BookCheck, Clock, Users, FileText, Sparkles } from 'lucide-react';
 import { useData } from '../../context/DataContext';
 import { apiFetch } from '../../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 function StatCounter({ target, prefix = '', suffix = '' }) {
   const ref = useRef(null);
@@ -31,6 +32,7 @@ function StatCounter({ target, prefix = '', suffix = '' }) {
 }
 
 export default function PublisherReports() {
+  const { t } = useTranslation();
   const { books = [], authors = [], reviews = [] } = useData();
 
   const [reportData, setReportData] = useState(null);
@@ -106,13 +108,13 @@ export default function PublisherReports() {
         <div>
           <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#212842] font-bold block flex items-center gap-1.5 mb-1">
             <BarChart3 className="w-3.5 h-3.5 text-[#212842]" />
-            Editorial Analytics Console
+            {t('publisher.reports.eyebrow')}
           </span>
           <h2 className="font-editorial-serif text-3xl text-[#211D1D] font-bold">
-            Platform Summary Reports
+            {t('publisher.reports.title')}
           </h2>
           <p className="text-xs text-[#6B5E5E] mt-1 font-sans">
-            Real-time catalog distribution, review velocity, and readership metrics
+            {t('publisher.reports.subtitle')}
           </p>
         </div>
       </div>
@@ -126,12 +128,12 @@ export default function PublisherReports() {
         >
           <div className="flex items-center justify-between">
             <span className="text-[10px] uppercase font-mono tracking-widest text-[#212842] font-bold">
-              Books Submitted
+              {t('publisher.reports.statBooksSubmitted')}
             </span>
             <FileText className="w-4 h-4 text-[#212842]" />
           </div>
           <StatCounter target={totalSubmitted} />
-          <span className="text-[11px] text-[#6B5E5E] font-sans block">Total platform index</span>
+          <span className="text-[11px] text-[#6B5E5E] font-sans block">{t('publisher.reports.statBooksSubmittedSub')}</span>
         </motion.div>
 
         <motion.div
@@ -141,12 +143,12 @@ export default function PublisherReports() {
         >
           <div className="flex items-center justify-between">
             <span className="text-[10px] uppercase font-mono tracking-widest text-[#212842] font-bold">
-              Books Published
+              {t('publisher.reports.statBooksPublished')}
             </span>
             <BookCheck className="w-4 h-4 text-[#212842]" />
           </div>
           <StatCounter target={totalPublished} />
-          <span className="text-[11px] text-[#6B5E5E] font-sans block">Authorized catalog works</span>
+          <span className="text-[11px] text-[#6B5E5E] font-sans block">{t('publisher.reports.statBooksPublishedSub')}</span>
         </motion.div>
 
         <motion.div
@@ -156,12 +158,12 @@ export default function PublisherReports() {
         >
           <div className="flex items-center justify-between">
             <span className="text-[10px] uppercase font-mono tracking-widest text-[#212842] font-bold">
-              Active Authors
+              {t('publisher.reports.statActiveAuthors')}
             </span>
             <Users className="w-4 h-4 text-[#212842]" />
           </div>
           <StatCounter target={totalAuthorsCount} />
-          <span className="text-[11px] text-[#6B5E5E] font-sans block">Platform writers</span>
+          <span className="text-[11px] text-[#6B5E5E] font-sans block">{t('publisher.reports.statActiveAuthorsSub')}</span>
         </motion.div>
 
         <motion.div
@@ -171,12 +173,12 @@ export default function PublisherReports() {
         >
           <div className="flex items-center justify-between">
             <span className="text-[10px] uppercase font-mono tracking-widest text-[#212842] font-bold">
-              Reader Reviews
+              {t('publisher.reports.statReaderReviews')}
             </span>
             <Sparkles className="w-4 h-4 text-[#212842]" />
           </div>
           <StatCounter target={totalReviewsCount} />
-          <span className="text-[11px] text-[#6B5E5E] font-sans block">Verified reader feedback</span>
+          <span className="text-[11px] text-[#6B5E5E] font-sans block">{t('publisher.reports.statReaderReviewsSub')}</span>
         </motion.div>
       </div>
 
@@ -185,14 +187,14 @@ export default function PublisherReports() {
         <div className="flex items-center justify-between border-b border-[#E9E5C8] pb-4">
           <div>
             <h3 className="font-editorial-serif text-xl font-bold text-[#211D1D]">
-              Catalog Distribution by Genre
+              {t('publisher.reports.distributionTitle')}
             </h3>
             <p className="text-xs text-[#6B5E5E] font-sans mt-0.5">
-              Live percentage share of published and reviewed manuscripts in MongoDB
+              {t('publisher.reports.distributionSubtitle')}
             </p>
           </div>
           <span className="text-xs font-mono text-[#212842] uppercase font-bold px-3 py-1 rounded-full bg-[#FFFDF3] border border-[#E9E5C8]">
-            {computedGenres.length} Categories
+            {computedGenres.length} {t('publisher.reports.categoriesCount', { count: computedGenres.length })}
           </span>
         </div>
 
@@ -201,7 +203,7 @@ export default function PublisherReports() {
             <div key={item.genre || idx} className="space-y-2">
               <div className="flex items-center justify-between text-xs font-mono">
                 <span className="font-bold text-[#211D1D]">{item.genre}</span>
-                <span className="text-[#6B5E5E] font-semibold">{item.count} Titles ({item.percentage}%)</span>
+                <span className="text-[#6B5E5E] font-semibold">{item.count} {t('publisher.reports.titlesCount')} ({item.percentage}%)</span>
               </div>
               <div className="w-full h-2.5 bg-[#E9E5C8]/60 rounded-full overflow-hidden p-0.5">
                 <motion.div

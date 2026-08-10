@@ -20,8 +20,10 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import { useData } from '../../context/DataContext';
 import { formatPrice } from '../../utils/format';
+import { useTranslation } from 'react-i18next';
 
 export default function Navbar() {
+  const { t, i18n } = useTranslation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchModalOpen, setSearchModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -133,11 +135,11 @@ export default function Navbar() {
 
   // ── 4. NAVIGATION LINKS ──
   const navLinks = [
-    { name: 'Explore', path: '/' },
-    { name: 'Books', path: '/books' },
-    { name: 'Authors', path: '/authors' },
-    { name: 'Categories', path: '/categories' },
-    { name: 'About', path: '/about' },
+    { name: t('navbar.explore'), path: '/' },
+    { name: t('navbar.books'), path: '/books' },
+    { name: t('navbar.authors'), path: '/authors' },
+    { name: t('navbar.categories'), path: '/categories' },
+    { name: t('navbar.about'), path: '/about' },
   ];
 
   const shelfPath = isReader
@@ -256,7 +258,7 @@ export default function Navbar() {
               title="Search Catalogue (⌘K)"
             >
               <Search className="w-3.5 h-3.5 text-[#212842]" />
-              <span className="hidden xl:inline text-[13px]">Search catalogue…</span>
+              <span className="hidden xl:inline text-[13px]">{t('navbar.searchPlaceholder')}</span>
               <motion.kbd
                 animate={{ opacity: [0.7, 1, 0.7] }}
                 transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
@@ -294,9 +296,23 @@ export default function Navbar() {
                 title="Publisher & Editorial Registrar"
               >
                 <Lock className="w-3 h-3 text-[#212842]" />
-                <span>Publisher</span>
+                <span>{t('navbar.publisher')}</span>
               </Link>
             )}
+
+            {/* Language Toggle Button */}
+            <button
+              type="button"
+              onClick={() => {
+                const newLang = i18n.language === 'en' ? 'ta' : 'en';
+                i18n.changeLanguage(newLang);
+                localStorage.setItem('bookverse_lang', newLang);
+              }}
+              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-[11px] font-mono uppercase tracking-[0.12em] font-bold text-[#6B5E5E] hover:text-[#211D1D] hover:border-[#212842] transition-all duration-200"
+              title={t('navbar.language')}
+            >
+              <span>{i18n.language === 'en' ? 'தமிழ்' : 'English'}</span>
+            </button>
 
             {/* User Profile / Auth Action */}
             {currentUser ? (
@@ -337,7 +353,7 @@ export default function Navbar() {
                         className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-[#211D1D] hover:bg-[#F5F5DA] transition-colors"
                       >
                         <Library className="w-3.5 h-3.5 text-[#212842]" />
-                        <span>{isPublisher ? 'Publisher Workspace' : isAuthor ? 'Author Dashboard' : 'My Reading Shelf'}</span>
+                        <span>{isPublisher ? 'Publisher Workspace' : isAuthor ? 'Author Dashboard' : t('navbar.myShelf')}</span>
                       </Link>
 
                       <Link
@@ -346,7 +362,7 @@ export default function Navbar() {
                         className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-[#211D1D] hover:bg-[#F5F5DA] transition-colors"
                       >
                         <User className="w-3.5 h-3.5 text-[#6B5E5E]" />
-                        <span>Profile & Settings</span>
+                        <span>{t('navbar.profileSettings')}</span>
                       </Link>
 
                       <div className="my-1 border-t border-[#E9E5C8]/60" />
@@ -360,7 +376,7 @@ export default function Navbar() {
                         className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-rose-700 hover:bg-rose-50 transition-colors text-left font-medium"
                       >
                         <LogOut className="w-3.5 h-3.5" />
-                        <span>Sign Out</span>
+                        <span>{t('navbar.signOut')}</span>
                       </button>
                     </motion.div>
                   )}
@@ -373,7 +389,7 @@ export default function Navbar() {
                     to="/login"
                     className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-[#211D1D] text-xs font-mono font-bold uppercase tracking-[0.1em] hover:border-[#212842] hover:bg-[#F5F5DA] transition-all duration-250 shadow-2xs"
                   >
-                    <span>LOGIN</span>
+                    <span>{t('navbar.login')}</span>
                   </Link>
                 </motion.div>
 
@@ -392,7 +408,7 @@ export default function Navbar() {
                       }}
                     />
                     <User className="w-3.5 h-3.5 text-[#F5F5DA] relative z-10" />
-                    <span className="relative z-10">SIGN IN</span>
+                    <span className="relative z-10">{t('navbar.signIn')}</span>
                   </button>
                 </motion.div>
               </div>
@@ -493,6 +509,21 @@ export default function Navbar() {
 
             {/* Mobile Actions */}
             <div className="pt-6 space-y-3">
+              {/* Mobile Language Toggle */}
+              <button
+                type="button"
+                onClick={() => {
+                  const newLang = i18n.language === 'en' ? 'ta' : 'en';
+                  i18n.changeLanguage(newLang);
+                  localStorage.setItem('bookverse_lang', newLang);
+                  setMobileMenuOpen(false);
+                }}
+                className="w-full py-3.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-center text-xs font-editorial-sans font-bold uppercase tracking-[0.1em] text-[#211D1D] hover:border-[#212842] flex items-center justify-center gap-2 shadow-2xs"
+                title={t('navbar.language')}
+              >
+                <span>{i18n.language === 'en' ? 'தமிழ்' : 'English'}</span>
+              </button>
+
               <Link
                 to={shelfPath}
                 onClick={() => setMobileMenuOpen(false)}

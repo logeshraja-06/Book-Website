@@ -4,8 +4,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Upload, FileText, Image as ImageIcon, ChevronRight, ChevronLeft, Check, Sparkles, Feather } from 'lucide-react';
 import { useData } from '../../context/DataContext';
 import { useAuth } from '../../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 export default function AuthorUploadWizard() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { addBook } = useData();
   const { currentUser } = useAuth();
@@ -108,13 +110,13 @@ export default function AuthorUploadWizard() {
       <div className="text-center space-y-2 border-b border-[#E7D9D3] pb-6">
         <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#212842] font-bold block flex items-center justify-center gap-1.5 mb-1">
           <Feather className="w-3.5 h-3.5 text-[#212842]" />
-          Manuscript Submission Wizard
+          {t('author.upload.wizardEyebrow')}
         </span>
         <h1 className="font-editorial-serif text-3xl sm:text-4xl font-bold text-[#2B2B2B]">
-          Submit Manuscript for Editorial Review
+          {t('author.upload.title')}
         </h1>
         <p className="text-xs font-sans text-[#6B5E5E]">
-          Upload your completed manuscript and cover artwork for publisher evaluation.
+          {t('author.upload.subtitle')}
         </p>
       </div>
 
@@ -142,7 +144,7 @@ export default function AuthorUploadWizard() {
                 {isComplete ? <Check className="w-4 h-4 text-[#F5F5DA]" /> : sNum}
               </motion.div>
               <span className="text-[10px] font-mono uppercase tracking-wider text-[#6B5E5E] font-bold">
-                {sNum === 1 ? 'Details' : sNum === 2 ? 'Uploads' : 'Submit'}
+                {sNum === 1 ? t('author.upload.stepDetails') : sNum === 2 ? t('author.upload.stepUploads') : t('author.upload.stepSubmit')}
               </span>
             </div>
           );
@@ -164,7 +166,7 @@ export default function AuthorUploadWizard() {
             >
               <div className="space-y-2">
                 <label className="text-[10px] uppercase font-mono tracking-widest text-[#212842] block font-bold">
-                  Book Title *
+                  {t('author.upload.bookTitle')}
                 </label>
                 <input
                   type="text"
@@ -178,12 +180,12 @@ export default function AuthorUploadWizard() {
 
               <div className="space-y-2">
                 <label className="text-[10px] uppercase font-mono tracking-widest text-[#212842] block font-bold">
-                  Synopsis & Editorial Description *
+                  {t('author.upload.synopsis')}
                 </label>
                 <textarea
                   rows={5}
                   required
-                  placeholder="Provide an editorial synopsis of the book…"
+                  placeholder={t('author.upload.synopsisPlaceholder')}
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   className="w-full px-4 py-3 rounded-2xl border border-[#E7D9D3] bg-[#FFFDF3] text-sm text-[#2B2B2B] focus:outline-none focus:border-[#212842] leading-relaxed font-sans shadow-inner resize-none"
@@ -193,7 +195,7 @@ export default function AuthorUploadWizard() {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 <div className="space-y-2">
                   <label className="text-[10px] uppercase font-mono tracking-widest text-[#212842] block font-bold">
-                    Genre
+                    {t('author.upload.genre')}
                   </label>
                   <select
                     value={formData.genre}
@@ -210,7 +212,7 @@ export default function AuthorUploadWizard() {
 
                 <div className="space-y-2">
                   <label className="text-[10px] uppercase font-mono tracking-widest text-[#212842] block font-bold">
-                    Language
+                    {t('author.upload.language')}
                   </label>
                   <select
                     value={formData.language}
@@ -226,7 +228,7 @@ export default function AuthorUploadWizard() {
 
                 <div className="space-y-2">
                   <label className="text-[10px] uppercase font-mono tracking-widest text-[#212842] block font-bold">
-                    Target Price (INR ₹)
+                    {t('author.upload.targetPrice')}
                   </label>
                   <input
                     type="number"
@@ -246,7 +248,7 @@ export default function AuthorUploadWizard() {
                   whileTap={{ scale: 0.97 }}
                   className="px-6 py-3 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors flex items-center gap-2 shadow-md"
                 >
-                  <span>Continue to Uploads</span>
+                  <span>{t('author.upload.continueToUploads')}</span>
                   <ChevronRight className="w-4 h-4" />
                 </motion.button>
               </div>
@@ -265,7 +267,7 @@ export default function AuthorUploadWizard() {
               {/* Cover Image Upload */}
               <div className="space-y-3">
                 <label className="text-[10px] uppercase font-mono tracking-widest text-[#212842] block font-bold">
-                  Book Cover Image (High Resolution Portrait)
+                  {t('author.upload.coverLabel')}
                 </label>
 
                 <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 items-center">
@@ -282,8 +284,8 @@ export default function AuthorUploadWizard() {
                     />
                     <ImageIcon className="w-8 h-8 text-[#212842] mx-auto" />
                     <div className="space-y-1">
-                      <p className="text-xs font-bold text-[#2B2B2B]">Drag & Drop cover artwork here</p>
-                      <p className="text-[11px] font-mono text-[#6B5E5E]">JPG, PNG or WebP up to 10MB</p>
+                      <p className="text-xs font-bold text-[#2B2B2B]">{t('author.upload.coverDragDrop')}</p>
+                      <p className="text-[11px] font-mono text-[#6B5E5E]">{t('author.upload.coverFormats')}</p>
                     </div>
                   </div>
 
@@ -299,7 +301,7 @@ export default function AuthorUploadWizard() {
               {/* Manuscript File Upload */}
               <div className="space-y-3 pt-4 border-t border-[#E7D9D3]">
                 <label className="text-[10px] uppercase font-mono tracking-widest text-[#212842] block font-bold">
-                  Manuscript Document (PDF, DOC, DOCX)
+                  {t('author.upload.manuscriptLabel')}
                 </label>
 
                 <div
@@ -315,8 +317,8 @@ export default function AuthorUploadWizard() {
                   />
                   <FileText className="w-8 h-8 text-[#212842] mx-auto" />
                   <div className="space-y-1">
-                    <p className="text-xs font-bold text-[#2B2B2B]">Drag & Drop manuscript document here</p>
-                    <p className="text-[11px] font-mono text-[#6B5E5E]">PDF, DOC, DOCX accepted</p>
+                    <p className="text-xs font-bold text-[#2B2B2B]">{t('author.upload.manuscriptDragDrop')}</p>
+                    <p className="text-[11px] font-mono text-[#6B5E5E]">{t('author.upload.manuscriptFormats')}</p>
                   </div>
 
                   {/* Uploaded File Pill */}
@@ -336,7 +338,7 @@ export default function AuthorUploadWizard() {
                   className="px-5 py-3 rounded-full border border-[#E7D9D3] text-xs font-mono uppercase tracking-wider text-[#6B5E5E] hover:bg-[#F4EEEA] transition-colors flex items-center gap-2 font-bold"
                 >
                   <ChevronLeft className="w-4 h-4" />
-                  <span>Back</span>
+                  <span>{t('author.upload.back')}</span>
                 </button>
 
                 <motion.button
@@ -346,7 +348,7 @@ export default function AuthorUploadWizard() {
                   onClick={handleNext}
                   className="px-6 py-3 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors flex items-center gap-2 shadow-md"
                 >
-                  <span>Preview & Review</span>
+                  <span>{t('author.upload.previewAndReview')}</span>
                   <ChevronRight className="w-4 h-4" />
                 </motion.button>
               </div>
@@ -364,10 +366,10 @@ export default function AuthorUploadWizard() {
             >
               <div className="text-center space-y-2">
                 <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#212842] font-bold block">
-                  Step 3 · Final Verification
+                  {t('author.upload.reviewStepEyebrow')}
                 </span>
                 <h3 className="font-editorial-serif text-2xl font-bold text-[#2B2B2B]">
-                  Submission Summary & Internal ISBN
+                  {t('author.upload.reviewStepTitle')}
                 </h3>
               </div>
 
@@ -397,7 +399,7 @@ export default function AuthorUploadWizard() {
                     {formData.description || 'No description provided.'}
                   </p>
                   <div className="pt-2 text-xs font-mono text-[#6B5E5E]">
-                    Attached Manuscript: <strong className="text-[#2B2B2B]">{formData.pdfFileName}</strong>
+                    {t('author.upload.attachedManuscript')} <strong className="text-[#2B2B2B]">{formData.pdfFileName}</strong>
                   </div>
                 </div>
               </div>
@@ -410,7 +412,7 @@ export default function AuthorUploadWizard() {
                   className="px-5 py-3 rounded-full border border-[#E7D9D3] text-xs font-mono uppercase tracking-wider text-[#6B5E5E] hover:bg-[#F4EEEA] transition-colors font-bold"
                 >
                   <ChevronLeft className="w-4 h-4" />
-                  <span>Back</span>
+                  <span>{t('author.upload.back')}</span>
                 </button>
 
                 <motion.button
@@ -421,7 +423,7 @@ export default function AuthorUploadWizard() {
                   className="px-8 py-3.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-xl flex items-center gap-2"
                 >
                   <Sparkles className="w-4 h-4 text-[#F5F5DA]" />
-                  <span>Submit Manuscript for Review</span>
+                  <span>{t('author.upload.submitForReview')}</span>
                 </motion.button>
               </div>
             </motion.div>

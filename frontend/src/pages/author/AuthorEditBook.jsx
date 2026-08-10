@@ -4,8 +4,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Save, ArrowLeft, Image as ImageIcon, FileText, CheckCircle2, RotateCcw, AlertCircle, Sparkles } from 'lucide-react';
 import { useData } from '../../context/DataContext';
 import { apiFetch } from '../../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 export default function AuthorEditBook() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
   const { getBookById, updateBook, fetchModuleData } = useData();
@@ -65,7 +67,7 @@ export default function AuthorEditBook() {
         pdfFileSize: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
         manuscriptUrl: fileUrl,
       }));
-      showToast('Manuscript PDF file updated');
+      showToast(t('author.editBook.toastPdfUpdated'));
     }
   };
 
@@ -75,7 +77,7 @@ export default function AuthorEditBook() {
       const reader = new FileReader();
       reader.onloadend = () => setFormData((prev) => ({ ...prev, coverUrl: reader.result, coverFile: file }));
       reader.readAsDataURL(file);
-      showToast('Cover artwork updated');
+      showToast(t('author.editBook.toastCoverUpdated'));
     }
   };
 
@@ -134,7 +136,7 @@ export default function AuthorEditBook() {
 
       if (fetchModuleData) fetchModuleData();
 
-      showToast(submitForReview ? 'Manuscript resubmitted to Editorial Workspace for review' : 'Book metadata saved successfully');
+      showToast(submitForReview ? t('author.editBook.toastResubmitted') : t('author.editBook.toastSaved'));
       setTimeout(() => navigate('/author/books'), 1200);
     } catch (err) {
       showToast(`Saved changes: ${err.message}`);
@@ -147,13 +149,13 @@ export default function AuthorEditBook() {
   if (!book) {
     return (
       <div className="text-center py-16 space-y-4">
-        <h2 className="font-editorial-serif text-2xl text-[#181616]">Book Record Not Found</h2>
+        <h2 className="font-editorial-serif text-2xl text-[#181616]">{t('author.editBook.notFoundTitle')}</h2>
         <button
           type="button"
           onClick={() => navigate('/author/books')}
           className="text-xs font-mono text-[#212842] hover:underline font-bold"
         >
-          Return to My Books
+          {t('author.editBook.returnToMyBooks')}
         </button>
       </div>
     );
@@ -177,14 +179,14 @@ export default function AuthorEditBook() {
             className="text-xs font-mono text-[#5F594F] hover:text-[#212842] transition-colors flex items-center gap-1 mb-2 font-bold uppercase tracking-wider"
           >
             <ArrowLeft className="w-3.5 h-3.5 text-[#212842]" />
-            <span>Back to Author Catalog</span>
+            <span>{t('author.editBook.backToCatalog')}</span>
           </button>
           <h1 className="font-editorial-serif text-3xl sm:text-4xl font-bold text-[#181616]">
-            {isRejected ? 'Edit & Resubmit Manuscript' : 'Edit Manuscript Details'}
+            {isRejected ? t('author.editBook.titleEditResubmit') : t('author.editBook.titleEditDetails')}
           </h1>
           {isRejected && (
             <p className="text-xs text-rose-800 font-mono mt-1 font-bold">
-              Status: {book.status} · Update manuscript parameters and resubmit for editorial evaluation
+              {t('author.editBook.statusLabel')} {book.status} · {t('author.editBook.resubmitNote')}
             </p>
           )}
         </div>
@@ -200,7 +202,7 @@ export default function AuthorEditBook() {
               className="px-6 py-3 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-md flex items-center gap-2"
             >
               <RotateCcw className="w-4 h-4 text-[#F5F5DA]" />
-              <span>{isSubmitting ? 'Submitting...' : 'Resubmit for Review'}</span>
+              <span>{isSubmitting ? t('author.editBook.submitting') : t('author.editBook.resubmitButton')}</span>
             </motion.button>
           ) : (
             <motion.button
@@ -212,7 +214,7 @@ export default function AuthorEditBook() {
               className="px-6 py-3 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-md flex items-center gap-2"
             >
               <Save className="w-4 h-4 text-[#F5F5DA]" />
-              <span>{isSubmitting ? 'Saving...' : 'Save Changes'}</span>
+              <span>{isSubmitting ? t('author.editBook.saving') : t('author.editBook.saveChanges')}</span>
             </motion.button>
           )}
         </div>
@@ -223,7 +225,7 @@ export default function AuthorEditBook() {
         <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-900 space-y-1">
           <span className="text-xs font-mono font-bold flex items-center gap-1.5 text-rose-700 uppercase tracking-wider">
             <AlertCircle className="w-4 h-4 text-rose-600" />
-            Publisher Review Comments:
+            {t('author.editBook.publisherComments')}
           </span>
           <p className="text-xs font-sans italic text-rose-800 leading-relaxed">
             "{book.rejectionReason || book.editorialNotes}"
@@ -235,7 +237,7 @@ export default function AuthorEditBook() {
       <form onSubmit={(e) => handleSave(e, false)} className="p-8 sm:p-10 rounded-3xl bg-[#FFFDF3] border border-[#D8CFAE] shadow-md space-y-6">
         <div className="space-y-2">
           <label className="text-[10px] uppercase font-mono tracking-widest text-[#212842] block font-bold">
-            Book Title *
+            {t('author.editBook.bookTitle')}
           </label>
           <input
             type="text"
@@ -248,7 +250,7 @@ export default function AuthorEditBook() {
 
         <div className="space-y-2">
           <label className="text-[10px] uppercase font-mono tracking-widest text-[#212842] block font-bold">
-            Synopsis / Description *
+            {t('author.editBook.synopsis')}
           </label>
           <textarea
             rows={5}
@@ -262,7 +264,7 @@ export default function AuthorEditBook() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           <div className="space-y-2">
             <label className="text-[10px] uppercase font-mono tracking-widest text-[#212842] block font-bold">
-              Genre
+              {t('author.editBook.genre')}
             </label>
             <input
               type="text"
@@ -274,7 +276,7 @@ export default function AuthorEditBook() {
 
           <div className="space-y-2">
             <label className="text-[10px] uppercase font-mono tracking-widest text-[#212842] block font-bold">
-              Language
+              {t('author.editBook.language')}
             </label>
             <input
               type="text"
@@ -286,7 +288,7 @@ export default function AuthorEditBook() {
 
           <div className="space-y-2">
             <label className="text-[10px] uppercase font-mono tracking-widest text-[#212842] block font-bold">
-              Price (INR ₹)
+              {t('author.editBook.price')}
             </label>
             <input
               type="number"
@@ -301,7 +303,7 @@ export default function AuthorEditBook() {
         <div className="pt-6 border-t border-[#DED7BD] grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="space-y-3">
             <label className="text-[10px] uppercase font-mono tracking-widest text-[#212842] block font-bold">
-              Book Cover Artwork
+              {t('author.editBook.coverArtwork')}
             </label>
             <div className="flex items-center gap-4">
               <div className="w-16 aspect-[2/3] rounded-xl overflow-hidden border border-[#D8CFAE] shrink-0 bg-[#F8F6E5] shadow-2xs">
@@ -314,7 +316,7 @@ export default function AuthorEditBook() {
                 )}
               </div>
               <label className="flex-1 p-3 rounded-2xl border border-dashed border-[#D8CFAE] bg-[#F8F6E5] text-center text-xs font-mono text-[#212842] font-bold hover:border-[#212842] cursor-pointer">
-                Upload New Cover
+                {t('author.editBook.uploadNewCover')}
                 <input
                   type="file"
                   accept="image/*"
@@ -327,7 +329,7 @@ export default function AuthorEditBook() {
 
           <div className="space-y-3">
             <label className="text-[10px] uppercase font-mono tracking-widest text-[#212842] block font-bold">
-              Manuscript File (PDF)
+              {t('author.editBook.manuscriptFile')}
             </label>
             <div className="p-3.5 rounded-2xl border border-[#D8CFAE] bg-[#F8F6E5] flex items-center justify-between text-xs font-mono relative shadow-inner">
               <div className="flex items-center gap-2">
@@ -335,7 +337,7 @@ export default function AuthorEditBook() {
                 <span className="truncate max-w-[150px] font-bold text-[#181616]">{formData.pdfFileName}</span>
               </div>
               <label className="text-[11px] text-[#212842] font-bold hover:underline cursor-pointer">
-                Replace PDF
+                {t('author.editBook.replacePdf')}
                 <input
                   type="file"
                   accept="application/pdf"
@@ -358,7 +360,7 @@ export default function AuthorEditBook() {
               className="px-8 py-3.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-lg flex items-center gap-2"
             >
               <Sparkles className="w-4 h-4 text-[#F5F5DA]" />
-              <span>{isSubmitting ? 'Submitting...' : 'Save & Resubmit to Publisher'}</span>
+              <span>{isSubmitting ? t('author.editBook.submitting') : t('author.editBook.saveAndResubmit')}</span>
             </motion.button>
           ) : (
             <motion.button
@@ -369,7 +371,7 @@ export default function AuthorEditBook() {
               className="px-8 py-3.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-lg flex items-center gap-2"
             >
               <Save className="w-4 h-4 text-[#F5F5DA]" />
-              <span>{isSubmitting ? 'Saving...' : 'Save Metadata Changes'}</span>
+              <span>{isSubmitting ? t('author.editBook.saving') : t('author.editBook.saveMetadataChanges')}</span>
             </motion.button>
           )}
         </div>

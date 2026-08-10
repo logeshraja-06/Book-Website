@@ -4,8 +4,10 @@ import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Bookmark, Star, ArrowRight } from 'lucide-react';
 import { useData } from '../../context/DataContext';
 import { formatPrice } from '../../utils/format';
+import { useTranslation } from 'react-i18next';
 
 export default function DiscoverCarousel() {
+  const { t } = useTranslation();
   const { books = [], wishlistBooks = [], toggleWishlist } = useData();
   const carouselRef = useRef(null);
 
@@ -25,11 +27,11 @@ export default function DiscoverCarousel() {
         {/* Section Header with Arrows */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#E9E5C8] pb-6">
           <div>
-            <span className="text-xs uppercase tracking-widest font-mono text-[#212842] font-bold block mb-1">
-              Curated Index
+            <span className="text-xs uppercase tracking-widest font-mono text-[#212842] font-bold inline-block mb-1">
+              {t('home.discover.eyebrow')}
             </span>
             <h2 className="font-editorial-serif text-3xl sm:text-4xl text-[#211D1D] font-normal">
-              Books you'll want to keep close
+              {t('home.discover.title')}
             </h2>
           </div>
 
@@ -37,7 +39,7 @@ export default function DiscoverCarousel() {
             <button
               type="button"
               onClick={() => scroll('left')}
-              className="w-10 h-10 rounded-full border border-[#E9E5C8] bg-[#F5F5DA] flex items-center justify-center text-[#211D1D] hover:border-[#212842] hover:text-[#212842] transition-colors"
+              className="w-10 h-10 rounded-full border border-[#E9E5C8] bg-[#F5F5DA] flex items-center justify-center text-[#211D1D] hover:border-[#181E33] hover:text-[#181E33] hover:bg-[#212842]/5 transition-colors"
               aria-label="Scroll Left"
             >
               <ChevronLeft className="w-5 h-5" />
@@ -45,7 +47,7 @@ export default function DiscoverCarousel() {
             <button
               type="button"
               onClick={() => scroll('right')}
-              className="w-10 h-10 rounded-full border border-[#E9E5C8] bg-[#F5F5DA] flex items-center justify-center text-[#211D1D] hover:border-[#212842] hover:text-[#212842] transition-colors"
+              className="w-10 h-10 rounded-full border border-[#E9E5C8] bg-[#F5F5DA] flex items-center justify-center text-[#211D1D] hover:border-[#181E33] hover:text-[#181E33] hover:bg-[#212842]/5 transition-colors"
               aria-label="Scroll Right"
             >
               <ChevronRight className="w-5 h-5" />
@@ -71,7 +73,7 @@ export default function DiscoverCarousel() {
                 whileHover={{ y: -8 }}
                 whileTap={{ scale: 0.97 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 24 }}
-                className="w-72 shrink-0 snap-start bg-gradient-to-b from-[#FFFDF3] to-[#F5F5DA] rounded-none p-3.5 border border-[#E9E5C8] flex flex-col justify-between shadow-xs hover:shadow-[0_20px_40px_-12px_rgba(24,30,51,0.18),0_2px_6px_-1px_rgba(24,30,51,0.12),inset_0_0_0_1.5px_rgba(33,40,66,0.35)] transition-all duration-300 ease-out group relative overflow-hidden cursor-pointer"
+                className="w-72 shrink-0 snap-start bg-gradient-to-br from-[#FFFDF3] via-[#FBF9EF] to-[#F1EED2] rounded-none p-3.5 border border-[#E9E5C8] hover:border-[#212842]/40 flex flex-col justify-between shadow-xs hover:shadow-[0_24px_48px_-14px_rgba(24,30,51,0.22),0_3px_8px_-2px_rgba(24,30,51,0.14),inset_0_0_0_1.5px_rgba(33,40,66,0.4)] transition-all duration-300 ease-out group relative overflow-hidden cursor-pointer"
               >
                 <div>
                   <Link to={`/books/${bookSlug}`} className="block relative aspect-[3/4] rounded-none overflow-hidden mb-3 bg-[#FFFDF3] border border-[#E9E5C8]/80">
@@ -98,16 +100,16 @@ export default function DiscoverCarousel() {
                         e.stopPropagation();
                         toggleWishlist(book.id || book._id);
                       }}
-                      className="absolute top-3 right-3 p-2 rounded-full bg-[#FFFDF3]/90 backdrop-blur-sm border border-[#E9E5C8] text-[#211D1D] hover:text-[#212842] transition-colors shadow-xs z-20 group/btn"
+                      className="absolute top-3 right-3 p-2 rounded-full bg-[#FFFDF3]/90 backdrop-blur-sm border border-[#E9E5C8] hover:border-[#212842] text-[#211D1D] hover:text-[#212842] transition-colors shadow-xs z-20 group/btn"
                     >
-                      <Bookmark className={`w-3.5 h-3.5 transition-transform duration-200 ${isWishlisted ? 'fill-[#212842] text-[#212842] scale-110' : ''}`} />
+                      <Bookmark className={`w-3.5 h-3.5 transition-transform duration-200 ${isWishlisted ? 'fill-[#181E33] text-[#181E33] scale-110' : ''}`} />
                       {isWishlisted && (
                         <span className="absolute inset-0 rounded-full border border-[#212842]/40 animate-ping pointer-events-none opacity-40" />
                       )}
                     </motion.button>
                   </Link>
 
-                  <span className="text-[10px] uppercase font-mono tracking-wider text-[#212842] font-bold block mb-1">
+                  <span className="text-[10px] uppercase font-mono tracking-wider text-[#212842] font-bold inline-block mb-1">
                     {book.genre}
                   </span>
 
@@ -126,14 +128,14 @@ export default function DiscoverCarousel() {
                   <div
                     className="absolute top-0 left-0 right-0 h-[1px] pointer-events-none"
                     style={{
-                      background: 'linear-gradient(90deg, transparent 0%, #E9E5C8 20%, #E9E5C8 80%, transparent 100%)',
+                      background: 'linear-gradient(90deg, transparent 0%, rgba(33,40,66,0.35) 20%, rgba(33,40,66,0.35) 80%, transparent 100%)',
                     }}
                   />
                   <span className="font-bold text-[#211D1D]">
                     {formatPrice(book.price)}
                   </span>
-                  <span className="flex items-center gap-1 text-[#212842] font-bold">
-                    <Star className="w-3.5 h-3.5 fill-[#212842]" />
+                  <span className="flex items-center gap-1 text-[#181E33] font-bold">
+                    <Star className="w-3.5 h-3.5 fill-[#181E33]" />
                     {book.rating || 4.8}
                   </span>
                 </div>

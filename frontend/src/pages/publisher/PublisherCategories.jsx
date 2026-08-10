@@ -3,8 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useData } from '../../context/DataContext';
 import { apiFetch } from '../../context/AuthContext';
 import { Plus, Trash2, CheckCircle2, Tag, AlertCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function PublisherCategories() {
+  const { t } = useTranslation();
   const { categories = [], fetchPublicData } = useData();
   const [newCatName, setNewCatName] = useState('');
   const [newCatDesc, setNewCatDesc] = useState('');
@@ -31,13 +33,13 @@ export default function PublisherCategories() {
       });
 
       if (res.success) {
-        showToast('success', 'Category created successfully');
+        showToast('success', t('publisher.categories.toastCreated'));
         setNewCatName('');
         setNewCatDesc('');
         if (fetchPublicData) fetchPublicData();
       }
     } catch (err) {
-      showToast('error', `Failed to create category: ${err.message}`);
+      showToast('error', `${t('publisher.categories.toastCreateFailed')} ${err.message}`);
     } finally {
       setIsLoading(false);
     }
@@ -48,10 +50,10 @@ export default function PublisherCategories() {
       await apiFetch(`/editorial/categories/${id}`, {
         method: 'DELETE'
       });
-      showToast('success', 'Category deleted successfully');
+      showToast('success', t('publisher.categories.toastDeleted'));
       if (fetchPublicData) fetchPublicData();
     } catch (err) {
-      showToast('error', `Failed to delete category: ${err.message}`);
+      showToast('error', `${t('publisher.categories.toastDeleteFailed')} ${err.message}`);
     }
   };
 
@@ -85,13 +87,13 @@ export default function PublisherCategories() {
         <div>
           <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#212842] font-bold block flex items-center gap-1.5 mb-1">
             <Tag className="w-3.5 h-3.5 text-[#212842]" />
-            Taxonomy Console
+            {t('publisher.categories.eyebrow')}
           </span>
           <h2 className="font-editorial-serif text-3xl text-[#211D1D] font-bold">
-            Genre & Taxonomy Management
+            {t('publisher.categories.title')}
           </h2>
           <p className="text-xs text-[#6B5E5E] mt-1 font-sans">
-            Configure platform category tags, descriptions, and literary classification
+            {t('publisher.categories.subtitle')}
           </p>
         </div>
       </div>
@@ -103,7 +105,7 @@ export default function PublisherCategories() {
       >
         <input
           type="text"
-          placeholder="Category name (e.g. Behavioral Economics)…"
+          placeholder={t('publisher.categories.namePlaceholder')}
           value={newCatName}
           onChange={(e) => setNewCatName(e.target.value)}
           className="flex-1 bg-[#FFFDF3] rounded-2xl border border-[#E9E5C8] px-4 py-2.5 text-xs text-[#211D1D] focus:border-[#212842] focus:outline-none transition-colors font-mono"
@@ -111,7 +113,7 @@ export default function PublisherCategories() {
         />
         <input
           type="text"
-          placeholder="Brief description (optional)…"
+          placeholder={t('publisher.categories.descPlaceholder')}
           value={newCatDesc}
           onChange={(e) => setNewCatDesc(e.target.value)}
           className="flex-1 bg-[#FFFDF3] rounded-2xl border border-[#E9E5C8] px-4 py-2.5 text-xs text-[#211D1D] focus:border-[#212842] focus:outline-none transition-colors font-mono"
@@ -124,7 +126,7 @@ export default function PublisherCategories() {
           className="inline-flex items-center justify-center gap-1.5 px-6 py-2.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shrink-0 shadow-md disabled:opacity-50"
         >
           <Plus className="w-4 h-4" />
-          <span>{isLoading ? 'Creating…' : 'Add Category'}</span>
+          <span>{isLoading ? t('publisher.categories.creating') : t('publisher.categories.addCategory')}</span>
         </motion.button>
       </form>
 
@@ -149,7 +151,7 @@ export default function PublisherCategories() {
 
               <div className="flex items-center gap-6">
                 <span className="text-xs font-mono text-[#6B5E5E]">
-                  {cat.count || 0} Titles
+                  {cat.count || 0} {t('publisher.categories.titles')}
                 </span>
                 <button
                   type="button"

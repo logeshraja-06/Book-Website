@@ -19,6 +19,7 @@ import { useData } from '../../context/DataContext';
 import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
 import { handleImgError, DEFAULT_AVATAR } from '../../utils/imageFallback';
+import { useTranslation } from 'react-i18next';
 
 function StatCounter({ target, prefix = '', suffix = '', decimals = 0 }) {
   const ref = useRef(null);
@@ -51,6 +52,7 @@ function StatCounter({ target, prefix = '', suffix = '', decimals = 0 }) {
 }
 
 export default function ProfileView() {
+  const { t } = useTranslation();
   const { currentUser, updateCurrentUser } = useAuth();
   const { wishlistBooks = [] } = useData();
 
@@ -125,11 +127,11 @@ export default function ProfileView() {
           handle: formData.handle,
           avatarUrl: formData.avatarUrl
         });
-        showToast('success', 'Reader profile updated successfully');
+        showToast('success', t('reader.profile.toastProfileUpdated'));
         setIsEditing(false);
       }
     } catch (err) {
-      showToast('error', `Failed to update profile: ${err.message}`);
+      showToast('error', `${t('reader.profile.toastProfileFailed')} ${err.message}`);
     } finally {
       setIsLoading(false);
     }
@@ -138,10 +140,10 @@ export default function ProfileView() {
   const handleSecuritySave = (e) => {
     e.preventDefault();
     if (securityData.newPassword !== securityData.confirmPassword) {
-      showToast('error', 'New passwords do not match');
+      showToast('error', t('reader.profile.toastPasswordMismatch'));
       return;
     }
-    showToast('success', 'Security credentials updated successfully');
+    showToast('success', t('reader.profile.toastSecurityUpdated'));
     setSecurityData({ currentPassword: '', newPassword: '', confirmPassword: '' });
   };
 
@@ -164,10 +166,10 @@ export default function ProfileView() {
   };
 
   const tabs = [
-    { id: 'overview', label: 'Reading Profile', icon: User },
-    { id: 'preferences', label: 'Reading Preferences', icon: Sliders },
-    { id: 'security', label: 'Account & Security', icon: Key },
-    { id: 'privacy', label: 'Privacy & Digest', icon: ShieldCheck }
+    { id: 'overview', label: t('reader.profile.tabOverview'), icon: User },
+    { id: 'preferences', label: t('reader.profile.tabPreferences'), icon: Sliders },
+    { id: 'security', label: t('reader.profile.tabSecurity'), icon: Key },
+    { id: 'privacy', label: t('reader.profile.tabPrivacy'), icon: ShieldCheck }
   ];
 
   return (
@@ -199,13 +201,13 @@ export default function ProfileView() {
         <div>
           <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#212842] font-bold flex items-center gap-1.5 mb-1">
             <Sparkles className="w-3.5 h-3.5 text-[#212842]" />
-            Personal Literary Membership
+            {t('reader.profile.membershipEyebrow')}
           </span>
           <h2 className="font-editorial-serif text-3xl sm:text-4xl text-[#181616] font-bold tracking-tight">
-            Reader Profile & Settings
+            {t('reader.profile.title')}
           </h2>
           <p className="text-xs text-[#5F594F] mt-1 font-sans">
-            Manage your personal literary credentials, reading preferences, and account security
+            {t('reader.profile.subtitle')}
           </p>
         </div>
 
@@ -278,7 +280,7 @@ export default function ProfileView() {
                         {handle}
                       </span>
                       <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#F1EED2] border border-[#D8CFAE] text-[10px] font-mono text-[#212842] font-bold">
-                        Verified Reader Passport
+                        {t('reader.profile.verifiedPassport')}
                       </span>
                     </div>
                   </div>
@@ -291,7 +293,7 @@ export default function ProfileView() {
                     className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#F1EED2] border border-[#D8CFAE] text-xs font-mono font-bold uppercase tracking-wider text-[#181616] hover:border-[#212842] hover:text-[#212842] transition-colors shadow-2xs self-start sm:self-auto"
                   >
                     <Edit2 className="w-3.5 h-3.5 text-[#212842]" />
-                    <span>Edit Profile</span>
+                    <span>{t('reader.profile.editProfile')}</span>
                   </motion.button>
                 </div>
 
@@ -305,40 +307,40 @@ export default function ProfileView() {
             <div className="space-y-4 relative z-10">
               <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-[#212842] font-bold block flex items-center gap-1.5">
                 <Award className="w-3.5 h-3.5 text-[#212842]" />
-                Reader Overview Statistics
+                {t('reader.profile.statsEyebrow')}
               </span>
               
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 py-6 border-y border-[#DED7BD] bg-[#F8F6E5] rounded-2xl px-6">
                 <div className="space-y-1">
                   <span className="text-[10px] uppercase font-mono tracking-widest text-[#827A6D] font-bold block">
-                    Books Read
+                    {t('reader.profile.statBooksRead')}
                   </span>
                   <StatCounter target={14} />
-                  <span className="text-[11px] text-[#5F594F] font-sans block">Completed volumes</span>
+                  <span className="text-[11px] text-[#5F594F] font-sans block">{t('reader.profile.statBooksReadSub')}</span>
                 </div>
 
                 <div className="space-y-1">
                   <span className="text-[10px] uppercase font-mono tracking-widest text-[#827A6D] font-bold block">
-                    Pages Completed
+                    {t('reader.profile.statPagesCompleted')}
                   </span>
                   <StatCounter target={4280} />
-                  <span className="text-[11px] text-[#5F594F] font-sans block">Cumulative pages</span>
+                  <span className="text-[11px] text-[#5F594F] font-sans block">{t('reader.profile.statPagesCompletedSub')}</span>
                 </div>
 
                 <div className="space-y-1">
                   <span className="text-[10px] uppercase font-mono tracking-widest text-[#827A6D] font-bold block flex items-center gap-1">
-                    <Heart className="w-3 h-3 text-[#212842]" /> Saved Books
+                    <Heart className="w-3 h-3 text-[#212842]" /> {t('reader.profile.statSavedBooks')}
                   </span>
                   <StatCounter target={wishlistBooks.length || 6} />
-                  <span className="text-[11px] text-[#5F594F] font-sans block">Wishlist catalogue</span>
+                  <span className="text-[11px] text-[#5F594F] font-sans block">{t('reader.profile.statSavedBooksSub')}</span>
                 </div>
 
                 <div className="space-y-1">
                   <span className="text-[10px] uppercase font-mono tracking-widest text-[#827A6D] font-bold block flex items-center gap-1">
-                    <Flame className="w-3 h-3 text-[#212842]" /> Active Streak
+                    <Flame className="w-3 h-3 text-[#212842]" /> {t('reader.profile.statActiveStreak')}
                   </span>
-                  <StatCounter target={18} suffix=" Days" />
-                  <span className="text-[11px] text-[#5F594F] font-sans block">Consecutive reading</span>
+                  <StatCounter target={18} suffix={` ${t('reader.profile.days')}`} />
+                  <span className="text-[11px] text-[#5F594F] font-sans block">{t('reader.profile.statActiveStreakSub')}</span>
                 </div>
               </div>
             </div>
@@ -347,7 +349,7 @@ export default function ProfileView() {
             <div className="space-y-4 relative z-10">
               <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-[#212842] font-bold block flex items-center gap-1.5">
                 <BookOpen className="w-3.5 h-3.5 text-[#212842]" />
-                Preferred Literary Taxonomy
+                {t('reader.profile.preferredGenres')}
               </span>
               <div className="flex flex-wrap items-center gap-3">
                 {['Historical Realism', 'Behavioral Economics', 'Ancient Philosophy', 'Biographies', 'Literary Fiction'].map((genre, idx) => (
@@ -372,10 +374,10 @@ export default function ProfileView() {
         <motion.div variants={itemVariants} className="p-8 sm:p-10 rounded-3xl bg-[#FFFDF3] border border-[#D8CFAE] shadow-md space-y-8">
           <div>
             <h3 className="font-editorial-serif text-2xl font-bold text-[#181616]">
-              Reading & Display Preferences
+              {t('reader.profile.preferencesTitle')}
             </h3>
             <p className="text-xs text-[#5F594F] font-sans mt-1">
-              Customize typography, background contrast, and digital reader viewing defaults
+              {t('reader.profile.preferencesSubtitle')}
             </p>
           </div>
 
@@ -383,7 +385,7 @@ export default function ProfileView() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <label className="text-[10px] uppercase font-mono tracking-widest text-[#212842] block font-bold">
-                  Reader Font Size
+                  {t('reader.profile.fontSize')}
                 </label>
                 <select
                   value={preferences.fontSize}
@@ -399,7 +401,7 @@ export default function ProfileView() {
 
               <div className="space-y-2">
                 <label className="text-[10px] uppercase font-mono tracking-widest text-[#212842] block font-bold">
-                  Serif Typography Family
+                  {t('reader.profile.fontFamily')}
                 </label>
                 <select
                   value={preferences.fontFamily}
@@ -415,7 +417,7 @@ export default function ProfileView() {
 
             <div className="space-y-2">
               <label className="text-[10px] uppercase font-mono tracking-widest text-[#212842] block font-bold">
-                Default Canvas Surface Theme
+                {t('reader.profile.theme')}
               </label>
               <select
                 value={preferences.theme}
@@ -431,7 +433,7 @@ export default function ProfileView() {
 
           <div className="pt-6 border-t border-[#DED7BD] flex justify-end">
             <Button size="md" onClick={() => showToast('success', 'Reading preferences saved')}>
-              Save Reading Preferences
+              {t('reader.profile.savePreferences')}
             </Button>
           </div>
         </motion.div>
@@ -441,29 +443,29 @@ export default function ProfileView() {
         <motion.form variants={itemVariants} onSubmit={handleSecuritySave} className="p-8 sm:p-10 rounded-3xl bg-[#FFFDF3] border border-[#D8CFAE] shadow-md space-y-8">
           <div>
             <h3 className="font-editorial-serif text-2xl font-bold text-[#181616]">
-              Account & Security Credentials
+              {t('reader.profile.securityTitle')}
             </h3>
             <p className="text-xs text-[#5F594F] font-sans mt-1">
-              Update password, review verified email address, and manage security options
+              {t('reader.profile.securitySubtitle')}
             </p>
           </div>
 
           <div className="space-y-6">
             <Input
-              label="Account Email Address"
+              label={t('reader.profile.accountEmail')}
               value={currentUser?.email || 'reader@bookverse.studio'}
               disabled
             />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <Input
-                label="New Password"
+                label={t('reader.profile.newPassword')}
                 type="password"
                 value={securityData.newPassword}
                 onChange={(e) => setSecurityData({ ...securityData, newPassword: e.target.value })}
               />
               <Input
-                label="Confirm New Password"
+                label={t('reader.profile.confirmNewPassword')}
                 type="password"
                 value={securityData.confirmPassword}
                 onChange={(e) => setSecurityData({ ...securityData, confirmPassword: e.target.value })}
@@ -473,7 +475,7 @@ export default function ProfileView() {
 
           <div className="pt-6 border-t border-[#DED7BD] flex justify-end">
             <Button type="submit" size="md">
-              Update Security Credentials
+              {t('reader.profile.updateSecurity')}
             </Button>
           </div>
         </motion.form>
@@ -483,18 +485,18 @@ export default function ProfileView() {
         <motion.div variants={itemVariants} className="p-8 sm:p-10 rounded-3xl bg-[#FFFDF3] border border-[#D8CFAE] shadow-md space-y-8">
           <div>
             <h3 className="font-editorial-serif text-2xl font-bold text-[#181616]">
-              Privacy & Notification Digest
+              {t('reader.profile.privacyTitle')}
             </h3>
             <p className="text-xs text-[#5F594F] font-sans mt-1">
-              Control public profile visibility and literary publication updates
+              {t('reader.profile.privacySubtitle')}
             </p>
           </div>
 
           <div className="space-y-4">
             <label className="flex items-center justify-between p-4 rounded-2xl bg-[#F8F6E5] border border-[#D8CFAE] cursor-pointer">
               <div>
-                <span className="text-xs font-mono font-bold text-[#181616] block">Public Reading Passport</span>
-                <span className="text-[11px] text-[#5F594F] font-sans block">Allow other BookVerse readers to view your preferred genres</span>
+                <span className="text-xs font-mono font-bold text-[#181616] block">{t('reader.profile.publicPassport')}</span>
+                <span className="text-[11px] text-[#5F594F] font-sans block">{t('reader.profile.publicPassportDesc')}</span>
               </div>
               <input
                 type="checkbox"
@@ -506,8 +508,8 @@ export default function ProfileView() {
 
             <label className="flex items-center justify-between p-4 rounded-2xl bg-[#F8F6E5] border border-[#D8CFAE] cursor-pointer">
               <div>
-                <span className="text-xs font-mono font-bold text-[#181616] block">Weekly Literary Digest</span>
-                <span className="text-[11px] text-[#5F594F] font-sans block">Receive curated author releases and new catalog arrivals</span>
+                <span className="text-xs font-mono font-bold text-[#181616] block">{t('reader.profile.weeklyDigest')}</span>
+                <span className="text-[11px] text-[#5F594F] font-sans block">{t('reader.profile.weeklyDigestDesc')}</span>
               </div>
               <input
                 type="checkbox"
@@ -519,8 +521,8 @@ export default function ProfileView() {
           </div>
 
           <div className="pt-6 border-t border-[#DED7BD] flex justify-end">
-            <Button size="md" onClick={() => showToast('success', 'Privacy preferences updated')}>
-              Save Privacy Settings
+            <Button size="md" onClick={() => showToast('success', t('reader.profile.toastPrivacyUpdated'))}>
+              {t('reader.profile.savePrivacy')}
             </Button>
           </div>
         </motion.div>
@@ -539,7 +541,7 @@ export default function ProfileView() {
             >
               <div className="flex items-center justify-between border-b border-[#D8CFAE] pb-4">
                 <h3 className="font-editorial-serif text-2xl font-bold text-[#181616]">
-                  Edit Reader Profile
+                  {t('reader.profile.editModalTitle')}
                 </h3>
                 <button
                   type="button"
@@ -552,26 +554,26 @@ export default function ProfileView() {
 
               <form onSubmit={handleSaveProfile} className="space-y-4">
                 <Input
-                  label="Full Name"
+                  label={t('reader.profile.fullName')}
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   required
                 />
 
                 <Input
-                  label="Handle"
+                  label={t('reader.profile.handle')}
                   value={formData.handle}
                   onChange={(e) => setFormData({ ...formData, handle: e.target.value })}
                 />
 
                 <Input
-                  label="Avatar Image URL"
+                  label={t('reader.profile.avatarUrl')}
                   value={formData.avatarUrl}
                   onChange={(e) => setFormData({ ...formData, avatarUrl: e.target.value })}
                 />
 
                 <Input
-                  label="Bio"
+                  label={t('reader.profile.bio')}
                   type="textarea"
                   rows={3}
                   value={formData.bio}
@@ -584,10 +586,10 @@ export default function ProfileView() {
                     onClick={() => setIsEditing(false)}
                     className="px-4 py-2 text-xs font-mono uppercase tracking-wider text-[#5F594F] hover:text-[#181616] transition-colors"
                   >
-                    Cancel
+                    {t('reader.profile.cancel')}
                   </button>
                   <Button type="submit" size="md" disabled={isLoading}>
-                    {isLoading ? 'Saving...' : 'Save Profile'}
+                    {isLoading ? t('reader.profile.saving') : t('reader.profile.saveProfile')}
                   </Button>
                 </div>
               </form>

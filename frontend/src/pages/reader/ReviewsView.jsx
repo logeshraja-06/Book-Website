@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, Trash2, ArrowUpRight, MessageSquareText, BookOpen } from 'lucide-react';
 import { apiFetch } from '../../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 export default function ReviewsView() {
+  const { t } = useTranslation();
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -46,7 +48,7 @@ export default function ReviewsView() {
   if (loading) {
     return (
       <div className="py-16 text-center text-xs font-mono text-[#6B5E5E]">
-        Loading your published book reviews…
+        {t('reader.reviews.loading')}
       </div>
     );
   }
@@ -59,17 +61,17 @@ export default function ReviewsView() {
         <div>
           <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#212842] font-bold block flex items-center gap-1.5 mb-1">
             <MessageSquareText className="w-3.5 h-3.5 text-[#212842]" />
-            Reader Critiques & Reviews
+            {t('reader.reviews.eyebrow')}
           </span>
           <h2 className="font-editorial-serif text-3xl sm:text-4xl text-[#2B2B2B] font-bold">
-            Written Critiques & Reviews
+            {t('reader.reviews.title')}
           </h2>
           <p className="text-xs text-[#6B5E5E] mt-1 font-sans">
-            Your published contributions and literary evaluations across the platform
+            {t('reader.reviews.subtitle')}
           </p>
         </div>
         <span className="text-xs font-mono text-[#212842] font-bold bg-[#FFFDF3] px-3.5 py-1.5 rounded-full border border-[#E7D9D3]">
-          {reviews.length} Review(s) Published
+          {reviews.length} {t('reader.reviews.publishedCount', { count: reviews.length })}
         </span>
       </div>
 
@@ -82,10 +84,10 @@ export default function ReviewsView() {
         >
           <BookOpen className="w-8 h-8 text-[#212842] mx-auto opacity-60" />
           <h3 className="font-editorial-serif text-xl font-bold text-[#2B2B2B]">
-            No Book Reviews Written Yet
+            {t('reader.reviews.emptyTitle')}
           </h3>
           <p className="max-w-md mx-auto text-[#6B5E5E] font-sans">
-            You haven't published any book reviews yet. Browse our catalog to read titles and share your thoughts with the reader community!
+            {t('reader.reviews.emptyDesc')}
           </p>
         </motion.div>
       ) : (
@@ -127,7 +129,7 @@ export default function ReviewsView() {
                           <ArrowUpRight className="w-4 h-4 text-[#212842]" />
                         </Link>
                         <p className="text-xs text-[#6B5E5E] font-sans">
-                          By {author} · Published {rev.date || rev.dateWritten || 'Recently'}
+                          By {author} · {t('reader.reviews.publishedOn')} {rev.date || rev.dateWritten || 'Recently'}
                         </p>
                       </div>
                     </div>

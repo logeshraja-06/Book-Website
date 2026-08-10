@@ -4,6 +4,7 @@ import { motion, useInView, useMotionValue, animate } from 'framer-motion';
 import { Layers, ArrowRight, BookOpen, Clock, ShieldCheck, Tag, Sparkles, BookCheck, Users } from 'lucide-react';
 import { useData } from '../../context/DataContext';
 import { handleImgError, DEFAULT_BOOK_COVER } from '../../utils/imageFallback';
+import { useTranslation } from 'react-i18next';
 
 function StatCounter({ target, prefix = '', suffix = '', decimals = 0 }) {
   const ref = useRef(null);
@@ -36,6 +37,7 @@ function StatCounter({ target, prefix = '', suffix = '', decimals = 0 }) {
 }
 
 export default function PublisherHome() {
+  const { t } = useTranslation();
   const { books = [], editorialBooks = [], editorialQueue = [], categories = [], authors = [] } = useData();
 
   const catalogSource = editorialBooks.length > 0 ? editorialBooks : books;
@@ -55,13 +57,13 @@ export default function PublisherHome() {
         <div>
           <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#212842] font-bold block flex items-center gap-1.5 mb-1">
             <Sparkles className="w-3.5 h-3.5 text-[#212842]" />
-            Control Desk Overview
+            {t('publisher.home.eyebrow')}
           </span>
           <h2 className="font-editorial-serif text-3xl sm:text-4xl text-[#211D1D] font-bold">
-            Publisher Workspace
+            {t('publisher.home.title')}
           </h2>
           <p className="text-xs text-[#6B5E5E] mt-1 font-sans">
-            Centralized back-office for manuscript evaluation, author registry, and catalog taxonomy
+            {t('publisher.home.subtitle')}
           </p>
         </div>
 
@@ -72,7 +74,7 @@ export default function PublisherHome() {
               to="/publisher/categories"
               className="px-5 py-2.5 rounded-full bg-[#FFFDF3] border border-[#E9E5C8] text-[#211D1D] text-xs font-bold uppercase tracking-wider hover:border-[#212842] transition-colors shadow-2xs block"
             >
-              Taxonomy & Categories
+              {t('publisher.home.taxonomyCategories')}
             </Link>
           </motion.div>
           
@@ -81,7 +83,7 @@ export default function PublisherHome() {
               to="/publisher/queue"
               className="px-6 py-2.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-md block"
             >
-              Review Queue ({pendingCount})
+              {t('publisher.home.reviewQueue')} ({pendingCount})
             </Link>
           </motion.div>
         </div>
@@ -96,12 +98,12 @@ export default function PublisherHome() {
         >
           <div className="flex items-center justify-between">
             <span className="text-[10px] uppercase font-mono tracking-widest text-[#212842] font-bold">
-              Pending Reviews
+              {t('publisher.home.statPendingReviews')}
             </span>
             <Clock className="w-4 h-4 text-[#212842]" />
           </div>
           <StatCounter target={pendingCount} />
-          <span className="text-[11px] text-[#6B5E5E] font-sans block">Awaiting evaluation</span>
+          <span className="text-[11px] text-[#6B5E5E] font-sans block">{t('publisher.home.statPendingReviewsSub')}</span>
         </motion.div>
 
         <motion.div
@@ -111,12 +113,12 @@ export default function PublisherHome() {
         >
           <div className="flex items-center justify-between">
             <span className="text-[10px] uppercase font-mono tracking-widest text-[#212842] font-bold">
-              Published Works
+              {t('publisher.home.statPublishedWorks')}
             </span>
             <BookCheck className="w-4 h-4 text-[#212842]" />
           </div>
           <StatCounter target={approvedCount} />
-          <span className="text-[11px] text-[#6B5E5E] font-sans block">Authorized titles</span>
+          <span className="text-[11px] text-[#6B5E5E] font-sans block">{t('publisher.home.statPublishedWorksSub')}</span>
         </motion.div>
 
         <motion.div
@@ -126,12 +128,12 @@ export default function PublisherHome() {
         >
           <div className="flex items-center justify-between">
             <span className="text-[10px] uppercase font-mono tracking-widest text-[#212842] font-bold">
-              Active Categories
+              {t('publisher.home.statActiveCategories')}
             </span>
             <Tag className="w-4 h-4 text-[#212842]" />
           </div>
           <StatCounter target={totalCategories} />
-          <span className="text-[11px] text-[#6B5E5E] font-sans block">Genre taxonomy</span>
+          <span className="text-[11px] text-[#6B5E5E] font-sans block">{t('publisher.home.statActiveCategoriesSub')}</span>
         </motion.div>
 
         <motion.div
@@ -141,12 +143,12 @@ export default function PublisherHome() {
         >
           <div className="flex items-center justify-between">
             <span className="text-[10px] uppercase font-mono tracking-widest text-[#212842] font-bold">
-              Author Guild
+              {t('publisher.home.statAuthorGuild')}
             </span>
             <Users className="w-4 h-4 text-[#212842]" />
           </div>
           <StatCounter target={totalAuthorsCount} />
-          <span className="text-[11px] text-[#6B5E5E] font-sans block">Registered writers</span>
+          <span className="text-[11px] text-[#6B5E5E] font-sans block">{t('publisher.home.statAuthorGuildSub')}</span>
         </motion.div>
       </div>
 
@@ -157,13 +159,13 @@ export default function PublisherHome() {
         <div className="lg:col-span-7 space-y-6">
           <div className="flex items-center justify-between border-b border-[#E9E5C8] pb-3">
             <h3 className="font-editorial-serif text-xl font-bold text-[#211D1D]">
-              Recent Submissions Activity
+              {t('publisher.home.recentSubmissions')}
             </h3>
             <Link
               to="/publisher/queue"
               className="text-xs font-mono text-[#212842] hover:underline inline-flex items-center gap-1 font-bold"
             >
-              <span>View Full Queue</span>
+              <span>{t('publisher.home.viewFullQueue')}</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
@@ -202,7 +204,7 @@ export default function PublisherHome() {
                     to={`/publisher/review/${book.id || book._id}`}
                     className="text-xs font-bold uppercase font-mono text-[#211D1D] hover:text-[#212842] transition-colors"
                   >
-                    Review
+                    {t('publisher.home.review')}
                   </Link>
                 </div>
               </motion.div>
@@ -215,10 +217,10 @@ export default function PublisherHome() {
           <div className="bg-gradient-to-br from-[#FFFDF3] to-[#F5F5DA] rounded-3xl p-6 border border-[#E9E5C8] shadow-md space-y-4">
             <h3 className="font-editorial-serif text-xl font-bold text-[#211D1D] flex items-center gap-2">
               <ShieldCheck className="w-5 h-5 text-[#212842]" />
-              Publisher Protocol
+              {t('publisher.home.protocolTitle')}
             </h3>
             <p className="text-xs text-[#6B5E5E] leading-relaxed font-sans">
-              All submitted manuscripts are checked for file integrity, metadata accuracy, and catalog suitability. Publisher status transitions update MongoDB documents in real time.
+              {t('publisher.home.protocolDesc')}
             </p>
 
             <div className="pt-2 border-t border-[#E9E5C8] space-y-2">
@@ -226,14 +228,14 @@ export default function PublisherHome() {
                 to="/publisher/queue"
                 className="w-full flex items-center justify-between p-3.5 rounded-xl bg-[#FFFDF3] hover:bg-[#F5F5DA] border border-[#E9E5C8] text-xs font-mono text-[#211D1D] font-bold transition-colors group"
               >
-                <span>Manuscript Review Desk</span>
+                <span>{t('publisher.home.manuscriptReviewDesk')}</span>
                 <ArrowRight className="w-4 h-4 text-[#212842] group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
                 to="/publisher/reports"
                 className="w-full flex items-center justify-between p-3.5 rounded-xl bg-[#FFFDF3] hover:bg-[#F5F5DA] border border-[#E9E5C8] text-xs font-mono text-[#211D1D] font-bold transition-colors group"
               >
-                <span>Analytics & Reports</span>
+                <span>{t('publisher.home.analyticsReports')}</span>
                 <ArrowRight className="w-4 h-4 text-[#212842] group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>

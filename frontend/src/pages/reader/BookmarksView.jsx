@@ -6,8 +6,10 @@ import { useData } from '../../context/DataContext';
 import { apiFetch } from '../../context/AuthContext';
 import BookCover from '../../components/book/BookCover';
 import DigitalReaderModal from '../../components/book/DigitalReaderModal';
+import { useTranslation } from 'react-i18next';
 
 export default function BookmarksView() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { toggleBookmark, activeReaderBook, setActiveReaderBook, isBookPurchased } = useData();
 
@@ -44,7 +46,7 @@ export default function BookmarksView() {
   if (loading) {
     return (
       <div className="py-20 text-center text-xs font-mono text-[#5F594F] bg-[#F5F5DA] rounded-3xl">
-        Loading saved bookmarks…
+        {t('reader.bookmarks.loading')}
       </div>
     );
   }
@@ -57,17 +59,17 @@ export default function BookmarksView() {
         <div>
           <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#212842] font-bold block flex items-center gap-1.5 mb-1">
             <BookmarkIcon className="w-3.5 h-3.5 text-[#212842] fill-[#212842]" />
-            Personal Reader Bookmarks
+            {t('reader.bookmarks.eyebrow')}
           </span>
           <h2 className="font-editorial-serif text-3xl sm:text-4xl text-[#181616] font-bold">
-            Bookmarked Manuscripts
+            {t('reader.bookmarks.title')}
           </h2>
           <p className="text-xs text-[#5F594F] mt-1 font-sans">
-            Quick-access saved volumes and quick references in your library
+            {t('reader.bookmarks.subtitle')}
           </p>
         </div>
         <span className="text-xs font-mono text-[#212842] font-bold bg-[#FFFDF3] px-3.5 py-1.5 rounded-full border border-[#D8CFAE] shadow-2xs">
-          {bookmarks.length} Bookmarked Volume(s)
+          {bookmarks.length} {t('reader.bookmarks.volumeCount', { count: bookmarks.length })}
         </span>
       </div>
 
@@ -104,7 +106,7 @@ export default function BookmarksView() {
                       </Link>
 
                       <div className="absolute top-3.5 left-3.5 px-2.5 py-1 rounded-full bg-[#F5F5DA]/95 text-[10px] uppercase tracking-[0.14em] font-mono text-[#212842] font-bold border border-[#D8CFAE]">
-                        Bookmarked
+                        {t('reader.bookmarks.bookmarked')}
                       </div>
                     </div>
 
@@ -144,7 +146,7 @@ export default function BookmarksView() {
                         className="px-4 py-2.5 rounded-full border border-[#D8CFAE] bg-[#F8F6E5] text-[#181616] text-xs font-mono font-bold uppercase tracking-wider hover:border-[#212842] transition-colors flex items-center gap-1"
                       >
                         <Eye className="w-3.5 h-3.5 text-[#212842]" />
-                        <span>Details</span>
+                        <span>{t('reader.bookmarks.details')}</span>
                       </Link>
 
                       <button
@@ -159,7 +161,7 @@ export default function BookmarksView() {
                         className="px-4 py-2.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-md flex items-center gap-1.5"
                       >
                         <BookOpen className="w-3.5 h-3.5" />
-                        <span>Open Book</span>
+                        <span>{t('reader.bookmarks.openBook')}</span>
                       </button>
                     </div>
                   </div>
@@ -181,10 +183,10 @@ export default function BookmarksView() {
 
             <div className="space-y-1 max-w-md">
               <h3 className="font-editorial-serif text-2xl font-bold text-[#181616]">
-                Keep the books worth returning to.
+                {t('reader.bookmarks.emptyTitle')}
               </h3>
               <p className="text-xs text-[#5F594F] font-sans leading-relaxed">
-                You haven't bookmarked any titles yet. Bookmark key volumes for quick reference and returning to your favorite passages.
+                {t('reader.bookmarks.emptyDesc')}
               </p>
             </div>
 
@@ -193,7 +195,7 @@ export default function BookmarksView() {
                 to="/books"
                 className="px-6 py-3 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-md inline-flex items-center gap-2"
               >
-                <span>Explore Books</span>
+                <span>{t('reader.bookmarks.exploreBooks')}</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </motion.div>

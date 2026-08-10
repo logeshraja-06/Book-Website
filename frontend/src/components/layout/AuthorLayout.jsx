@@ -12,8 +12,10 @@ import {
   ShieldCheck
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 export default function AuthorLayout() {
+  const { t } = useTranslation();
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -24,11 +26,11 @@ export default function AuthorLayout() {
   };
 
   const navItems = [
-    { label: 'Writing Studio', path: '/author/dashboard', icon: LayoutDashboard },
-    { label: 'My Books', path: '/author/books', icon: BookOpen },
-    { label: 'Upload Book', path: '/author/upload', icon: Upload },
-    { label: 'Analytics', path: '/author/analytics', icon: BarChart2 },
-    { label: 'Profile', path: '/author/profile', icon: User },
+    { label: t('author.layout.tabStudio'), path: '/author/dashboard', icon: LayoutDashboard },
+    { label: t('author.layout.tabBooks'), path: '/author/books', icon: BookOpen },
+    { label: t('author.layout.tabUpload'), path: '/author/upload', icon: Upload },
+    { label: t('author.layout.tabAnalytics'), path: '/author/analytics', icon: BarChart2 },
+    { label: t('author.layout.tabProfile'), path: '/author/profile', icon: User },
   ];
 
   return (
@@ -48,10 +50,10 @@ export default function AuthorLayout() {
               <div>
                 <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-[#D8CFAE] font-bold block flex items-center gap-1.5">
                   <Sparkles className="w-3 h-3 text-[#212842]" />
-                  Author Writing Studio & Imprint Console
+                  {t('author.layout.consoleEyebrow')}
                 </span>
                 <h1 className="font-editorial-serif text-xl sm:text-2xl text-[#FFFDF3] font-bold">
-                  Welcome back, {currentUser?.name || 'Author'}
+                  {t('author.layout.welcomeBack')} {currentUser?.name || 'Author'}
                 </h1>
               </div>
             </div>
@@ -59,7 +61,7 @@ export default function AuthorLayout() {
             <div className="flex items-center gap-3">
               <div className="hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#181E33]/60 border border-[#D8CFAE]/30 text-xs font-mono text-[#D8CFAE]">
                 <ShieldCheck className="w-3.5 h-3.5 text-[#D8CFAE]" />
-                <span>Verified Author Imprint</span>
+                <span>{t('author.layout.verifiedBadge')}</span>
               </div>
               
               <button
@@ -68,7 +70,7 @@ export default function AuthorLayout() {
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-xs"
               >
                 <LogOut className="w-3.5 h-3.5" />
-                <span>Log Out</span>
+                <span>{t('author.layout.signOut')}</span>
               </button>
             </div>
           </div>

@@ -156,10 +156,10 @@ const createStudioBook = asyncHandler(async (req, res) => {
   }
 
   let pdfPath = '';
-  let manuscriptFileName = req.body.manuscriptFileName || '';
+  let manuscriptFileName = '';
   let manuscriptFileType = 'PDF Document';
   let manuscriptFileSize = '';
-  let manuscriptUrl = req.body.manuscriptUrl || '';
+  let manuscriptUrl = '';
 
   if (req.files && req.files.manuscriptFile && req.files.manuscriptFile[0]) {
     const file = req.files.manuscriptFile[0];
@@ -167,13 +167,6 @@ const createStudioBook = asyncHandler(async (req, res) => {
     manuscriptFileName = file.originalname;
     manuscriptFileSize = `${(file.size / (1024 * 1024)).toFixed(1)} MB`;
     manuscriptUrl = `/uploads/pdfs/${file.filename}`;
-  }
-
-  if (!pdfPath) {
-    pdfPath = '/uploads/pdfs/sample-manuscript.pdf';
-    manuscriptFileName = manuscriptFileName || `${title || 'Manuscript'}-Sample.pdf`;
-    manuscriptFileSize = manuscriptFileSize || '4.8 MB';
-    manuscriptUrl = manuscriptUrl || '/uploads/pdfs/sample-manuscript.pdf';
   }
 
   const newBookStatus = status === 'Draft' ? 'Draft' : 'Submitted';

@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
 import { useData } from '../../context/DataContext';
 import { AuthorCard } from '../ui/EditorialCards';
+import { useTranslation } from 'react-i18next';
 
 export default function AuthorSection() {
+  const { t } = useTranslation();
   const { authors = [] } = useData();
 
   // Featured laureate author: Kalki Krishnamurthy or first author
@@ -29,21 +31,21 @@ export default function AuthorSection() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
             <span className="text-[11px] uppercase tracking-[0.2em] font-editorial-sans text-[#212842] block mb-2.5 font-bold">
-              The Literary Guild & Salon
+              {t('home.authors.eyebrow')}
             </span>
             <h2 className="font-editorial-serif text-4xl sm:text-5xl lg:text-[3.5rem] text-[#211D1D] font-normal tracking-tight leading-tight">
-              Meet the Authors
+              {t('home.authors.title')}
             </h2>
           </div>
           <div className="space-y-2 max-w-md">
             <p className="text-sm sm:text-base text-[#6B5E5E] leading-relaxed font-sans">
-              An illustrious circle of novelists, essayists, researchers, and historians whose works form the intellectual cornerstone of BookVerse Studio.
+              {t('home.authors.subtitle')}
             </p>
             <Link
               to="/authors"
               className="inline-flex items-center gap-1.5 text-xs font-editorial-sans font-bold uppercase tracking-[0.1em] text-[#212842] hover:text-[#181E33] transition-colors"
             >
-              <span>Explore Complete Author Index</span>
+              <span>{t('home.authors.exploreIndex')}</span>
               <ArrowUpRight className="w-4 h-4" />
             </Link>
           </div>

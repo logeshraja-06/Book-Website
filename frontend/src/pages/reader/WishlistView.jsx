@@ -6,8 +6,10 @@ import { useData } from '../../context/DataContext';
 import { formatPrice } from '../../utils/format';
 import BookCover from '../../components/book/BookCover';
 import DigitalReaderModal from '../../components/book/DigitalReaderModal';
+import { useTranslation } from 'react-i18next';
 
 export default function WishlistView() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { wishlistBooks, toggleWishlist, isBookPurchased, purchaseBook, activeReaderBook, setActiveReaderBook } = useData();
 
@@ -19,17 +21,17 @@ export default function WishlistView() {
         <div>
           <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#212842] font-bold block flex items-center gap-1.5 mb-1">
             <Bookmark className="w-3.5 h-3.5 text-[#212842] fill-[#212842]" />
-            Personal Reader Sanctuary
+            {t('reader.wishlist.eyebrow')}
           </span>
           <h2 className="font-editorial-serif text-3xl sm:text-4xl text-[#181616] font-bold">
-            Wishlist & Saved Titles
+            {t('reader.wishlist.title')}
           </h2>
           <p className="text-xs text-[#5F594F] mt-1 font-sans">
-            Curated manuscripts saved for future reading, contemplation, and library addition
+            {t('reader.wishlist.subtitle')}
           </p>
         </div>
         <span className="text-xs font-mono text-[#212842] font-bold bg-[#FFFDF3] px-3.5 py-1.5 rounded-full border border-[#D8CFAE] shadow-2xs">
-          {wishlistBooks.length} Earmarked Title(s)
+          {wishlistBooks.length} {t('reader.wishlist.titleCount', { count: wishlistBooks.length })}
         </span>
       </div>
 
@@ -86,7 +88,7 @@ export default function WishlistView() {
                         {formatPrice(price)}
                       </span>
                       <span className="text-[10px] text-[#212842] block font-mono font-bold uppercase tracking-wider">
-                        {isOwned ? 'Owned in Library' : 'Available for Purchase'}
+                        {isOwned ? t('reader.wishlist.owned') : t('reader.wishlist.availableForPurchase')}
                       </span>
                     </div>
 
@@ -113,7 +115,7 @@ export default function WishlistView() {
                           className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-md"
                         >
                           <BookOpen className="w-3.5 h-3.5" />
-                          <span>Read Now</span>
+                          <span>{t('reader.wishlist.readNow')}</span>
                         </motion.button>
                       ) : (
                         <motion.button
@@ -124,7 +126,7 @@ export default function WishlistView() {
                           className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-md"
                         >
                           <ShoppingBag className="w-3.5 h-3.5" />
-                          <span>Purchase</span>
+                          <span>{t('reader.wishlist.purchase')}</span>
                         </motion.button>
                       )}
                     </div>
@@ -147,10 +149,10 @@ export default function WishlistView() {
 
             <div className="space-y-1 max-w-md">
               <h3 className="font-editorial-serif text-2xl font-bold text-[#181616]">
-                Stories waiting to be discovered.
+                {t('reader.wishlist.emptyTitle')}
               </h3>
               <p className="text-xs text-[#5F594F] font-sans leading-relaxed">
-                Your wishlist is empty. Save books you wish to return to later, contemplate, or add to your permanent reading shelf.
+                {t('reader.wishlist.emptyDesc')}
               </p>
             </div>
 
@@ -159,7 +161,7 @@ export default function WishlistView() {
                 to="/books"
                 className="px-6 py-3 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-md inline-flex items-center gap-2"
               >
-                <span>Explore Books</span>
+                <span>{t('reader.wishlist.exploreBooks')}</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </motion.div>

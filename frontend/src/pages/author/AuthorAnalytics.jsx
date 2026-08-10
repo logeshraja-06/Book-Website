@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, useInView, useMotionValue, animate } from 'framer-motion';
 import { Users, Eye, Clock, Award, BarChart2, Feather, Sparkles } from 'lucide-react';
 import { apiFetch } from '../../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 function StatCounter({ target, prefix = '', suffix = '', decimals = 0 }) {
   const ref = useRef(null);
@@ -34,6 +35,7 @@ function StatCounter({ target, prefix = '', suffix = '', decimals = 0 }) {
 }
 
 export default function AuthorAnalytics() {
+  const { t } = useTranslation();
   const [analyticsData, setAnalyticsData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -71,10 +73,10 @@ export default function AuthorAnalytics() {
   const maxReads = Math.max(...monthlyReads.map((m) => m.reads));
 
   const stats = [
-    { label: 'Total Readers', value: totalReaders, sub: '+18% this month', icon: Users, isNum: true },
-    { label: 'Total Views', value: totalViews, sub: 'Across catalog manuscripts', icon: Eye, isNum: true },
-    { label: 'Avg Reading Time', value: avgTime, sub: 'Per reading session', icon: Clock, isNum: false },
-    { label: 'Completion Rate', value: completionRate, sub: 'High engagement score', icon: Award, isNum: true, suffix: '%' },
+    { label: t('author.analytics.statTotalReaders'), value: totalReaders, sub: t('author.analytics.statTotalReadersSub'), icon: Users, isNum: true },
+    { label: t('author.analytics.statTotalViews'), value: totalViews, sub: t('author.analytics.statTotalViewsSub'), icon: Eye, isNum: true },
+    { label: t('author.analytics.statAvgReadingTime'), value: avgTime, sub: t('author.analytics.statAvgReadingTimeSub'), icon: Clock, isNum: false },
+    { label: t('author.analytics.statCompletionRate'), value: completionRate, sub: t('author.analytics.statCompletionRateSub'), icon: Award, isNum: true, suffix: '%' },
   ];
 
   const containerVariants = {
@@ -101,13 +103,13 @@ export default function AuthorAnalytics() {
       <motion.div variants={itemVariants} className="border-b border-[#E7D9D3] pb-6 space-y-1">
         <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#212842] font-bold block flex items-center gap-1.5 mb-1">
           <Feather className="w-3.5 h-3.5 text-[#212842]" />
-          Imprint Performance & Metrics
+          {t('author.analytics.eyebrow')}
         </span>
         <h1 className="font-editorial-serif text-3xl sm:text-4xl text-[#2B2B2B] font-bold">
-          Author Readership Analytics
+          {t('author.analytics.title')}
         </h1>
         <p className="text-xs font-sans text-[#6B5E5E]">
-          Performance insights and monthly reader trends for your catalog titles.
+          {t('author.analytics.subtitle')}
         </p>
       </motion.div>
 
@@ -151,12 +153,12 @@ export default function AuthorAnalytics() {
           <div>
             <h3 className="font-editorial-serif text-xl font-bold text-[#2B2B2B] flex items-center gap-2">
               <BarChart2 className="w-5 h-5 text-[#212842]" />
-              Monthly Readership Trend
+              {t('author.analytics.trendTitle')}
             </h3>
-            <p className="text-xs font-sans text-[#6B5E5E]">Total unique reader sessions over 2026</p>
+            <p className="text-xs font-sans text-[#6B5E5E]">{t('author.analytics.trendSubtitle')}</p>
           </div>
           <span className="text-xs font-mono text-[#212842] font-bold bg-[#FFFDF3] px-3.5 py-1.5 rounded-full border border-[#E7D9D3]">
-            +32% Growth
+            {t('author.analytics.growthBadge')}
           </span>
         </div>
 

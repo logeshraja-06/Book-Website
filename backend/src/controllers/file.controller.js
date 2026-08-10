@@ -118,14 +118,14 @@ const streamManuscript = asyncHandler(async (req, res) => {
     return ApiResponse.error(res, 'Manuscript file not found', 404);
   }
 
-  let pdfRel = book.pdfPath || book.manuscriptUrl;
-  if (!pdfRel || !pdfRel.startsWith('/uploads/')) {
-    pdfRel = '/uploads/pdfs/sample-manuscript.pdf';
+  const pdfRel = book.pdfPath || book.manuscriptUrl;
+  if (!pdfRel || typeof pdfRel !== 'string' || !pdfRel.trim() || !pdfRel.startsWith('/uploads/')) {
+    return ApiResponse.error(res, 'No manuscript file has been uploaded for this book yet.', 404);
   }
 
   const absPath = path.join(__dirname, '../../', pdfRel.startsWith('/') ? pdfRel : `/${pdfRel}`);
   if (!fs.existsSync(absPath)) {
-    return ApiResponse.error(res, 'File missing on server disk', 404);
+    return ApiResponse.error(res, 'No manuscript file has been uploaded for this book yet.', 404);
   }
 
   res.set('Content-Type', 'application/pdf');
@@ -161,9 +161,9 @@ const downloadBookPdf = asyncHandler(async (req, res) => {
     }
   }
 
-  let pdfRel = book.pdfPath || book.manuscriptUrl;
-  if (!pdfRel || !pdfRel.startsWith('/uploads/')) {
-    pdfRel = '/uploads/pdfs/sample-manuscript.pdf';
+  const pdfRel = book.pdfPath || book.manuscriptUrl;
+  if (!pdfRel || typeof pdfRel !== 'string' || !pdfRel.trim() || !pdfRel.startsWith('/uploads/')) {
+    return ApiResponse.error(res, 'No PDF file available for this book.', 404);
   }
 
   const absPath = path.join(__dirname, '../../', pdfRel.startsWith('/') ? pdfRel : `/${pdfRel}`);

@@ -3,8 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { useData } from '../../context/DataContext';
+import { useTranslation } from 'react-i18next';
 
 export default function CategoriesPage() {
+  const { t } = useTranslation();
   const { categories: CATEGORIES, books: ALL_BOOKS } = useData();
   const navigate = useNavigate();
   const [hoveredCategory, setHoveredCategory] = useState(null);
@@ -14,13 +16,13 @@ export default function CategoriesPage() {
       <section className="border-b border-[#E9E5C8] bg-[#F5F5DA] pt-16 pb-14">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <span className="text-xs uppercase tracking-widest font-mono text-[#212842] font-bold block mb-2">
-            Taxonomy & Literary Index
+            {t('listing.categories.eyebrow')}
           </span>
           <h1 className="font-editorial-serif text-5xl sm:text-6xl text-[#211D1D] font-normal tracking-tight">
-            Table of Contents
+            {t('listing.categories.title')}
           </h1>
           <p className="text-base text-[#6B5E5E] max-w-2xl mt-4 leading-relaxed font-sans">
-            An editorial index of BookVerse Studio’s curated literary genres. Select any category row to explore titles, manuscript collections, and author perspectives.
+            {t('listing.categories.subtitle')}
           </p>
         </div>
       </section>
@@ -54,11 +56,11 @@ export default function CategoriesPage() {
                   <div className={`lg:col-span-7 space-y-6 ${isEven ? 'lg:order-2' : 'lg:order-1'}`}>
                     <div className="flex items-center gap-4">
                       <span className="font-mono text-xs text-[#212842] font-bold">
-                        CHAPTER 0{idx + 1}
+                        {t('listing.categories.chapter')} 0{idx + 1}
                       </span>
                       <span className="h-px w-12 bg-[#E9E5C8]" />
                       <span className="font-mono text-xs text-[#6B5E5E] uppercase tracking-widest">
-                        {matchingBooks.length || cat.count || 0} Titles Archived
+                        {matchingBooks.length || cat.count || 0} {t('listing.categories.titlesArchived')}
                       </span>
                     </div>
 
@@ -72,7 +74,7 @@ export default function CategoriesPage() {
 
                     <div className="pt-2">
                       <span className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#211D1D] font-bold group-hover:text-[#212842] transition-colors">
-                        <span>Explore {cat.name} Collection</span>
+                        <span>{t('listing.categories.exploreCollection')} {cat.name}</span>
                         <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                       </span>
                     </div>

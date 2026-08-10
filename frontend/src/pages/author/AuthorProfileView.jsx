@@ -20,6 +20,7 @@ import { useData } from '../../context/DataContext';
 import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
 import { handleImgError, DEFAULT_AVATAR, DEFAULT_BOOK_COVER } from '../../utils/imageFallback';
+import { useTranslation } from 'react-i18next';
 
 function StatCounter({ target, prefix = '', suffix = '', decimals = 0 }) {
   const ref = useRef(null);
@@ -52,6 +53,7 @@ function StatCounter({ target, prefix = '', suffix = '', decimals = 0 }) {
 }
 
 export default function AuthorProfileView() {
+  const { t } = useTranslation();
   const { currentUser, updateCurrentUser } = useAuth();
   const { books = [], studioBooks = [] } = useData();
 
@@ -123,10 +125,10 @@ export default function AuthorProfileView() {
           avatarUrl: formData.avatarUrl,
           handle: formData.handle
         });
-        showToast('success', 'Author imprint profile updated successfully');
+        showToast('success', t('author.profile.toastImprintUpdated'));
       }
     } catch (err) {
-      showToast('error', `Failed to save author profile: ${err.message}`);
+      showToast('error', `${t('author.profile.toastImprintFailed')} ${err.message}`);
     } finally {
       setIsLoading(false);
     }
@@ -135,10 +137,10 @@ export default function AuthorProfileView() {
   const handleSecuritySave = (e) => {
     e.preventDefault();
     if (securityData.newPassword !== securityData.confirmPassword) {
-      showToast('error', 'New passwords do not match');
+      showToast('error', t('author.profile.toastPasswordMismatch'));
       return;
     }
-    showToast('success', 'Security credentials updated successfully');
+    showToast('success', t('author.profile.toastSecurityUpdated'));
     setSecurityData({ currentPassword: '', newPassword: '', confirmPassword: '' });
   };
 
@@ -161,10 +163,10 @@ export default function AuthorProfileView() {
   };
 
   const tabs = [
-    { id: 'imprint', label: 'Imprint Credentials', icon: Feather },
-    { id: 'catalogue', label: 'Published Catalogue', icon: BookOpen },
-    { id: 'preferences', label: 'Publishing Preferences', icon: Sliders },
-    { id: 'security', label: 'Security & Access', icon: Key }
+    { id: 'imprint', label: t('author.profile.tabImprint'), icon: Feather },
+    { id: 'catalogue', label: t('author.profile.tabCatalogue'), icon: BookOpen },
+    { id: 'preferences', label: t('author.profile.tabPreferences'), icon: Sliders },
+    { id: 'security', label: t('author.profile.tabSecurity'), icon: Key }
   ];
 
   return (
@@ -200,13 +202,13 @@ export default function AuthorProfileView() {
         <div>
           <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#212842] font-bold flex items-center gap-1.5 mb-1">
             <Feather className="w-3.5 h-3.5 text-[#212842]" />
-            Writing Studio & Publishing Identity
+            {t('author.profile.consoleEyebrow')}
           </span>
           <h1 className="font-editorial-serif text-3xl sm:text-4xl font-normal text-[#181616]">
-            Author Profile & Settings
+            {t('author.profile.title')}
           </h1>
           <p className="text-xs text-[#5F594F] font-sans mt-0.5">
-            Configure your public writer biography, pen name, published catalogue, and imprint preferences
+            {t('author.profile.subtitle')}
           </p>
         </div>
 
@@ -278,7 +280,7 @@ export default function AuthorProfileView() {
                   </h3>
                   <span className="inline-flex items-center gap-1 px-3 py-0.5 rounded-full bg-[#F1EED2] border border-[#D8CFAE] text-[10px] font-mono text-[#212842] font-bold">
                     <ShieldCheck className="w-3 h-3 text-[#212842]" />
-                    Verified Studio Author
+                    {t('author.profile.verifiedAuthor')}
                   </span>
                 </div>
                 <p className="text-xs text-[#5F594F] font-mono">
@@ -294,34 +296,34 @@ export default function AuthorProfileView() {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 py-6 border-y border-[#DED7BD] bg-[#F8F6E5] rounded-2xl px-6">
               <div className="space-y-1">
                 <span className="text-[10px] uppercase font-mono tracking-widest text-[#827A6D] font-bold block flex items-center gap-1">
-                  <BookOpen className="w-3 h-3 text-[#212842]" /> Works
+                  <BookOpen className="w-3 h-3 text-[#212842]" /> {t('author.profile.statWorks')}
                 </span>
                 <StatCounter target={authorWorks.length || 5} />
-                <span className="text-[11px] text-[#5F594F] font-sans block">Published titles</span>
+                <span className="text-[11px] text-[#5F594F] font-sans block">{t('author.profile.statWorksSub')}</span>
               </div>
 
               <div className="space-y-1">
                 <span className="text-[10px] uppercase font-mono tracking-widest text-[#827A6D] font-bold block flex items-center gap-1">
-                  <Users className="w-3 h-3 text-[#212842]" /> Readers
+                  <Users className="w-3 h-3 text-[#212842]" /> {t('author.profile.statReaders')}
                 </span>
                 <StatCounter target={28400} />
-                <span className="text-[11px] text-[#5F594F] font-sans block">Cumulative reach</span>
+                <span className="text-[11px] text-[#5F594F] font-sans block">{t('author.profile.statReadersSub')}</span>
               </div>
 
               <div className="space-y-1">
                 <span className="text-[10px] uppercase font-mono tracking-widest text-[#827A6D] font-bold block flex items-center gap-1">
-                  <Star className="w-3 h-3 text-[#212842]" /> Rating
+                  <Star className="w-3 h-3 text-[#212842]" /> {t('author.profile.statRating')}
                 </span>
                 <StatCounter target={4.9} decimals={1} suffix=" ★" />
-                <span className="text-[11px] text-[#5F594F] font-sans block">Average feedback</span>
+                <span className="text-[11px] text-[#5F594F] font-sans block">{t('author.profile.statRatingSub')}</span>
               </div>
 
               <div className="space-y-1">
                 <span className="text-[10px] uppercase font-mono tracking-widest text-[#827A6D] font-bold block flex items-center gap-1">
-                  <FileText className="w-3 h-3 text-[#212842]" /> Manuscripts
+                  <FileText className="w-3 h-3 text-[#212842]" /> {t('author.profile.statManuscripts')}
                 </span>
                 <StatCounter target={8} />
-                <span className="text-[11px] text-[#5F594F] font-sans block">In editorial queue</span>
+                <span className="text-[11px] text-[#5F594F] font-sans block">{t('author.profile.statManuscriptsSub')}</span>
               </div>
             </div>
 
@@ -329,26 +331,26 @@ export default function AuthorProfileView() {
             <form onSubmit={handleSaveProfile} className="space-y-6 pt-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <Input
-                  label="Display Pen Name"
+                  label={t('author.profile.displayPenName')}
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   required
                 />
                 <Input
-                  label="Author Handle"
+                  label={t('author.profile.authorHandle')}
                   value={formData.handle}
                   onChange={(e) => setFormData({ ...formData, handle: e.target.value })}
                 />
               </div>
 
               <Input
-                label="Avatar Image URL"
+                label={t('author.profile.avatarUrl')}
                 value={formData.avatarUrl}
                 onChange={(e) => setFormData({ ...formData, avatarUrl: e.target.value })}
               />
 
               <Input
-                label="Public Author Biography"
+                label={t('author.profile.publicBio')}
                 type="textarea"
                 rows={4}
                 value={formData.bio}
@@ -358,7 +360,7 @@ export default function AuthorProfileView() {
               <div className="flex justify-end pt-4 border-t border-[#DED7BD]">
                 <Button type="submit" size="md" disabled={isLoading}>
                   <Save className="w-4 h-4 mr-2" />
-                  <span>{isLoading ? 'Saving Imprint…' : 'Save Imprint Changes'}</span>
+                  <span>{isLoading ? t('author.profile.savingImprint') : t('author.profile.saveImprintChanges')}</span>
                 </Button>
               </div>
             </form>
@@ -371,10 +373,10 @@ export default function AuthorProfileView() {
         <motion.div variants={itemVariants} className="p-8 sm:p-10 rounded-3xl bg-[#FFFDF3] border border-[#D8CFAE] shadow-md space-y-6">
           <div>
             <h3 className="font-editorial-serif text-2xl font-bold text-[#181616]">
-              Published Imprint Catalogue
+              {t('author.profile.catalogueTitle')}
             </h3>
             <p className="text-xs text-[#5F594F] font-sans mt-1">
-              Active published works curated under your author profile
+              {t('author.profile.catalogueSubtitle')}
             </p>
           </div>
 
@@ -407,17 +409,17 @@ export default function AuthorProfileView() {
         <motion.div variants={itemVariants} className="p-8 sm:p-10 rounded-3xl bg-[#FFFDF3] border border-[#D8CFAE] shadow-md space-y-8">
           <div>
             <h3 className="font-editorial-serif text-2xl font-bold text-[#181616]">
-              Author & Publishing Preferences
+              {t('author.profile.preferencesTitle')}
             </h3>
             <p className="text-xs text-[#5F594F] font-sans mt-1">
-              Configure genre taxonomy defaults, royalties payout, and manuscript submission notifications
+              {t('author.profile.preferencesSubtitle')}
             </p>
           </div>
 
           <div className="space-y-6">
             <div className="space-y-2">
               <label className="text-[10px] uppercase font-mono tracking-widest text-[#212842] block font-bold">
-                Primary Writing Genre Category
+                {t('author.profile.primaryGenre')}
               </label>
               <select
                 value={preferences.genreCategory}
@@ -432,13 +434,13 @@ export default function AuthorProfileView() {
             </div>
 
             <Input
-              label="Royalties Payout Method"
+              label={t('author.profile.royaltiesPayout')}
               value={preferences.royaltiesPayout}
               onChange={(e) => setPreferences({ ...preferences, royaltiesPayout: e.target.value })}
             />
 
             <Input
-              label="Default Copyright Holder Identity"
+              label={t('author.profile.copyrightHolder')}
               value={preferences.copyrightHolder}
               onChange={(e) => setPreferences({ ...preferences, copyrightHolder: e.target.value })}
             />
@@ -446,7 +448,7 @@ export default function AuthorProfileView() {
 
           <div className="pt-6 border-t border-[#DED7BD] flex justify-end">
             <Button size="md" onClick={() => showToast('success', 'Author publishing preferences saved')}>
-              Save Publishing Preferences
+              {t('author.profile.savePublishingPreferences')}
             </Button>
           </div>
         </motion.div>
@@ -457,29 +459,29 @@ export default function AuthorProfileView() {
         <motion.form variants={itemVariants} onSubmit={handleSecuritySave} className="p-8 sm:p-10 rounded-3xl bg-[#FFFDF3] border border-[#D8CFAE] shadow-md space-y-8">
           <div>
             <h3 className="font-editorial-serif text-2xl font-bold text-[#181616]">
-              Security & Credentials
+              {t('author.profile.securityTitle')}
             </h3>
             <p className="text-xs text-[#5F594F] font-sans mt-1">
-              Update password, review author email address, and manage security access
+              {t('author.profile.securitySubtitle')}
             </p>
           </div>
 
           <div className="space-y-6">
             <Input
-              label="Author Registered Email"
+              label={t('author.profile.registeredEmail')}
               value={formData.email}
               disabled
             />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <Input
-                label="New Password"
+                label={t('author.profile.newPassword')}
                 type="password"
                 value={securityData.newPassword}
                 onChange={(e) => setSecurityData({ ...securityData, newPassword: e.target.value })}
               />
               <Input
-                label="Confirm New Password"
+                label={t('author.profile.confirmNewPassword')}
                 type="password"
                 value={securityData.confirmPassword}
                 onChange={(e) => setSecurityData({ ...securityData, confirmPassword: e.target.value })}
@@ -489,7 +491,7 @@ export default function AuthorProfileView() {
 
           <div className="pt-6 border-t border-[#DED7BD] flex justify-end">
             <Button type="submit" size="md">
-              Save Security Changes
+              {t('author.profile.saveSecurityChanges')}
             </Button>
           </div>
         </motion.form>

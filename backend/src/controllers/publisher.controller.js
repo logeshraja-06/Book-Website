@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const Book = require('../models/Book');
 const Author = require('../models/Author');
 const User = require('../models/User');
@@ -6,6 +8,18 @@ const Bookmark = require('../models/Bookmark');
 const ApiResponse = require('../utils/apiResponse');
 const asyncHandler = require('../middleware/asyncHandler');
 const mongoose = require('mongoose');
+
+// Helper to check if manuscript exists on disk
+const checkHasManuscript = (book) => {
+  if (!book) return false;
+  const pdfRel = book.pdfPath || book.manuscriptUrl;
+  if (!pdfRel || typeof pdfRel !== 'string' || !pdfRel.trim()) {
+    return false;
+  }
+  const cleanRel = pdfRel.startsWith('/') ? pdfRel : `/${pdfRel}`;
+  const absPath = path.join(__dirname, '../../', cleanRel);
+  return fs.existsSync(absPath);
+};
 
 // Helper to resolve book ID
 const resolveBook = async (id) => {
@@ -30,7 +44,13 @@ const getReviewQueue = asyncHandler(async (req, res) => {
   console.log(`Manuscript IDs: ${queueBooks.map(b => b._id).join(', ')}`);
   console.log(`Statuses: ${queueBooks.map(b => b.status).join(', ')}`);
 
-  return ApiResponse.success(res, 'Review queue fetched successfully', queueBooks);
+  const enrichedQueue = queueBooks.map((book) => {
+    const bookObj = book.toObject ? book.toObject() : { ...book };
+    bookObj.hasManuscript = checkHasManuscript(book);
+    return bookObj;
+  });
+
+  return ApiResponse.success(res, 'Review queue fetched successfully', enrichedQueue);
 });
 
 // @desc    Get book details for publisher review
@@ -59,7 +79,10 @@ const getEditorialBookById = asyncHandler(async (req, res) => {
   console.log(`Previous status: ${prevStatus}`);
   console.log(`Current status: ${book.status}`);
 
-  return ApiResponse.success(res, 'Editorial book details fetched successfully', book);
+  const bookObj = book.toObject ? book.toObject() : { ...book };
+  bookObj.hasManuscript = checkHasManuscript(book);
+
+  return ApiResponse.success(res, 'Editorial book details fetched successfully', bookObj);
 });
 
 // @desc    Approve book submission (status -> Approved)

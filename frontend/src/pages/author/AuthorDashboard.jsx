@@ -4,6 +4,7 @@ import { motion, useInView, useMotionValue, animate } from 'framer-motion';
 import { BookOpen, Upload, Star, Eye, Users, ArrowUpRight, Clock, Activity, Sparkles, Feather } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useData } from '../../context/DataContext';
+import { useTranslation } from 'react-i18next';
 
 function StatCounter({ target, prefix = '', suffix = '', decimals = 0 }) {
   const ref = useRef(null);
@@ -36,6 +37,7 @@ function StatCounter({ target, prefix = '', suffix = '', decimals = 0 }) {
 }
 
 export default function AuthorDashboard() {
+  const { t } = useTranslation();
   const { currentUser } = useAuth();
   const { books = [], reviews = [] } = useData();
 
@@ -110,13 +112,13 @@ export default function AuthorDashboard() {
         <div className="space-y-2 relative z-10">
           <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#212842] font-bold block flex items-center gap-1.5">
             <Feather className="w-3.5 h-3.5 text-[#212842]" />
-            Author Publishing Studio & Workspace
+            {t('author.dashboard.eyebrow')}
           </span>
           <h1 className="font-editorial-serif text-3xl sm:text-4xl text-[#2B2B2B] font-bold">
-            Welcome back, {currentUser?.name || 'Kalki Krishnamurthy'}
+            {t('author.dashboard.welcomeBack')} {currentUser?.name || 'Kalki Krishnamurthy'}
           </h1>
           <p className="text-xs text-[#6B5E5E] font-sans max-w-xl">
-            Your manuscript catalog is live across the BookVerse reader ecosystem. Manage uploads, catalog entries, and reader analytics.
+            {t('author.dashboard.welcomeDesc')}
           </p>
         </div>
 
@@ -126,7 +128,7 @@ export default function AuthorDashboard() {
             className="px-6 py-3.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-md flex items-center gap-2"
           >
             <Upload className="w-4 h-4 text-[#F5F5DA]" />
-            <span>Upload New Book</span>
+            <span>{t('author.dashboard.uploadNewBook')}</span>
           </Link>
         </motion.div>
       </motion.div>
@@ -140,12 +142,12 @@ export default function AuthorDashboard() {
         >
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-mono uppercase tracking-widest text-[#212842] font-bold">
-              Total Books
+              {t('author.dashboard.statTotalBooks')}
             </span>
             <BookOpen className="w-4 h-4 text-[#212842]" />
           </div>
           <StatCounter target={displayBooksCount} />
-          <p className="text-[11px] font-mono text-[#6B5E5E]">Published & Drafts</p>
+          <p className="text-[11px] font-mono text-[#6B5E5E]">{t('author.dashboard.statTotalBooksSub')}</p>
         </motion.div>
 
         <motion.div
@@ -155,12 +157,12 @@ export default function AuthorDashboard() {
         >
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-mono uppercase tracking-widest text-[#212842] font-bold">
-              Total Readers
+              {t('author.dashboard.statTotalReaders')}
             </span>
             <Users className="w-4 h-4 text-[#212842]" />
           </div>
           <StatCounter target={12450} />
-          <p className="text-[11px] font-mono text-[#6B5E5E]">Across catalog works</p>
+          <p className="text-[11px] font-mono text-[#6B5E5E]">{t('author.dashboard.statTotalReadersSub')}</p>
         </motion.div>
 
         <motion.div
@@ -170,12 +172,12 @@ export default function AuthorDashboard() {
         >
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-mono uppercase tracking-widest text-[#212842] font-bold">
-              Average Rating
+              {t('author.dashboard.statAvgRating')}
             </span>
             <Star className="w-4 h-4 text-[#212842] fill-[#212842]" />
           </div>
           <StatCounter target={parseFloat(avgRating)} decimals={1} suffix=" ★" />
-          <p className="text-[11px] font-mono text-[#6B5E5E]">Derived from reader reviews</p>
+          <p className="text-[11px] font-mono text-[#6B5E5E]">{t('author.dashboard.statAvgRatingSub')}</p>
         </motion.div>
 
         <motion.div
@@ -185,12 +187,12 @@ export default function AuthorDashboard() {
         >
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-mono uppercase tracking-widest text-[#212842] font-bold">
-              Total Reads
+              {t('author.dashboard.statTotalReads')}
             </span>
             <Eye className="w-4 h-4 text-[#212842]" />
           </div>
           <StatCounter target={totalViews} />
-          <p className="text-[11px] font-mono text-[#6B5E5E]">Cumulative reader views</p>
+          <p className="text-[11px] font-mono text-[#6B5E5E]">{t('author.dashboard.statTotalReadsSub')}</p>
         </motion.div>
       </motion.div>
 
@@ -199,9 +201,9 @@ export default function AuthorDashboard() {
         <div className="flex items-center justify-between border-b border-[#E7D9D3] pb-4">
           <h3 className="font-editorial-serif text-xl font-bold text-[#2B2B2B] flex items-center gap-2">
             <Activity className="w-4.5 h-4.5 text-[#212842]" />
-            Recent Activity & Review Feed
+            {t('author.dashboard.activityTitle')}
           </h3>
-          <span className="text-xs font-mono text-[#6B5E5E]">Live catalog update feed</span>
+          <span className="text-xs font-mono text-[#6B5E5E]">{t('author.dashboard.activityFeedNote')}</span>
         </div>
 
         <div className="bg-gradient-to-br from-[#FFFDF3] to-[#F4EEEA] rounded-3xl border border-[#E7D9D3] divide-y divide-[#E7D9D3] shadow-sm overflow-hidden">
