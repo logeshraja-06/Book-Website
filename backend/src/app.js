@@ -28,10 +28,12 @@ const normalizeOrigin = (url) => (url ? url.replace(/\/+$/, '') : '');
 const rawAllowedOrigins = [
   env.FRONTEND_URL,
   env.CLIENT_ORIGIN,
+  'https://book-website-theta-five.vercel.app',
   'https://book-website-theta-one.vercel.app',
   'http://localhost:5173',
   'http://localhost:5174',
-  'http://localhost:5175'
+  'http://localhost:5175',
+  'http://localhost:3000'
 ];
 
 const allowedOrigins = Array.from(
@@ -40,11 +42,17 @@ const allowedOrigins = Array.from(
 
 const corsOptions = {
   origin: (origin, callback) => {
-    // Allow non-browser requests (Postman, curl, etc.) with no origin header
+    // Allow non-browser requests (Postman, curl, server-to-server) with no origin header
     if (!origin) return callback(null, true);
 
     const cleanOrigin = normalizeOrigin(origin);
-    if (allowedOrigins.includes(cleanOrigin)) {
+
+    // Check exact allowed origins or any Vercel deployment URL for book-website
+    if (
+      allowedOrigins.includes(cleanOrigin) ||
+      /^https:\/\/book-website-.*\.vercel\.app$/i.test(cleanOrigin) ||
+      cleanOrigin.endsWith('.vercel.app')
+    ) {
       return callback(null, true);
     }
     return callback(new Error('Not allowed by CORS'));
