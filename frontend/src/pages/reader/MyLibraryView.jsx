@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 
 export default function MyLibraryView() {
   const { t } = useTranslation();
-  const { libraryBookState, wishlistBooks, isBookPurchased, isBookInWishlist, toggleWishlist, toggleLibrary, activeReaderBook, setActiveReaderBook, fetchModuleData } = useData();
+  const { libraryBookState, wishlistBooks, isBookPurchased, isBookInWishlist, toggleWishlist, toggleLibrary, purchaseBook, activeReaderBook, setActiveReaderBook, fetchModuleData } = useData();
 
   const [activeTab, setActiveTab] = useState('currently_reading'); // 'currently_reading' | 'purchased' | 'completed' | 'wishlist'
 
@@ -110,17 +110,34 @@ export default function MyLibraryView() {
       <AnimatePresence mode="popLayout">
         {currentList.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {currentList.map((book, idx) => {
+            {currentList.map((rawBook, idx) => {
+              const bObj = rawBook.bookId && typeof rawBook.bookId === 'object' ? rawBook.bookId : null;
+              const book = bObj
+                ? {
+                    ...bObj,
+                    ...rawBook,
+                    _id: bObj._id || rawBook._id,
+                    id: bObj.id || bObj.slug || rawBook.id || rawBook.slug || bObj._id,
+                    slug: bObj.slug || rawBook.slug || bObj.id || rawBook.id,
+                    title: (bObj.title && bObj.title !== 'Literature') ? bObj.title : (rawBook.title && rawBook.title !== 'Literature' ? rawBook.title : 'Untitled Book'),
+                    author: bObj.author || rawBook.author || 'BookVerse Author',
+                    genre: bObj.genre || rawBook.genre || 'Literature',
+                    coverUrl: bObj.coverUrl || bObj.coverImage || rawBook.coverUrl || rawBook.coverImage || DEFAULT_BOOK_COVER,
+                    coverImage: bObj.coverImage || bObj.coverUrl || rawBook.coverImage || rawBook.coverUrl || DEFAULT_BOOK_COVER,
+                    price: bObj.price !== undefined ? bObj.price : (rawBook.price !== undefined ? rawBook.price : 499)
+                  }
+                : rawBook;
+
               const bookSlug = book.slug || book.id || book._id;
               const isWishlisted = isBookInWishlist(book);
               const rating = book.rating || 4.8;
-              const price = book.price || 499;
+              const price = book.price !== undefined ? book.price : 499;
               const isCompleted = (book.progress || 0) >= 100 || book.status === 'Completed';
               const hasBookmarks = (book.bookmarksCount || 0) > 0;
 
               return (
                 <motion.div
-                  key={`${book.id || book._id || 'lib'}-${idx}`}
+                  key={`${book._id || book.id || 'lib'}-${idx}`}
                   layout
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -178,31 +195,43 @@ export default function MyLibraryView() {
                         </div>
 
                         <h3 className="font-editorial-serif text-xl font-bold text-[#181616] mt-1 leading-snug group-hover:text-[#212842] transition-colors">
-                          {book.title}
+                          {book.title || 'Untitled Book'}
                         </h3>
-                        <p className="text-xs text-[#5F594F] mt-1 font-sans">By {book.author}</p>
+                        <p className="text-xs text-[#5F594F] mt-1 font-sans">By {book.author || 'BookVerse Author'}</p>
                       </div>
 
-                      {/* Reading Progress Bar */}
-                      <div className="space-y-2 pt-2 border-t border-[#DED7BD]">
-                        <div className="flex items-center justify-between text-xs font-mono">
-                          <span className="text-[#5F594F]">
-                            {t('reader.library.pageOf')} {book.currentPage || 1} {t('reader.library.of')} {book.totalPages || 20}
-                          </span>
-                          <span className="font-bold text-[#212842]">
-                            {book.progress || 0}{t('reader.library.percentRead')}
-                          </span>
-                        </div>
+                      {/* Reading Progress Bar (for shelf books) or Wishlist Meta */}
+                      {activeTab !== 'wishlist' ? (
+                        <div className="space-y-2 pt-2 border-t border-[#DED7BD]">
+                          <div className="flex items-center justify-between text-xs font-mono">
+                            <span className="text-[#5F594F]">
+                              {t('reader.library.pageOf')} {book.currentPage || 1} {t('reader.library.of')} {book.totalPages || book.pages || 350}
+                            </span>
+                            <span className="font-bold text-[#212842]">
+                              {book.progress || 0}{t('reader.library.percentRead')}
+                            </span>
+                          </div>
 
-                        <div className="w-full h-2.5 bg-[#F8F6E5] rounded-full overflow-hidden border border-[#D8CFAE] p-0.5">
-                          <motion.div
-                            initial={{ width: 0 }}
-                            animate={{ width: `${book.progress || 0}%` }}
-                            transition={{ duration: 0.8, delay: 0.2 + idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                            className="h-full bg-[#212842] rounded-full shadow-2xs"
-                          />
+                          <div className="w-full h-2.5 bg-[#F8F6E5] rounded-full overflow-hidden border border-[#D8CFAE] p-0.5">
+                            <motion.div
+                              initial={{ width: 0 }}
+                              animate={{ width: `${book.progress || 0}%` }}
+                              transition={{ duration: 0.8, delay: 0.2 + idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                              className="h-full bg-[#212842] rounded-full shadow-2xs"
+                            />
+                          </div>
                         </div>
-                      </div>
+                      ) : (
+                        <div className="pt-2 border-t border-[#DED7BD] flex items-center justify-between text-xs font-mono text-[#5F594F]">
+                          <div className="flex items-center gap-1">
+                            <Star className="w-3.5 h-3.5 text-[#212842] fill-[#212842]" />
+                            <span className="font-bold text-[#212842]">{rating} Rating</span>
+                          </div>
+                          <span className="text-[10px] uppercase font-bold text-[#212842]">
+                            {isBookPurchased(book) ? 'Owned in Shelf' : 'Available Edition'}
+                          </span>
+                        </div>
+                      )}
 
                       {/* Action Buttons */}
                       <div className="flex items-center justify-between gap-2 pt-2">
@@ -211,29 +240,70 @@ export default function MyLibraryView() {
                         </span>
 
                         <div className="flex items-center gap-2">
-                          <motion.button
-                            type="button"
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => handleDownloadPdf(book)}
-                            className="p-2.5 rounded-full border border-[#D8CFAE] bg-[#F8F6E5] text-[#181616] hover:text-[#212842] hover:border-[#212842] transition-colors shadow-2xs"
-                            title={t('reader.library.downloadPdf')}
-                          >
-                            <Download className="w-4 h-4" />
-                          </motion.button>
+                          {activeTab !== 'wishlist' ? (
+                            <>
+                              <motion.button
+                                type="button"
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() => handleDownloadPdf(book)}
+                                className="p-2.5 rounded-full border border-[#D8CFAE] bg-[#F8F6E5] text-[#181616] hover:text-[#212842] hover:border-[#212842] transition-colors shadow-2xs"
+                                title={t('reader.library.downloadPdf')}
+                              >
+                                <Download className="w-4 h-4" />
+                              </motion.button>
 
-                          <motion.button
-                            type="button"
-                            whileHover={{ scale: 1.03 }}
-                            whileTap={{ scale: 0.97 }}
-                            onClick={() => setActiveReaderBook(book)}
-                            className="px-4 py-2.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-md flex items-center gap-1.5"
-                          >
-                            <BookOpen className="w-3.5 h-3.5" />
-                            <span>
-                              {isCompleted ? t('reader.library.reread') : (book.progress || 0) > 0 ? t('reader.library.continueReading') : t('reader.library.readNow')}
-                            </span>
-                          </motion.button>
+                              <motion.button
+                                type="button"
+                                whileHover={{ scale: 1.03 }}
+                                whileTap={{ scale: 0.97 }}
+                                onClick={() => setActiveReaderBook(book)}
+                                className="px-4 py-2.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-md flex items-center gap-1.5"
+                              >
+                                <BookOpen className="w-3.5 h-3.5" />
+                                <span>
+                                  {isCompleted ? t('reader.library.reread') : (book.progress || 0) > 0 ? t('reader.library.continueReading') : t('reader.library.readNow')}
+                                </span>
+                              </motion.button>
+                            </>
+                          ) : (
+                            <>
+                              <motion.button
+                                type="button"
+                                whileHover={{ scale: 1.08 }}
+                                whileTap={{ scale: 0.92 }}
+                                onClick={() => toggleWishlist(book)}
+                                className="p-2.5 rounded-full border border-[#D8CFAE] bg-[#F8F6E5] text-[#5F594F] hover:text-rose-600 hover:border-rose-300 transition-colors shadow-2xs"
+                                title="Remove from Wishlist"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </motion.button>
+
+                              {isBookPurchased(book) ? (
+                                <motion.button
+                                  type="button"
+                                  whileHover={{ scale: 1.03 }}
+                                  whileTap={{ scale: 0.97 }}
+                                  onClick={() => setActiveReaderBook(book)}
+                                  className="px-4 py-2.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-md flex items-center gap-1.5"
+                                >
+                                  <BookOpen className="w-3.5 h-3.5" />
+                                  <span>{t('reader.wishlist.readNow')}</span>
+                                </motion.button>
+                              ) : (
+                                <motion.button
+                                  type="button"
+                                  whileHover={{ scale: 1.03 }}
+                                  whileTap={{ scale: 0.97 }}
+                                  onClick={() => purchaseBook(book, price)}
+                                  className="px-4 py-2.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#181E33] transition-colors shadow-md flex items-center gap-1.5"
+                                >
+                                  <ShoppingBag className="w-3.5 h-3.5" />
+                                  <span>{t('reader.wishlist.purchase')}</span>
+                                </motion.button>
+                              )}
+                            </>
+                          )}
                         </div>
                       </div>
 

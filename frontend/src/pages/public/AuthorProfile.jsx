@@ -176,7 +176,7 @@ export default function AuthorProfile() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
               {books.map((book, idx) => (
                 <AuthorBookCard
-                  key={book.slug || book.id || book._id || idx}
+                  key={`${book.slug || book.id || book._id || 'author-bk'}-${idx}`}
                   book={book}
                   index={idx}
                 />

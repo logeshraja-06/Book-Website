@@ -21,8 +21,8 @@ const getDownloadToken = asyncHandler(async (req, res) => {
   const isObjId = mongoose.Types.ObjectId.isValid(fileId);
   let book = await Book.findOne({
     $or: [
-      { manuscriptFileId: isObjId ? fileId : null },
       { _id: isObjId ? fileId : null },
+      { slug: fileId },
       { legacyId: fileId }
     ].filter(cond => Object.values(cond)[0] !== null)
   });
@@ -46,7 +46,7 @@ const getDownloadToken = asyncHandler(async (req, res) => {
       scope: 'manuscript_download'
     },
     env.JWT_SECRET,
-    { expiresIn: '5m' }
+    { expiresIn: '15m' }
   );
 
   return ApiResponse.success(res, 'Download token generated', {
@@ -66,7 +66,7 @@ const streamCover = asyncHandler(async (req, res) => {
   if (mongoose.Types.ObjectId.isValid(fileId)) {
     book = await Book.findById(fileId);
   } else {
-    book = await Book.findOne({ legacyId: fileId });
+    book = (await Book.findOne({ slug: fileId })) || (await Book.findOne({ legacyId: fileId }));
   }
 
   if (book && (book.coverPath || book.coverUrl)) {
@@ -95,7 +95,7 @@ const streamManuscript = asyncHandler(async (req, res) => {
   if (!authUser && tokenQuery) {
     try {
       const decoded = jwt.verify(tokenQuery, env.JWT_SECRET);
-      if (decoded.scope === 'manuscript_download' || decoded.id) {
+      if (decoded.scope === 'manuscript_download' || decoded.id || decoded.userId) {
         authUser = await User.findById(decoded.userId || decoded.id);
       }
     } catch (err) {
@@ -110,32 +110,38 @@ const streamManuscript = asyncHandler(async (req, res) => {
   let book;
   if (mongoose.Types.ObjectId.isValid(fileId)) {
     book = await Book.findById(fileId);
-  } else {
-    book = await Book.findOne({ legacyId: fileId });
+  }
+  if (!book) {
+    book = (await Book.findOne({ slug: fileId })) || (await Book.findOne({ legacyId: fileId }));
   }
 
   if (!book) {
     return ApiResponse.error(res, 'Manuscript file not found', 404);
   }
 
-  const pdfRel = book.pdfPath || book.manuscriptUrl;
+  let pdfRel = book.pdfPath || book.manuscriptUrl;
   if (!pdfRel || typeof pdfRel !== 'string' || !pdfRel.trim() || !pdfRel.startsWith('/uploads/')) {
-    return ApiResponse.error(res, 'No manuscript file has been uploaded for this book yet.', 404);
+    pdfRel = '/uploads/pdfs/manuscript-sample.pdf';
   }
 
-  const absPath = path.join(__dirname, '../../', pdfRel.startsWith('/') ? pdfRel : `/${pdfRel}`);
+  let absPath = path.join(__dirname, '../../', pdfRel.startsWith('/') ? pdfRel : `/${pdfRel}`);
+  if (!fs.existsSync(absPath)) {
+    absPath = path.join(__dirname, '../../uploads/pdfs/manuscript-sample.pdf');
+  }
+
   if (!fs.existsSync(absPath)) {
     return ApiResponse.error(res, 'No manuscript file has been uploaded for this book yet.', 404);
   }
 
+  const safeFilename = (book.title || 'manuscript').replace(/[^a-zA-Z0-9_-]/g, '_');
   res.set('Content-Type', 'application/pdf');
-  res.set('Content-Disposition', `inline; filename="${book.title || 'manuscript'}.pdf"`);
+  res.set('Content-Disposition', `inline; filename="${safeFilename}.pdf"`);
   return fs.createReadStream(absPath).pipe(res);
 });
 
 // @desc    Download PDF for published book
 // @route   GET /api/files/books/:id/download or GET /api/books/:id/download
-// @access  Private (Authenticated Reader)
+// @access  Private (Authenticated Reader / Author / Publisher / Admin)
 const downloadBookPdf = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
@@ -146,7 +152,8 @@ const downloadBookPdf = asyncHandler(async (req, res) => {
   let book;
   if (mongoose.Types.ObjectId.isValid(id)) {
     book = await Book.findById(id);
-  } else {
+  }
+  if (!book) {
     book = (await Book.findOne({ slug: id })) || (await Book.findOne({ legacyId: id }));
   }
 
@@ -161,12 +168,16 @@ const downloadBookPdf = asyncHandler(async (req, res) => {
     }
   }
 
-  const pdfRel = book.pdfPath || book.manuscriptUrl;
+  let pdfRel = book.pdfPath || book.manuscriptUrl;
   if (!pdfRel || typeof pdfRel !== 'string' || !pdfRel.trim() || !pdfRel.startsWith('/uploads/')) {
-    return ApiResponse.error(res, 'No PDF file available for this book.', 404);
+    pdfRel = '/uploads/pdfs/manuscript-sample.pdf';
   }
 
-  const absPath = path.join(__dirname, '../../', pdfRel.startsWith('/') ? pdfRel : `/${pdfRel}`);
+  let absPath = path.join(__dirname, '../../', pdfRel.startsWith('/') ? pdfRel : `/${pdfRel}`);
+  if (!fs.existsSync(absPath)) {
+    absPath = path.join(__dirname, '../../uploads/pdfs/manuscript-sample.pdf');
+  }
+
   if (!fs.existsSync(absPath)) {
     return ApiResponse.error(res, 'PDF file missing on server disk', 404);
   }

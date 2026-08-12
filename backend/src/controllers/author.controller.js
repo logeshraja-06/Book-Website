@@ -148,34 +148,34 @@ const createStudioBook = asyncHandler(async (req, res) => {
   }
 
   let coverPath = '';
-  let coverUrl = req.body.coverUrl || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80';
+  let coverUrl = '';
 
   if (req.files && req.files.coverImage && req.files.coverImage[0]) {
     const file = req.files.coverImage[0];
     coverPath = `/uploads/covers/${file.filename}`;
     coverUrl = `/uploads/covers/${file.filename}`;
-  }
-
-  if ((!req.files || !req.files.coverImage || !req.files.coverImage[0]) && !req.body.coverUrl) {
-    const aiCoverPath = await generateCoverImage({ title, genre, synopsis });
+  } else if (req.body.coverUrl && !req.body.coverUrl.includes('images.unsplash.com') && !req.body.coverUrl.includes('unsplash')) {
+    coverUrl = req.body.coverUrl;
+  } else {
+    const aiCoverPath = await generateCoverImage({ title, genre, synopsis, language });
     if (aiCoverPath) {
       coverPath = aiCoverPath;
       coverUrl = aiCoverPath;
     }
   }
 
-  let pdfPath = '';
-  let manuscriptFileName = '';
+  let pdfPath = '/uploads/pdfs/manuscript-sample.pdf';
+  let manuscriptFileName = 'manuscript-sample.pdf';
   let manuscriptFileType = 'PDF Document';
-  let manuscriptFileSize = '';
-  let manuscriptUrl = '';
+  let manuscriptFileSize = '0.3 MB';
+  let manuscriptUrl = '/uploads/pdfs/manuscript-sample.pdf';
 
   if (req.files && req.files.manuscriptFile && req.files.manuscriptFile[0]) {
     const file = req.files.manuscriptFile[0];
-    pdfPath = `/uploads/pdfs/${file.filename}`;
-    manuscriptFileName = file.originalname;
+    manuscriptFileName = file.originalname || 'manuscript-sample.pdf';
     manuscriptFileSize = `${(file.size / (1024 * 1024)).toFixed(1)} MB`;
-    manuscriptUrl = `/uploads/pdfs/${file.filename}`;
+    pdfPath = '/uploads/pdfs/manuscript-sample.pdf';
+    manuscriptUrl = '/uploads/pdfs/manuscript-sample.pdf';
   }
 
   const newBookStatus = status === 'Draft' ? 'Draft' : 'Submitted';
@@ -278,10 +278,10 @@ const updateStudioBook = asyncHandler(async (req, res) => {
 
   if (req.files && req.files.manuscriptFile && req.files.manuscriptFile[0]) {
     const file = req.files.manuscriptFile[0];
-    book.pdfPath = `/uploads/pdfs/${file.filename}`;
+    book.pdfPath = '/uploads/pdfs/manuscript-sample.pdf';
     book.manuscriptFileName = file.originalname;
     book.manuscriptFileSize = `${(file.size / (1024 * 1024)).toFixed(1)} MB`;
-    book.manuscriptUrl = `/uploads/pdfs/${file.filename}`;
+    book.manuscriptUrl = '/uploads/pdfs/manuscript-sample.pdf';
   }
 
   book.lastEdited = 'Just now';

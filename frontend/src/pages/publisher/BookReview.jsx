@@ -42,7 +42,7 @@ export default function BookReview() {
   useEffect(() => {
     let isMounted = true;
     const fetchManuscriptToken = async () => {
-      if (!book || !book.hasManuscript || !targetId) {
+      if (!book || !targetId) {
         setManuscriptViewUrl(null);
         setManuscriptLoading(false);
         setManuscriptError(null);
@@ -77,7 +77,7 @@ export default function BookReview() {
     return () => {
       isMounted = false;
     };
-  }, [targetId, book?.hasManuscript]);
+  }, [targetId, book?.id, book?._id]);
 
   if (!book) {
     return (

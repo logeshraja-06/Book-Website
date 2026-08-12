@@ -22,13 +22,13 @@ export default function AuthorUploadWizard() {
     genre: 'Historical Fiction',
     language: 'Tamil',
     price: 499,
-    coverUrl: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80',
+    coverFile: null,
     pdfFile: null,
     pdfFileName: 'manuscript-submission.pdf',
     pdfFileSize: '4.8 MB',
   });
 
-  const [coverPreview, setCoverPreview] = useState(formData.coverUrl);
+  const [coverPreview, setCoverPreview] = useState(null);
 
   const handleNext = (e) => {
     if (e) e.preventDefault();
@@ -52,7 +52,7 @@ export default function AuthorUploadWizard() {
       genre: formData.genre,
       synopsis: formData.description || 'No description provided.',
       price: Number(formData.price) || 499,
-      coverUrl: coverPreview,
+      coverUrl: null,
       coverFile: formData.coverFile || null,
       pdfFile: formData.pdfFile || null,
       manuscriptFile: formData.pdfFile || null,
@@ -88,13 +88,12 @@ export default function AuthorUploadWizard() {
     e.preventDefault();
     const file = e.dataTransfer?.files[0] || e.target.files?.[0];
     if (file) {
-      const fileUrl = URL.createObjectURL(file);
       setFormData((prev) => ({
         ...prev,
         pdfFile: file,
         pdfFileName: file.name,
         pdfFileSize: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
-        manuscriptUrl: fileUrl,
+        manuscriptUrl: null
       }));
     }
   };
@@ -291,8 +290,16 @@ export default function AuthorUploadWizard() {
 
                   {/* Cover Preview Tile */}
                   <div className="sm:col-span-4 flex justify-center">
-                    <div className="w-28 aspect-[2/3] rounded-2xl overflow-hidden shadow-xl border border-[#E7D9D3] bg-[#FFFDF3] group hover:rotate-1 transition-transform">
-                      <img src={coverPreview} alt="Cover Preview" className="w-full h-full object-cover" />
+                    <div className="w-28 aspect-[2/3] rounded-2xl overflow-hidden shadow-xl border border-[#E7D9D3] bg-[#FAF8F6] group hover:rotate-1 transition-transform flex items-center justify-center">
+                      {coverPreview ? (
+                        <img src={coverPreview} alt="Cover Preview" className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full flex flex-col items-center justify-center p-3 text-center text-[#212842]">
+                          <Sparkles className="w-6 h-6 text-[#212842] mb-1.5 animate-pulse" />
+                          <span className="text-[9px] font-mono font-bold uppercase tracking-wider">AI Cover</span>
+                          <span className="text-[8px] font-mono opacity-60 mt-0.5">Auto-Generated</span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -375,8 +382,16 @@ export default function AuthorUploadWizard() {
 
               {/* Preview Card */}
               <div className="p-6 rounded-3xl bg-[#FFFDF3] border border-[#E7D9D3] flex flex-col sm:flex-row items-start gap-6 shadow-sm">
-                <div className="w-32 aspect-[2/3] rounded-2xl overflow-hidden shadow-xl border border-[#E7D9D3] shrink-0 mx-auto sm:mx-0">
-                  <img src={coverPreview} alt="Cover Preview" className="w-full h-full object-cover" />
+                <div className="w-32 aspect-[2/3] rounded-2xl overflow-hidden shadow-xl border border-[#E7D9D3] bg-[#FAF8F6] shrink-0 mx-auto sm:mx-0 flex items-center justify-center">
+                  {coverPreview ? (
+                    <img src={coverPreview} alt="Cover Preview" className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full flex flex-col items-center justify-center p-3 text-center text-[#212842]">
+                      <Sparkles className="w-7 h-7 text-[#212842] mb-2 animate-pulse" />
+                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider">AI Editorial Cover</span>
+                      <span className="text-[8px] font-mono opacity-60 mt-1">Generated on Submit</span>
+                    </div>
+                  )}
                 </div>
 
                 <div className="space-y-3 min-w-0 flex-1">

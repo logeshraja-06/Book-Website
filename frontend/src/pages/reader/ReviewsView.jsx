@@ -99,7 +99,7 @@ export default function ReviewsView() {
               const bookTitle = book.title || rev.bookTitle || 'Book';
               const bookId = book._id || book.id || rev.bookId;
               const author = book.author || rev.author || 'Author';
-              const coverUrl = book.coverImage || book.coverUrl || rev.coverUrl || '/books/ponniyin-selvan.jpg';
+              const coverUrl = book.coverImage || book.coverUrl || rev.coverUrl || '/assets/books/ponniyin-selvan.webp';
 
               return (
                 <motion.div

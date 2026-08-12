@@ -420,7 +420,8 @@ const regenerateBookCover = asyncHandler(async (req, res) => {
   const aiCoverPath = await generateCoverImage({
     title: book.title,
     genre: book.genre,
-    synopsis: book.synopsis
+    synopsis: book.synopsis,
+    language: book.language
   });
 
   if (!aiCoverPath) {

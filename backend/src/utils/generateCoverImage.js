@@ -6,9 +6,11 @@ const path = require('path');
  * and saves it to /uploads/covers on disk. Returns the relative path (e.g. '/uploads/covers/xxx.jpg')
  * on success, or null if generation is unavailable/fails (caller must handle fallback).
  */
-const generateCoverImage = async ({ title, genre, synopsis }) => {
+const generateCoverImage = async ({ title, genre, synopsis, language }) => {
   try {
-    const promptText = `Design an elegant, professional hardcover book cover illustration for a book titled "${title}", genre: ${genre || 'Literary Fiction'}. Theme/synopsis context: ${(synopsis || '').slice(0, 200)}. Style: premium literary publishing house cover art, no text or typography on the image, painterly and evocative, portrait orientation, warm ivory and navy color palette.`;
+    const langContext = language ? `, setting/language: ${language}` : '';
+    const synopsisExcerpt = synopsis ? synopsis.slice(0, 250) : 'An evocative literary masterpiece';
+    const promptText = `Design an elegant, museum-grade hardcover book cover illustration for a book titled "${title}", genre: ${genre || 'Literary Fiction'}${langContext}. Theme/synopsis context: ${synopsisExcerpt}. Style: premium literary publishing house cover art, painterly and evocative, portrait 3:4 orientation, refined palette with warm ivory, midnight navy, and rich ochre, typography-free art composition, award-winning book jacket aesthetics.`;
 
     const encodedPrompt = encodeURIComponent(promptText);
     const pollinationsUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=768&height=1024&nologo=true&seed=${Math.floor(Math.random() * 1e9)}`;

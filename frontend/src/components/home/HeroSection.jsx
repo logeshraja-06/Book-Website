@@ -504,7 +504,7 @@ export default function HeroSection() {
               const rotate = rotationFor(idx);
               const lift = liftFor(idx);
               return (
-                <div key={slug || idx} className="hero-shelf-item shrink-0" style={{ marginBottom: `${lift}px` }}>
+                <div key={`${slug || 'hero-shelf'}-${idx}`} className="hero-shelf-item shrink-0" style={{ marginBottom: `${lift}px` }}>
                   <Link
                     to={`/books/${slug}`}
                     className="hero-shelf-book hero-float-slow block relative"

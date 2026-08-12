@@ -3,6 +3,7 @@ const Author = require('../models/Author');
 const ApiResponse = require('../utils/apiResponse');
 const asyncHandler = require('../middleware/asyncHandler');
 const slugify = require('../utils/slugify');
+const generateCoverImage = require('../utils/generateCoverImage');
 const mongoose = require('mongoose');
 
 // Helper to generate unique book slug
@@ -165,12 +166,20 @@ const uploadBook = asyncHandler(async (req, res) => {
   }
 
   let coverPath = '';
-  let coverUrl = req.body.coverUrl || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80';
+  let coverUrl = '';
 
   if (req.files && req.files.coverImage && req.files.coverImage[0]) {
     const file = req.files.coverImage[0];
     coverPath = `/uploads/covers/${file.filename}`;
     coverUrl = `/uploads/covers/${file.filename}`;
+  } else if (req.body.coverUrl && !req.body.coverUrl.includes('images.unsplash.com') && !req.body.coverUrl.includes('unsplash')) {
+    coverUrl = req.body.coverUrl;
+  } else {
+    const aiCoverPath = await generateCoverImage({ title, genre, synopsis, language });
+    if (aiCoverPath) {
+      coverPath = aiCoverPath;
+      coverUrl = aiCoverPath;
+    }
   }
 
   let pdfPath = '';

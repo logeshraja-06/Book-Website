@@ -27,10 +27,8 @@ const getLibrary = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id).populate('library.bookId');
 
   const libraryWithProgress = await Promise.all(
-    (user.library || []).map(async (item) => {
+    (user.library || []).filter((item) => item && item.bookId).map(async (item) => {
       const bObj = item.bookId;
-      if (!bObj) return item;
-
       const targetBookId = bObj._id || bObj;
 
       // Query real ReadingProgress from MongoDB
@@ -40,10 +38,10 @@ const getLibrary = asyncHandler(async (req, res) => {
       const bmCount = await Bookmark.countDocuments({ userId: req.user._id, bookId: targetBookId });
 
       const curPage = progDoc?.currentPage || item.currentPage || 1;
-      const totPages = progDoc?.totalPages || item.totalPages || bObj.pages || 20;
-      const progPct = progDoc?.progressPercent !== undefined ? progDoc.progressPercent : Math.min(100, Math.round((curPage / totPages) * 100));
+      const totPages = progDoc?.totalPages || item.totalPages || bObj.pages || 350;
+      const progPct = progDoc?.progressPercent !== undefined ? progDoc.progressPercent : (item.progress !== undefined ? item.progress : Math.min(100, Math.round((curPage / totPages) * 100)));
       const statusStr = progPct >= 100 ? 'Completed' : (progDoc?.status || item.status || 'Currently Reading');
-      const lastReadDate = progDoc?.lastReadAt || item.updatedAt || item.createdAt;
+      const lastReadDate = progDoc?.lastReadAt || item.lastRead || item.updatedAt || item.createdAt || 'Recently';
 
       return {
         _id: item._id,

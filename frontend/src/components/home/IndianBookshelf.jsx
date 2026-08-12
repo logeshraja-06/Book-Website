@@ -44,7 +44,7 @@ export default function IndianBookshelf() {
             const bookSlug = book.slug || book.id || book._id;
             return (
               <motion.div
-                key={bookSlug || idx}
+                key={`${bookSlug || 'ind-shelf'}-${idx}`}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}

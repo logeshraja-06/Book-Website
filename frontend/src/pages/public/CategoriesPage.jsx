@@ -85,7 +85,7 @@ export default function CategoriesPage() {
                       {matchingBooks.length > 0 ? (
                         matchingBooks.slice(0, 3).map((book, bIdx) => (
                           <motion.div
-                            key={book.id || book._id}
+                            key={`${book.slug || book.id || book._id || 'cat-bk'}-${bIdx}`}
                             animate={{
                               y: isHovered ? (bIdx === 1 ? -12 : 0) : 0,
                               scale: isHovered ? 1.05 : 1,

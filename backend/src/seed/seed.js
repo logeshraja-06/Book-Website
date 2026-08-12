@@ -2001,9 +2001,11 @@ const seedDB = async () => {
     // 7. Seed Initial Wishlist & Library for Reader User
     const psVol1Id = bookMap['ps-vol1'];
     const psychId = bookMap['psychology-of-money'];
+    const malgudiId = bookMap['malgudi-days'];
+    const habitsId = bookMap['atomic-habits'];
 
-    if (psVol1Id && psychId) {
-      readerUser.wishlistBookIds = [psychId];
+    if (psVol1Id && psychId && malgudiId) {
+      readerUser.wishlistBookIds = habitsId ? [habitsId] : [psychId];
       readerUser.library = [
         {
           bookId: psVol1Id,
@@ -2012,6 +2014,22 @@ const seedDB = async () => {
           totalPages: 540,
           status: 'Currently Reading',
           lastRead: 'Yesterday'
+        },
+        {
+          bookId: psychId,
+          progress: 100,
+          currentPage: 252,
+          totalPages: 252,
+          status: 'Completed',
+          lastRead: '2 weeks ago'
+        },
+        {
+          bookId: malgudiId,
+          progress: 55,
+          currentPage: 143,
+          totalPages: 260,
+          status: 'Currently Reading',
+          lastRead: '3 days ago'
         }
       ];
       await readerUser.save();

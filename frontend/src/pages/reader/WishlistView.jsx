@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bookmark, Trash2, ArrowRight, BookOpen, Star, ShoppingBag, Eye } from 'lucide-react';
+import { Bookmark, Trash2, ArrowRight, BookOpen, Star, ShoppingBag, Eye, CheckCircle2, Sparkles } from 'lucide-react';
 import { useData } from '../../context/DataContext';
 import { formatPrice } from '../../utils/format';
 import BookCover from '../../components/book/BookCover';
@@ -30,7 +30,7 @@ export default function WishlistView() {
             {t('reader.wishlist.subtitle')}
           </p>
         </div>
-        <span className="text-xs font-mono text-[#212842] font-bold bg-[#FFFDF3] px-3.5 py-1.5 rounded-full border border-[#D8CFAE] shadow-2xs">
+        <span className="text-xs font-mono text-[#212842] font-bold bg-[#FFFDF3] px-4 py-2 rounded-full border border-[#D8CFAE] shadow-2xs">
           {wishlistBooks.length} {t('reader.wishlist.titleCount', { count: wishlistBooks.length })}
         </span>
       </div>
@@ -43,38 +43,62 @@ export default function WishlistView() {
               const bookSlug = book.slug || book.id || book._id;
               const categoryName = book.genre || book.category || 'General';
               const rating = book.rating || 4.8;
-              const price = book.price || 499;
+              const price = book.price !== undefined ? book.price : 499;
               const isOwned = isBookPurchased(book);
 
               return (
                 <motion.div
                   key={`${bookSlug}-${idx}`}
                   layout
-                  initial={{ opacity: 0, scale: 0.95, y: 16 }}
+                  initial={{ opacity: 0, scale: 0.96, y: 14 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.35, delay: idx * 0.05, ease: [0.16, 1, 0.3, 1] }}
-                  className="bg-[#FFFDF3] rounded-3xl p-6 border border-[#D8CFAE] hover:border-[#212842] shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between h-full group"
+                  exit={{ opacity: 0, scale: 0.92 }}
+                  transition={{ duration: 0.35, delay: idx * 0.04, ease: [0.16, 1, 0.3, 1] }}
+                  className="bg-[#FFFDF3] rounded-3xl p-6 border border-[#D8CFAE] hover:border-[#212842] shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between h-full group relative"
                 >
                   <div>
                     {/* Cover & Rating Badge */}
-                    <div className="relative mb-4 block">
+                    <div className="relative mb-5 block overflow-hidden rounded-2xl border border-[#D8CFAE] bg-[#F8F6E5] shadow-inner">
                       <Link to={`/books/${bookSlug}`} className="block">
                         <BookCover book={book} imageClassName="group-hover:scale-105 transition-transform duration-500" />
                       </Link>
 
-                      <div className="absolute top-3.5 left-3.5 px-2.5 py-1 rounded-full bg-[#F5F5DA]/95 text-[10px] uppercase tracking-[0.14em] font-editorial-sans text-[#212842] font-bold border border-[#D8CFAE] flex items-center gap-1">
+                      {/* Top-Left Rating Pill */}
+                      <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-[#F5F5DA]/95 backdrop-blur-xs text-[10px] uppercase tracking-[0.14em] font-editorial-sans text-[#212842] font-bold border border-[#D8CFAE] flex items-center gap-1 shadow-xs">
                         <Star className="w-3 h-3 text-[#212842] fill-[#212842]" />
                         <span>{rating}</span>
                       </div>
+
+                      {/* Top-Right Bookmark Toggle Action */}
+                      <motion.button
+                        type="button"
+                        whileHover={{ scale: 1.15 }}
+                        whileTap={{ scale: 0.85 }}
+                        onClick={() => toggleWishlist(book)}
+                        className="absolute top-3 right-3 p-2 rounded-full bg-[#F5F5DA]/95 backdrop-blur-xs border border-[#D8CFAE] text-[#212842] shadow-xs hover:bg-[#FFFDF3] transition-all"
+                        title="Remove from Wishlist"
+                      >
+                        <Bookmark className="w-3.5 h-3.5 fill-[#212842] text-[#212842]" />
+                      </motion.button>
+
+                      {/* Bottom Status Pill */}
+                      <div className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-none">
+                        <span className={`px-2.5 py-1 rounded-full text-[9px] font-mono font-bold uppercase tracking-wider shadow-xs backdrop-blur-xs border ${
+                          isOwned
+                            ? 'bg-emerald-950/85 text-emerald-200 border-emerald-500/30'
+                            : 'bg-[#181616]/85 text-[#F5F5DA] border-[#D8CFAE]/30'
+                        }`}>
+                          {isOwned ? t('reader.wishlist.owned') : t('reader.wishlist.availableForPurchase')}
+                        </span>
+                      </div>
                     </div>
 
-                    <span className="text-[10px] uppercase font-mono tracking-widest text-[#212842] font-bold">
+                    <span className="text-[10px] uppercase font-mono tracking-widest text-[#212842] font-bold block">
                       {categoryName}
                     </span>
                     
                     <Link to={`/books/${bookSlug}`}>
-                      <h3 className="font-editorial-serif text-xl font-bold text-[#181616] mt-1 line-clamp-1 group-hover:text-[#212842] transition-colors leading-snug">
+                      <h3 className="font-editorial-serif text-xl sm:text-2xl font-bold text-[#181616] mt-1 line-clamp-1 group-hover:text-[#212842] transition-colors leading-snug">
                         {book.title}
                       </h3>
                     </Link>
@@ -82,13 +106,13 @@ export default function WishlistView() {
                   </div>
 
                   {/* Pricing & Actions */}
-                  <div className="pt-4 mt-6 border-t border-[#DED7BD] flex items-center justify-between">
+                  <div className="pt-4 mt-6 border-t border-[#DED7BD] flex items-center justify-between gap-2">
                     <div>
-                      <span className="font-editorial-sans font-tabular text-[17px] font-bold tracking-tight text-[#181616]">
+                      <span className="font-editorial-sans font-tabular text-lg font-bold tracking-tight text-[#181616] block">
                         {formatPrice(price)}
                       </span>
-                      <span className="text-[10px] text-[#212842] block font-mono font-bold uppercase tracking-wider">
-                        {isOwned ? t('reader.wishlist.owned') : t('reader.wishlist.availableForPurchase')}
+                      <span className="text-[9px] text-[#5F594F] block font-mono font-bold uppercase tracking-wider">
+                        {isOwned ? 'In Library Shelf' : 'Hardcover Edition'}
                       </span>
                     </div>
 

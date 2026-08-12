@@ -87,7 +87,10 @@ export default function BookCover({
       <img
         src={coverSrc}
         alt={alt || title}
-        onError={() => setImageError(true)}
+        onError={() => {
+          console.warn('[BookCover Load Failed]:', coverSrc);
+          setImageError(true);
+        }}
         className={`w-full h-full object-cover transition-transform duration-500 ease-out ${imageClassName}`}
         loading="lazy"
       />

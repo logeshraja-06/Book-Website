@@ -653,10 +653,10 @@ export default function Navbar() {
                   </div>
 
                   <div className="space-y-2">
-                    {filteredBooks.map((book) => {
+                    {filteredBooks.map((book, idx) => {
                       const bookSlug = book.slug || book.id || book._id;
                       return (
-                        <motion.div key={book.id || book._id} whileHover={{ x: 4 }} transition={{ duration: 0.15 }}>
+                        <motion.div key={`${book.id || book._id || 'search'}-${idx}`} whileHover={{ x: 4 }} transition={{ duration: 0.15 }}>
                           <Link
                             to={`/books/${bookSlug}`}
                             onClick={() => setSearchModalOpen(false)}
