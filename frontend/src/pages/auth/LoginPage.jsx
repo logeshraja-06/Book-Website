@@ -13,8 +13,8 @@ export default function LoginPage() {
   const { login } = useAuth();
   const emailInputRef = useRef(null);
 
-  const [email, setEmail] = useState(() => localStorage.getItem('bookverse_remembered_email') || 'ananya@bookverse.in');
-  const [password, setPassword] = useState('password123');
+  const [email, setEmail] = useState(() => localStorage.getItem('bookverse_remembered_email') || '');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
 

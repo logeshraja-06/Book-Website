@@ -244,8 +244,8 @@ export default function Navbar() {
             })}
           </nav>
 
-          {/* ── RIGHT: SEARCH, BOOKMARKS, PUBLISHER ACCESS & AUTH ── */}
-          <div className="hidden md:flex items-center gap-4 xl:gap-5">
+          {/* ── RIGHT: SEARCH, PUBLISHER ACCESS & AUTH ── */}
+          <div className="hidden lg:flex items-center gap-2 xl:gap-3">
             
             {/* Search Trigger Button with Keyboard Shortcut Badge & Inner Glow */}
             <motion.button
@@ -254,7 +254,7 @@ export default function Navbar() {
               whileHover={{ y: -1, borderColor: '#212842', boxShadow: '0 0 0 3px rgba(33,40,66,0.08)' }}
               whileTap={{ scale: 0.96 }}
               transition={{ duration: 0.2 }}
-              className="flex items-center gap-3 px-4 py-2.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-[#6B5E5E] hover:text-[#211D1D] transition-all text-xs font-editorial-sans font-medium shadow-xs"
+              className="flex items-center gap-2 px-3 py-2 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-[#6B5E5E] hover:text-[#211D1D] transition-all text-xs font-editorial-sans font-medium shadow-xs"
               title="Search Catalogue (⌘K)"
             >
               <Search className="w-3.5 h-3.5 text-[#212842]" />
@@ -268,31 +268,11 @@ export default function Navbar() {
               </motion.kbd>
             </motion.button>
 
-            {/* Bookmarks / Saved Shelf Shortcut with Spring Scale Pop Badge */}
-            <Link
-              to={currentUser ? "/my-shelf/wishlist" : "/login"}
-              className="relative p-2.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-[#6B5E5E] hover:text-[#211D1D] hover:border-[#212842] transition-all duration-200"
-              title="My Saved Shelf / Bookmarks"
-            >
-              <Bookmark className="w-4 h-4 text-[#212842]" />
-              {wishlistBooks.length > 0 && (
-                <motion.span
-                  key={wishlistBooks.length}
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: 'spring', stiffness: 450, damping: 25 }}
-                  className="absolute -top-1 -right-1 w-4.5 h-4.5 rounded-full bg-[#212842] text-[#F5F5DA] text-[9px] font-mono font-bold flex items-center justify-center shadow-xs"
-                >
-                  {wishlistBooks.length}
-                </motion.span>
-              )}
-            </Link>
-
             {/* Publisher Workspace Link (Internal Portal) */}
             {!isPublisher && (
               <Link
                 to="/publisher/login"
-                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-[12px] font-mono uppercase tracking-[0.12em] font-bold text-[#6B5E5E] hover:text-[#211D1D] hover:border-[#212842] transition-all duration-200"
+                className="hidden xl:inline-flex items-center gap-1.5 px-3 py-2 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-[11px] font-mono uppercase tracking-[0.1em] font-bold text-[#6B5E5E] hover:text-[#211D1D] hover:border-[#212842] transition-all duration-200"
                 title="Publisher & Editorial Registrar"
               >
                 <Lock className="w-3 h-3 text-[#212842]" />
@@ -308,7 +288,7 @@ export default function Navbar() {
                 i18n.changeLanguage(newLang);
                 localStorage.setItem('bookverse_lang', newLang);
               }}
-              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-[12px] font-mono uppercase tracking-[0.12em] font-bold text-[#6B5E5E] hover:text-[#211D1D] hover:border-[#212842] transition-all duration-200"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-[11px] font-mono uppercase tracking-[0.1em] font-bold text-[#6B5E5E] hover:text-[#211D1D] hover:border-[#212842] transition-all duration-200"
               title={t('navbar.language')}
             >
               <span>{i18n.language === 'en' ? 'தமிழ்' : 'English'}</span>
@@ -320,7 +300,7 @@ export default function Navbar() {
                 <button
                   type="button"
                   onClick={() => setUserDropdownOpen((prev) => !prev)}
-                  className="flex items-center gap-2 p-1.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] hover:border-[#212842] transition-all shadow-2xs"
+                  className="flex items-center gap-1.5 p-1 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] hover:border-[#212842] transition-all shadow-2xs"
                 >
                   <img
                     src={currentUser.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'}
@@ -387,7 +367,7 @@ export default function Navbar() {
                 <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.95 }} transition={{ duration: 0.15 }}>
                   <Link
                     to="/login"
-                    className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-[#211D1D] text-xs font-mono font-bold uppercase tracking-[0.1em] hover:border-[#212842] hover:bg-[#F5F5DA] transition-all duration-250 shadow-2xs"
+                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full border border-[#E9E5C8] bg-[#FFFDF3] text-[#211D1D] text-[11px] font-mono font-bold uppercase tracking-[0.1em] hover:border-[#212842] hover:bg-[#F5F5DA] transition-all duration-250 shadow-2xs"
                   >
                     <span>{t('navbar.login')}</span>
                   </Link>
@@ -397,7 +377,7 @@ export default function Navbar() {
                   <button
                     type="button"
                     onClick={() => setRoleModalOpen(true)}
-                    className="relative group overflow-hidden inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-[#212842] text-[#F5F5DA] text-xs font-mono font-bold uppercase tracking-[0.1em] hover:bg-[#181E33] transition-all duration-250 shadow-md whitespace-nowrap"
+                    className="relative group overflow-hidden inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#212842] text-[#F5F5DA] text-[11px] font-mono font-bold uppercase tracking-[0.1em] hover:bg-[#181E33] transition-all duration-250 shadow-md whitespace-nowrap"
                   >
                     {/* Shimmer sheen sweep on hover */}
                     <div
