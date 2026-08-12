@@ -23,27 +23,42 @@ const wishlistRoutes = require('./routes/wishlist.routes');
 const app = express();
 
 // CORS Configuration
-const allowedOrigins = [
+const normalizeOrigin = (url) => (url ? url.replace(/\/+$/, '') : '');
+
+const rawAllowedOrigins = [
+  env.FRONTEND_URL,
   env.CLIENT_ORIGIN,
+  'https://book-website-theta-one.vercel.app',
   'http://localhost:5173',
   'http://localhost:5174',
   'http://localhost:5175'
 ];
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-  })
+const allowedOrigins = Array.from(
+  new Set(rawAllowedOrigins.map(normalizeOrigin).filter(Boolean))
 );
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow non-browser requests (Postman, curl, etc.) with no origin header
+    if (!origin) return callback(null, true);
+
+    const cleanOrigin = normalizeOrigin(origin);
+    if (allowedOrigins.includes(cleanOrigin)) {
+      return callback(null, true);
+    }
+    return callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  optionsSuccessStatus: 200
+};
+
+// Enable CORS Pre-Flight for all routes
+app.options('*', cors(corsOptions));
+// Register CORS Middleware before routes
+app.use(cors(corsOptions));
 
 // Logging
 if (env.NODE_ENV === 'development') {
@@ -59,27 +74,52 @@ app.use(cookieParser());
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Healthcheck Route
-app.get('/api/health', (req, res) => {
+const handleHealthCheck = (req, res) => {
   return ApiResponse.success(res, 'BookVerse Studio API is running smoothly', {
     status: 'ONLINE',
     version: '1.0.0',
     timestamp: new Date().toISOString()
   });
-});
+};
+app.get('/api/health', handleHealthCheck);
+app.get('/health', handleHealthCheck);
 
-// API Routes Registration
+// API Routes Registration (Supports both /api prefix and direct endpoint routes)
 app.use('/api/auth', authRoutes);
+app.use('/auth', authRoutes);
+
 app.use('/api/books', bookRoutes);
+app.use('/books', bookRoutes);
+
 app.use('/api/authors', authorRoutes);
+app.use('/authors', authorRoutes);
+
 app.use('/api/categories', categoryRoutes);
+app.use('/categories', categoryRoutes);
+
 app.use('/api/reviews', reviewRoutes);
+app.use('/reviews', reviewRoutes);
+
 app.use('/api/reader', readerRoutes);
+app.use('/reader', readerRoutes);
+
 app.use('/api/studio', studioRoutes);
+app.use('/studio', studioRoutes);
+
 app.use('/api/editorial', publisherRoutes);
+app.use('/editorial', publisherRoutes);
+
 app.use('/api/publisher', publisherRoutes);
+app.use('/publisher', publisherRoutes);
+
 app.use('/api/admin', adminRoutes);
+app.use('/admin', adminRoutes);
+
 app.use('/api/files', fileRoutes);
+app.use('/files', fileRoutes);
+
 app.use('/api/wishlist', wishlistRoutes);
+app.use('/wishlist', wishlistRoutes);
 
 // Fallback 404 Route
 app.use((req, res) => {
